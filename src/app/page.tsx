@@ -24,10 +24,10 @@ const directions = [
 ];
 
 const fears = [
-  { objection: "«Пластик — это дёшево и непрезентабельно»", answer: "RePanel выглядит и ощущается как терраццо или камень. Каждая панель уникальна по текстуре — это не принт, а структура самого материала." },
-  { objection: "«Переработанный = ненадёжный»", answer: "ЕАС-сертифицированный материал. Выдерживает воду, УФ и механические нагрузки. Срок службы — десятилетия." },
-  { objection: "«Сложно интегрировать в проект»", answer: "Обрабатывается стандартным столярным инструментом. Режется, фрезеруется, клеится. Мы даём чертежи и техподдержку." },
-  { objection: "«Долго ждать и непонятно по цене»", answer: "Стандартные панели — от 3 дней. Готовые решения — от 1 недели. Прозрачное ценообразование с первого запроса." },
+  { objection: "«Пластик — это дёшево и непрезентабельно»", answer: "RePanel выглядит и ощущается как терраццо или камень. Каждая панель уникальна по текстуре — это не принт, а структура самого материала.", img: "/images/why-texture.jpg" },
+  { objection: "«Переработанный = ненадёжный»", answer: "ЕАС-сертифицированный материал. Выдерживает воду, УФ и механические нагрузки. Срок службы — десятилетия.", img: "/images/why-reliable.jpg" },
+  { objection: "«Сложно интегрировать в проект»", answer: "Обрабатывается стандартным столярным инструментом. Режется, фрезеруется, клеится. Мы даём чертежи и техподдержку.", img: "/images/why-easy.jpg" },
+  { objection: "«Долго ждать и непонятно по цене»", answer: "Стандартные панели — от 3 дней. Готовые решения — от 1 недели. Прозрачное ценообразование с первого запроса.", img: "/images/why-fast.jpg" },
 ];
 
 const whereWorks = [
@@ -194,13 +194,18 @@ export default function Home() {
           </h2>
           <div className="flex flex-col lg:grid lg:grid-cols-2 gap-0">
             {fears.map((f, i) => (
-              <div key={i} className="border-t border-[#171513] py-5 lg:py-6 lg:pr-8">
-                <p className="text-[15px] lg:text-[18px] leading-[1.4] text-[#171513] font-[Montserrat] font-bold mb-2 lg:mb-3">
-                  {f.objection}
-                </p>
-                <p className="text-[14px] lg:text-[16px] leading-[1.5] text-[#171513]">
-                  {f.answer}
-                </p>
+              <div key={i} className="border-t border-[#171513] py-5 lg:py-6 lg:pr-8 flex gap-4 lg:gap-5 items-start">
+                <div className="shrink-0 w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] relative">
+                  <Image src={f.img} alt="" fill sizes="80px" className="object-cover" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-[15px] lg:text-[18px] leading-[1.4] text-[#171513] font-[Montserrat] font-bold mb-2 lg:mb-3">
+                    {f.objection}
+                  </p>
+                  <p className="text-[14px] lg:text-[16px] leading-[1.5] text-[#171513]">
+                    {f.answer}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
@@ -351,21 +356,33 @@ export default function Home() {
               <Link
                 key={a.title}
                 href={a.href}
-                className="group/path block border border-[#171513] p-[5px] transition-all duration-200"
+                className="block border border-[#171513] p-[5px] transition-all duration-200"
                 style={{ textDecoration: "none", borderRadius: 20 }}
+                onMouseEnter={(e) => {
+                  const inner = e.currentTarget.querySelector("[data-inner]") as HTMLElement;
+                  if (inner) { inner.style.backgroundColor = "#171513"; }
+                  e.currentTarget.querySelectorAll("[data-txt]").forEach((t) => { (t as HTMLElement).style.color = "#FFFFFF"; });
+                }}
+                onMouseLeave={(e) => {
+                  const inner = e.currentTarget.querySelector("[data-inner]") as HTMLElement;
+                  if (inner) { inner.style.backgroundColor = ""; }
+                  e.currentTarget.querySelectorAll("[data-txt]").forEach((t) => { (t as HTMLElement).style.color = "#171513"; });
+                }}
               >
-                <div className="flex flex-col justify-between p-5 lg:p-7 h-full transition-colors duration-200 group-hover/path:bg-[#171513]"
+                <div data-inner className="flex flex-col justify-between p-5 lg:p-7 h-full transition-colors duration-200"
                   style={{ borderRadius: 14 }}>
                   <div>
-                    <h3 className="font-bold font-[Montserrat] leading-none tracking-[-0.03em] mb-3 lg:mb-4 transition-colors duration-200 text-[#171513] group-hover/path:text-white"
-                      style={{ fontSize: "clamp(22px,6vw,36px)" }}>
+                    <h3 data-txt className="font-bold font-[Montserrat] leading-none tracking-[-0.03em] mb-3 lg:mb-4 transition-colors duration-200"
+                      style={{ fontSize: "clamp(22px,6vw,36px)", color: "#171513" }}>
                       {a.title}
                     </h3>
-                    <p className="text-[14px] lg:text-[16px] leading-[1.5] transition-colors duration-200 text-[#171513] group-hover/path:text-white">
+                    <p data-txt className="text-[14px] lg:text-[16px] leading-[1.5] transition-colors duration-200"
+                      style={{ color: "#171513" }}>
                       {a.desc}
                     </p>
                   </div>
-                  <span className="text-[14px] lg:text-[16px] font-bold font-[Montserrat] mt-5 lg:mt-8 inline-block transition-colors duration-200 text-[#171513] group-hover/path:text-white">
+                  <span data-txt className="text-[14px] lg:text-[16px] font-bold font-[Montserrat] mt-5 lg:mt-8 inline-block transition-colors duration-200"
+                    style={{ color: "#171513" }}>
                     {a.link}
                   </span>
                 </div>
