@@ -1,26 +1,211 @@
 @import "tailwindcss";
 
+/*
+ * RePanel — Design System
+ * Minimalist editorial commerce: white canvas, dark ink, giant typography,
+ * hairline borders, generous spacing, no shadows, no rounded corners
+ */
+
+/* ── Gramatika — body font (matches Recycle Object site) ── */
+@font-face {
+  font-family: 'Gramatika';
+  src: url('/fonts/Gramatika-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gramatika';
+  src: url('/fonts/Gramatika-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ── Canvas ── */
+  --background: #FFFFFF;
+  --foreground: #171513;
+  --accent: #171513;
+  --photo-placeholder: #F0F0F0;
+
+  /* ── Neutrals ── */
+  --ink: #171513;
+  --warm-gray: #C9BDAF;
+  --olive: #66704D;
+  --canvas-warm: #F5F5F5;
+  --canvas-dark: #171513;
+
+  /* ── Layout ── */
+  --site-margins: 20px;
+  --site-gutters: 20px;
+  --section-py: 80px;
+
+  /* ── Motion ── */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-fast: 160ms;
+  --t-mid: 280ms;
+  --t-slow: 400ms;
+}
+
+/* Desktop: same narrow margins as hero (20px) */
+@media (min-width: 940px) {
+  :root {
+    --site-margins: 20px !important;
+    --site-gutters: 20px;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent: var(--accent);
+  --color-ink: var(--ink);
+  --color-warm-gray: var(--warm-gray);
+  --color-olive: var(--olive);
+  --color-canvas-warm: var(--canvas-warm);
+  --color-canvas-dark: var(--canvas-dark);
+  --color-photo-placeholder: var(--photo-placeholder);
+  --font-sans: 'Gramatika', system-ui, -apple-system, sans-serif;
+  --font-display: 'Montserrat', 'Gramatika', system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* No border-radius anywhere except explicit exceptions */
+*, *::before, *::after { border-radius: 0; }
+.rounded-full-override { border-radius: 9999px !important; }
+.rounded-pill { border-radius: 9999px !important; }
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Typography ── */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+h1 { letter-spacing: -0.03em; line-height: 0.92; }
+h2 { letter-spacing: -0.025em; line-height: 0.95; }
+h3 { letter-spacing: -0.015em; line-height: 1.05; }
+
+p, span, label, li { color: var(--foreground); }
+
+/* ── Hero text scaling ── */
+.hero-text-mobile {
+  font-size: 25vw;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+}
+
+.hero-text {
+  font-size: 26.5vw;
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+  font-weight: 700;
+}
+
+/* ── Layout ── */
+.section {
+  padding: var(--section-py) var(--site-margins);
+}
+
+.wrap {
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 var(--site-margins);
+}
+
+/* ── Selection ── */
+::selection {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* ── Focus ── */
+:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 3px;
+}
+
+/* ── Links ── */
+a {
+  color: var(--foreground);
+  text-decoration: none;
+  transition: opacity var(--t-fast) var(--ease);
+}
+/* opacity on hover removed — use explicit hover:opacity-60 on individual links instead */
+
+/* ── Hairline ── */
+hr {
+  border: none;
+  border-top: 1px solid var(--foreground);
+  opacity: 0.15;
+}
+
+/* ── Scrollbar hiding ── */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Animations ── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes catalog-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 10px)); }
+}
+
+/* ── Image defaults ── */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Divider (editorial * * *) ── */
+.divider-stars {
+  text-align: center;
+  padding: 40px 0;
+  font-size: 14px;
+  letter-spacing: 0.5em;
+  opacity: 0.3;
+  color: var(--foreground);
+}
+
+/* ── Card hover ── */
+.card-hover img {
+  transition: transform 500ms var(--ease);
+}
+.card-hover:hover img {
+  transform: scale(1.04);
+}
+
+/* ── Section transitions ── */
+.section-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.section-fade.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
