@@ -17,6 +17,8 @@ const quickLinks = [
   { label: "Кейсы", href: "/projects" },
 ];
 
+const contactAddressLines = ["Дмитров, ул. Промышленная, 10"];
+
 export default function ContactsPage() {
   return (
     <div style={{ maxWidth: 1440, margin: "0 auto" }}>
@@ -177,9 +179,12 @@ export default function ContactsPage() {
                     color: "#171513",
                   }}
                 >
-                  Москва, ул. Промышленная ул. 32,
-                  <br />
-                  Борис Федоров, д. 21 корп.
+                  {contactAddressLines.map((line, index) => (
+                    <span key={line}>
+                      {index > 0 && <br />}
+                      {line}
+                    </span>
+                  ))}
                 </p>
               </div>
             </div>
@@ -226,7 +231,7 @@ export default function ContactsPage() {
               color: "#171513",
             }}
           >
-            Дмитров, ул. Промышленная, 10
+            {contactAddressLines.join(", ")}
           </p>
         </div>
       </section>
