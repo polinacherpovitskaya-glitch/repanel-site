@@ -42,6 +42,15 @@ const sustainabilityPoints = [
   "Безотходное производство — обрезки возвращаются в цикл",
 ];
 
+const sectionTitleStyle: React.CSSProperties = {
+  fontFamily: D,
+  fontSize: "clamp(34px, 9vw, 52px)",
+  fontWeight: 700,
+  letterSpacing: -1.5,
+  lineHeight: 0.92,
+  color: "#000",
+};
+
 export default function ProductionPage() {
   return (
     <>
@@ -51,11 +60,8 @@ export default function ProductionPage() {
           <h1
             className="font-bold"
             style={{
-              fontFamily: D,
-              fontSize: 52,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
+              ...sectionTitleStyle,
+              fontSize: "clamp(38px, 11vw, 52px)",
             }}
           >
             Производство RePanel
@@ -83,7 +89,7 @@ export default function ProductionPage() {
               src="/images/DSC02276.jpg"
               alt="Производство RePanel"
               fill
-              sizes="100vw"
+              sizes="(max-width: 1440px) calc(100vw - 40px), 1400px"
               className="object-cover"
               priority
             />
@@ -108,7 +114,7 @@ export default function ProductionPage() {
                   className="block font-bold"
                   style={{
                     fontFamily: D,
-                    fontSize: 42,
+                    fontSize: "clamp(30px, 9vw, 42px)",
                     letterSpacing: -1,
                     lineHeight: 1,
                     color: "#000",
@@ -138,14 +144,7 @@ export default function ProductionPage() {
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
           <h2
             className="font-bold mb-8"
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
-            }}
+            style={sectionTitleStyle}
           >
             Этапы производства
           </h2>
@@ -202,14 +201,7 @@ export default function ProductionPage() {
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
           <h2
             className="font-bold mb-8"
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
-            }}
+            style={sectionTitleStyle}
           >
             Что выходит с производства
           </h2>
@@ -219,7 +211,7 @@ export default function ProductionPage() {
                 src="/images/DSC02231.jpg"
                 alt="Продукция RePanel"
                 fill
-                sizes="33vw"
+                sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1023px) calc((100vw - 56px) / 2), calc((100vw - 72px) / 3)"
                 className="object-cover"
               />
             </div>
@@ -228,7 +220,7 @@ export default function ProductionPage() {
                 src="/images/DSC02226.jpg"
                 alt="Продукция RePanel"
                 fill
-                sizes="33vw"
+                sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1023px) calc((100vw - 56px) / 2), calc((100vw - 72px) / 3)"
                 className="object-cover"
               />
             </div>
@@ -237,7 +229,7 @@ export default function ProductionPage() {
                 src="/images/DSC02247.jpg"
                 alt="Продукция RePanel"
                 fill
-                sizes="33vw"
+                sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1023px) calc((100vw - 56px) / 2), calc((100vw - 72px) / 3)"
                 className="object-cover"
               />
             </div>
@@ -262,7 +254,7 @@ export default function ProductionPage() {
                   className="block font-bold"
                   style={{
                     fontFamily: D,
-                    fontSize: 52,
+                    fontSize: "clamp(34px, 9vw, 52px)",
                     letterSpacing: -1.5,
                     lineHeight: 1,
                     color: "#000",
@@ -303,14 +295,7 @@ export default function ProductionPage() {
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
           <h2
             className="font-bold mb-8"
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
-            }}
+            style={sectionTitleStyle}
           >
             Про устойчивость
           </h2>
@@ -364,14 +349,7 @@ export default function ProductionPage() {
         >
           <h2
             className="font-bold mb-4"
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
-            }}
+            style={sectionTitleStyle}
           >
             Хотите увидеть производство?
           </h2>

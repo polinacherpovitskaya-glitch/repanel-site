@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { FAQ } from "@/components/FAQ";
 import { ContactForm } from "@/components/ContactForm";
 import type { Metadata } from "next";
@@ -56,10 +57,10 @@ const architectFaq = [
 ];
 
 const quickActions = [
-  "Скачать каталог",
-  "Заказать образцы",
-  "Консультация",
-  "Отправить чертёж",
+  { label: "Скачать каталог", href: "#documents" },
+  { label: "Заказать образцы", href: "#sample-request" },
+  { label: "Консультация", href: "/contacts" },
+  { label: "Отправить чертёж", href: "/contacts" },
 ];
 
 const colors = [
@@ -120,118 +121,174 @@ const certificates = [
   { name: "Экологический сертификат", desc: "Подтверждение использования переработанного сырья" },
 ];
 
+const forArchitectsHeroDescription =
+  "Всё, что помогает быстро заложить RePanel в проект";
+
+const sectionTitleStyle: React.CSSProperties = {
+  fontFamily: D,
+  fontSize: "clamp(34px, 9vw, 52px)",
+  fontWeight: 700,
+  letterSpacing: -1.5,
+  lineHeight: 0.92,
+  color: "#171513",
+};
+
 export default function ForArchitectsPage() {
   return (
     <div style={{ maxWidth: 1440, margin: "0 auto" }}>
       {/* ===== HERO ===== */}
       <section
         style={{
-          position: "relative",
-          height: 700,
           background: "#fff",
-          overflow: "hidden",
         }}
       >
-        {/* Title */}
-        <h1
-          style={{
-            position: "absolute",
-            left: 40,
-            top: 40,
-            width: 649,
-            fontFamily: D,
-            fontSize: 80,
-            fontWeight: 700,
-            letterSpacing: -4,
-            lineHeight: 0.85,
-            color: "#171513",
-            margin: 0,
-            zIndex: 2,
-          }}
-        >
-          {"Для архитекторов,\nдизайнеров производителей".split("\n").map((line, i) => (
-            <span key={i}>
-              {i > 0 && <br />}
-              {line}
-            </span>
-          ))}
-        </h1>
-
-        {/* Vertical line */}
-        <div
-          style={{
-            position: "absolute",
-            left: 699,
-            top: 0,
-            width: 1,
-            height: 660,
-            background: "#000",
-            zIndex: 2,
-          }}
-        />
-
-        {/* Description */}
-        <p
-          style={{
-            position: "absolute",
-            left: 22,
-            top: 531,
-            width: 570,
-            fontFamily: I,
-            fontSize: 16,
-            lineHeight: 1.6,
-            color: "#171513",
-            margin: 0,
-            zIndex: 2,
-          }}
-        >
-          Всё, что помогает быстро заложить RePanel в проект
-        </p>
-
-        {/* Photo */}
-        <div
-          style={{
-            position: "absolute",
-            right: 0,
-            left: 716,
-            top: 15.5,
-            width: 706,
-            height: 629,
-            zIndex: 1,
-          }}
-        >
-          <Image
-            src="/images/ro0182.jpg"
-            alt="RePanel для архитекторов"
-            fill
-            style={{ objectFit: "cover" }}
-            priority
-          />
+        <div className="block px-5 pt-10 pb-8 lg:hidden">
+          <h1
+            style={{
+              fontFamily: D,
+              fontSize: "clamp(32px, 9.5vw, 60px)",
+              fontWeight: 700,
+              letterSpacing: "-0.05em",
+              lineHeight: 0.85,
+              color: "#171513",
+              margin: 0,
+            }}
+          >
+            {"Для\nархитекторов,\nдизайнеров и\nпроизводителей".split("\n").map((line, i) => (
+              <span key={i}>
+                {i > 0 && <br />}
+                {line}
+              </span>
+            ))}
+          </h1>
+          <p
+            style={{
+              fontFamily: I,
+              fontSize: 16,
+              lineHeight: 1.6,
+              color: "#171513",
+              margin: "24px 0 0",
+            }}
+          >
+            {forArchitectsHeroDescription}
+          </p>
+          <div className="relative mt-8 overflow-hidden" style={{ aspectRatio: "4 / 5" }}>
+            <Image
+              src="/images/ro0184.jpg"
+              alt="RePanel для архитекторов"
+              fill
+              sizes="(max-width: 1023px) calc(100vw - 40px), 706px"
+              style={{ objectFit: "cover" }}
+              priority
+            />
+          </div>
+          <div className="mt-8 h-px bg-black" />
         </div>
 
-        {/* Horizontal line at bottom */}
-        <div
-          style={{
-            position: "absolute",
-            left: 22,
-            top: 661,
-            width: 1401,
-            height: 1,
-            background: "#000",
-          }}
-        />
+        <div className="relative hidden h-[700px] overflow-hidden lg:block">
+          {/* Title */}
+          <h1
+            style={{
+              position: "absolute",
+              left: 40,
+              top: 40,
+              width: 649,
+              fontFamily: D,
+              fontSize: 80,
+              fontWeight: 700,
+              letterSpacing: -4,
+              lineHeight: 0.85,
+              color: "#171513",
+              margin: 0,
+              zIndex: 2,
+            }}
+          >
+            {"Для архитекторов,\nдизайнеров и\nпроизводителей".split("\n").map((line, i) => (
+              <span key={i}>
+                {i > 0 && <br />}
+                {line}
+              </span>
+            ))}
+          </h1>
+
+          {/* Vertical line */}
+          <div
+            style={{
+              position: "absolute",
+              left: 699,
+              top: 0,
+              width: 1,
+              height: 660,
+              background: "#000",
+              zIndex: 2,
+            }}
+          />
+
+          {/* Description */}
+          <p
+            style={{
+              position: "absolute",
+              left: 22,
+              top: 531,
+              width: 570,
+              fontFamily: I,
+              fontSize: 16,
+              lineHeight: 1.6,
+              color: "#171513",
+              margin: 0,
+              zIndex: 2,
+            }}
+          >
+            {forArchitectsHeroDescription}
+          </p>
+
+          {/* Photo */}
+          <div
+            style={{
+              position: "absolute",
+              right: 0,
+              left: 716,
+              top: 15.5,
+              width: 706,
+              height: 629,
+              zIndex: 1,
+            }}
+          >
+            <Image
+              src="/images/ro0184.jpg"
+              alt="RePanel для архитекторов"
+              fill
+              sizes="(max-width: 1439px) 49vw, 706px"
+              style={{ objectFit: "cover" }}
+              priority
+            />
+          </div>
+
+          {/* Horizontal line at bottom */}
+          <div
+            style={{
+              position: "absolute",
+              left: 22,
+              top: 661,
+              width: 1401,
+              height: 1,
+              background: "#000",
+            }}
+          />
+        </div>
       </section>
 
       {/* ===== Quick Actions ===== */}
       <section style={{ padding: "0 20px 40px 20px" }}>
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          {quickActions.map((label) => (
-            <button
-              key={label}
-              className="rounded-pill cursor-pointer"
+          {quickActions.map((action) => (
+            <Link
+              key={action.label}
+              href={action.href}
+              className="rounded-pill cursor-pointer w-full sm:flex-1"
               style={{
-                flex: "1 1 0",
-                minWidth: 200,
+                flex: "1 1 240px",
+                minWidth: 0,
                 border: "1px solid #000",
                 padding: "16px 20px",
                 background: "transparent",
@@ -239,10 +296,11 @@ export default function ForArchitectsPage() {
                 fontSize: 15,
                 color: "#171513",
                 textAlign: "center",
+                textDecoration: "none",
               }}
             >
-              {label}
-            </button>
+              {action.label}
+            </Link>
           ))}
         </div>
       </section>
@@ -250,15 +308,7 @@ export default function ForArchitectsPage() {
       {/* ===== Характеристики ===== */}
       <section style={{ padding: "20px 20px 60px 20px" }}>
         <h2
-          style={{
-            fontFamily: D,
-            fontSize: 52,
-            fontWeight: 700,
-            letterSpacing: -1.5,
-            lineHeight: 0.92,
-            color: "#171513",
-            marginBottom: 40,
-          }}
+          style={{ ...sectionTitleStyle, marginBottom: 40 }}
         >
           Характеристики
         </h2>
@@ -296,15 +346,7 @@ export default function ForArchitectsPage() {
       {/* ===== Цветовая палитра ===== */}
       <section style={{ padding: "0 20px 60px 20px" }}>
         <h2
-          style={{
-            fontFamily: D,
-            fontSize: 52,
-            fontWeight: 700,
-            letterSpacing: -1.5,
-            lineHeight: 0.92,
-            color: "#171513",
-            marginBottom: 40,
-          }}
+          style={{ ...sectionTitleStyle, marginBottom: 40 }}
         >
           Цветовая палитра
         </h2>
@@ -331,15 +373,7 @@ export default function ForArchitectsPage() {
       <section style={{ padding: "80px 20px" }}>
         <div style={{ borderTop: "1px solid #000", paddingTop: 40 }}>
           <h2
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#171513",
-              marginBottom: 40,
-            }}
+            style={{ ...sectionTitleStyle, marginBottom: 40 }}
           >
             Технические характеристики
           </h2>
@@ -363,15 +397,7 @@ export default function ForArchitectsPage() {
       <section style={{ padding: "80px 20px" }}>
         <div style={{ borderTop: "1px solid #000", paddingTop: 40 }}>
           <h2
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#171513",
-              marginBottom: 40,
-            }}
+            style={{ ...sectionTitleStyle, marginBottom: 40 }}
           >
             Обработка материала
           </h2>
@@ -395,15 +421,7 @@ export default function ForArchitectsPage() {
       <section style={{ padding: "80px 20px" }}>
         <div style={{ borderTop: "1px solid #000", paddingTop: 40 }}>
           <h2
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#171513",
-              marginBottom: 40,
-            }}
+            style={{ ...sectionTitleStyle, marginBottom: 40 }}
           >
             Углеродный след
           </h2>
@@ -438,18 +456,10 @@ export default function ForArchitectsPage() {
       </section>
 
       {/* ===== Документы и файлы ===== */}
-      <section style={{ padding: "80px 20px" }}>
+      <section id="documents" style={{ padding: "80px 20px" }}>
         <div style={{ borderTop: "1px solid #000", paddingTop: 40 }}>
           <h2
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#171513",
-              marginBottom: 16,
-            }}
+            style={{ ...sectionTitleStyle, marginBottom: 16 }}
           >
             Документы и файлы
           </h2>
@@ -488,15 +498,7 @@ export default function ForArchitectsPage() {
       <section style={{ padding: "80px 20px" }}>
         <div style={{ borderTop: "1px solid #000", paddingTop: 40 }}>
           <h2
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#171513",
-              marginBottom: 40,
-            }}
+            style={{ ...sectionTitleStyle, marginBottom: 40 }}
           >
             Сертификаты и стандарты
           </h2>
@@ -528,17 +530,9 @@ export default function ForArchitectsPage() {
       </section>
 
       {/* ===== Форма запроса образцов ===== */}
-      <section style={{ padding: "80px 20px" }}>
+      <section id="sample-request" style={{ padding: "80px 20px" }}>
         <h2
-          style={{
-            fontFamily: D,
-            fontSize: 52,
-            fontWeight: 700,
-            letterSpacing: -1.5,
-            lineHeight: 0.92,
-            color: "#171513",
-            marginBottom: 16,
-          }}
+          style={{ ...sectionTitleStyle, marginBottom: 16 }}
         >
           Форма запроса образцов
         </h2>

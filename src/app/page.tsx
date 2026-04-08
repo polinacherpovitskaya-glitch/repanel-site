@@ -124,13 +124,34 @@ export default function Home() {
           }}
         >
           <div className="relative flex-1 overflow-hidden">
-            <Image src="/images/ro0151.jpg" alt="RePanel" fill sizes="100vw" className="object-cover" priority />
+            <Image
+              src="/images/ro0151.jpg"
+              alt="RePanel"
+              fill
+              sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1023px) calc((100vw - 56px) / 2), calc((100vw - 72px) / 3)"
+              className="object-cover"
+              priority
+            />
           </div>
           <div className="relative flex-1 overflow-hidden hidden md:block">
-            <Image src="/images/ro0184.jpg" alt="RePanel" fill sizes="33vw" className="object-cover" priority />
+            <Image
+              src="/images/ro0184.jpg"
+              alt="RePanel"
+              fill
+              sizes="(max-width: 1023px) calc((100vw - 56px) / 2), calc((100vw - 72px) / 3)"
+              className="object-cover"
+              priority
+            />
           </div>
           <div className="relative flex-1 overflow-hidden hidden lg:block">
-            <Image src="/images/ro0164.jpg" alt="RePanel" fill sizes="33vw" className="object-cover" priority />
+            <Image
+              src="/images/ro0164.jpg"
+              alt="RePanel"
+              fill
+              sizes="calc((100vw - 72px) / 3)"
+              className="object-cover"
+              priority
+            />
           </div>
         </div>
 
@@ -292,15 +313,15 @@ export default function Home() {
                   {/* Photos row: 3 equal columns */}
                   <div className="flex" style={{ gap: 16 }}>
                     <div className="relative overflow-hidden flex-1 bg-[#171513]" style={{ aspectRatio: "3/4" }}>
-                      <Image src={c.photos[0]} alt={c.name} fill sizes="33vw"
+                      <Image src={c.photos[0]} alt={c.name} fill sizes="calc((100vw - 72px) / 3)"
                         className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                     </div>
                     <div className="relative overflow-hidden flex-1 bg-[#171513]" style={{ aspectRatio: "3/4" }}>
-                      <Image src={c.photos[1]} alt={c.name} fill sizes="33vw"
+                      <Image src={c.photos[1]} alt={c.name} fill sizes="calc((100vw - 72px) / 3)"
                         className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                     </div>
                     <div className="relative overflow-hidden flex-1 bg-[#171513]" style={{ aspectRatio: "3/4" }}>
-                      <Image src={c.photos[2]} alt={c.name} fill sizes="33vw"
+                      <Image src={c.photos[2]} alt={c.name} fill sizes="calc((100vw - 72px) / 3)"
                         className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                     </div>
                   </div>

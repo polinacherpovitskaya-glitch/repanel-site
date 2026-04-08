@@ -25,7 +25,7 @@ export default function ContactsPage() {
         <h1
           style={{
             fontFamily: D,
-            fontSize: 52,
+            fontSize: "clamp(42px, 13vw, 52px)",
             fontWeight: 700,
             letterSpacing: -1.5,
             lineHeight: 0.92,
@@ -62,13 +62,16 @@ export default function ContactsPage() {
           }}
         >
           {/* Left: Form */}
-          <div style={{ flex: "1 1 0", minWidth: 320 }}>
+          <div style={{ flex: "1 1 360px", minWidth: 0 }}>
             <ContactForm />
           </div>
 
           {/* Right: Contact info */}
-          <div style={{ width: 400, flexShrink: 0 }}>
-            <div style={{ position: "sticky", top: 100 }}>
+          <div
+            className="w-full md:w-[400px] md:shrink-0"
+            style={{ maxWidth: "100%" }}
+          >
+            <div className="md:sticky md:top-[100px]">
               {/* Phone */}
               <div style={{ marginBottom: 28 }}>
                 <p

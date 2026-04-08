@@ -111,18 +111,21 @@ const materialFaq = [
   },
 ];
 
+const materialHeroDescription =
+  "Листовой материал из переработанного пластика с уникальной текстурой. Для интерьеров, мебели и бренд-объектов. Не просто переработанный пластик. Рабочий материал для сильных интерьеров — с характером, которого нет у ЛДСП, типового пластика или имитации камня.";
+
 /* ── Styles ── */
 
 const h2Style: React.CSSProperties = {
   fontFamily: D,
-  fontSize: 52,
+  fontSize: "clamp(34px, 9vw, 52px)",
   fontWeight: 700,
   letterSpacing: -1.5,
   lineHeight: 0.92,
 };
 
 const sectionPadding: React.CSSProperties = {
-  padding: "80px 20px",
+  padding: "clamp(56px, 9vw, 80px) 20px",
 };
 
 const hr: React.CSSProperties = {
@@ -139,91 +142,123 @@ export default function MaterialPage() {
         style={{
           maxWidth: 1440,
           margin: "0 auto",
-          position: "relative",
-          height: 700,
           background: "#fff",
-          overflow: "hidden",
         }}
       >
-        {/* Title */}
-        <h1
-          style={{
-            fontFamily: D,
-            fontSize: 80,
-            fontWeight: 700,
-            letterSpacing: -4,
-            lineHeight: 0.85,
-            position: "absolute",
-            left: 40,
-            top: 40,
-            margin: 0,
-          }}
-        >
-          Материал
-        </h1>
-
-        {/* Vertical divider line */}
-        <div
-          style={{
-            position: "absolute",
-            left: 640,
-            top: 20,
-            width: 1,
-            height: 660,
-            background: "#000",
-          }}
-        />
-
-        {/* Description at bottom-left */}
-        <p
-          style={{
-            fontFamily: I,
-            fontSize: 16,
-            lineHeight: 1.6,
-            position: "absolute",
-            left: 22,
-            top: 531,
-            width: 570,
-            margin: 0,
-          }}
-        >
-          Листовой материал из переработанного пластика с уникальной текстурой.
-          Для интерьеров, мебели и бренд-объектов. Не просто переработанный
-          пластик. Рабочий материал для сильных интерьеров — с характером,
-          которого нет у ЛДСП, типового пластика или имитации камня.
-        </p>
-
-        {/* Photo on the right */}
-        <div
-          style={{
-            position: "absolute",
-            left: 660,
-            top: 15.5,
-            width: 763,
-            height: 629,
-          }}
-        >
-          <Image
-            src="/images/RO1258.jpg"
-            alt="Материал RePanel"
-            fill
-            sizes="763px"
-            className="object-cover"
-            priority
-          />
+        <div className="block px-5 pt-10 pb-8 lg:hidden">
+          <h1
+            style={{
+              fontFamily: D,
+              fontSize: "clamp(44px, 17vw, 72px)",
+              fontWeight: 700,
+              letterSpacing: "-0.05em",
+              lineHeight: 0.85,
+              margin: 0,
+            }}
+          >
+            Материал
+          </h1>
+          <p
+            style={{
+              fontFamily: I,
+              fontSize: 16,
+              lineHeight: 1.6,
+              margin: "24px 0 0",
+            }}
+          >
+            {materialHeroDescription}
+          </p>
+          <div className="relative mt-8 overflow-hidden" style={{ aspectRatio: "4 / 5" }}>
+            <Image
+              src="/images/RO1258.jpg"
+              alt="Материал RePanel"
+              fill
+              sizes="(max-width: 1023px) calc(100vw - 40px), 763px"
+              className="object-cover"
+              priority
+            />
+          </div>
+          <div className="mt-8 h-px bg-black" />
         </div>
 
-        {/* Horizontal line at bottom */}
-        <div
-          style={{
-            position: "absolute",
-            left: 20,
-            top: 661,
-            width: 1401,
-            height: 1,
-            background: "#000",
-          }}
-        />
+        <div className="relative hidden h-[700px] overflow-hidden lg:block">
+          {/* Title */}
+          <h1
+            style={{
+              fontFamily: D,
+              fontSize: 80,
+              fontWeight: 700,
+              letterSpacing: -4,
+              lineHeight: 0.85,
+              position: "absolute",
+              left: 40,
+              top: 40,
+              margin: 0,
+            }}
+          >
+            Материал
+          </h1>
+
+          {/* Vertical divider line */}
+          <div
+            style={{
+              position: "absolute",
+              left: 640,
+              top: 20,
+              width: 1,
+              height: 660,
+              background: "#000",
+            }}
+          />
+
+          {/* Description at bottom-left */}
+          <p
+            style={{
+              fontFamily: I,
+              fontSize: 16,
+              lineHeight: 1.6,
+              position: "absolute",
+              left: 22,
+              top: 531,
+              width: 570,
+              margin: 0,
+            }}
+          >
+            {materialHeroDescription}
+          </p>
+
+          {/* Photo on the right */}
+          <div
+            style={{
+              position: "absolute",
+              left: 660,
+              top: 15.5,
+              width: 763,
+              height: 629,
+            }}
+          >
+            <Image
+              src="/images/RO1258.jpg"
+              alt="Материал RePanel"
+              fill
+              sizes="(max-width: 1439px) 53vw, 763px"
+              className="object-cover"
+              priority
+            />
+          </div>
+
+          {/* Horizontal line at bottom */}
+          <div
+            style={{
+              position: "absolute",
+              left: 20,
+              top: 661,
+              width: 1401,
+              height: 1,
+              background: "#000",
+            }}
+          />
+        </div>
       </section>
 
       {/* ══════ ЦВЕТА И КАСТОМИЗАЦИЯ ══════ */}
@@ -410,12 +445,10 @@ export default function MaterialPage() {
           {specs.map((s) => (
             <div
               key={s.label}
+              className="flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between"
               style={{
                 borderTop: "1px solid #000",
                 padding: "16px 0",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "baseline",
               }}
             >
               <span
@@ -469,21 +502,18 @@ export default function MaterialPage() {
           {processing.map((p) => (
             <div
               key={p.method}
+              className="flex flex-col gap-3 md:flex-row md:items-baseline"
               style={{
                 borderTop: "1px solid #000",
                 padding: "20px 0",
-                display: "flex",
-                gap: 40,
-                alignItems: "baseline",
               }}
             >
               <span
+                className="md:min-w-[180px] md:shrink-0"
                 style={{
                   fontFamily: D,
                   fontSize: 18,
                   fontWeight: 700,
-                  minWidth: 180,
-                  flexShrink: 0,
                 }}
               >
                 {p.method}
@@ -585,12 +615,10 @@ export default function MaterialPage() {
           {carbonData.map((c) => (
             <div
               key={c.material}
+              className="grid grid-cols-1 gap-2 md:grid-cols-[200px_1fr_1fr] md:gap-5"
               style={{
                 borderTop: "1px solid #000",
                 padding: "16px 0",
-                display: "grid",
-                gridTemplateColumns: "200px 1fr 1fr",
-                gap: 20,
                 alignItems: "baseline",
               }}
             >
@@ -633,10 +661,11 @@ export default function MaterialPage() {
 
         <h2 style={{ ...h2Style, marginTop: 40 }}>Сравнение с аналогами</h2>
 
-        <div style={{ marginTop: 40, overflowX: "auto" }}>
+        <div style={{ marginTop: 40, overflowX: "auto", paddingBottom: 8 }}>
           <table
             style={{
               width: "100%",
+              minWidth: 720,
               borderCollapse: "collapse",
               fontFamily: I,
               fontSize: 14,

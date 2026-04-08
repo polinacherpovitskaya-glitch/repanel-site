@@ -154,7 +154,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <div className="grid grid-cols-3 gap-4 mb-12">
             {project.photos.map((p) => (
               <div key={p} className="relative aspect-[3/2]">
-                <Image src={`/images/${p}`} alt={project.title} fill className="object-cover" />
+                <Image
+                  src={`/images/${p}`}
+                  alt={project.title}
+                  fill
+                  sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1439px) calc((100vw - 56px) / 3), 469px"
+                  className="object-cover"
+                />
               </div>
             ))}
           </div>

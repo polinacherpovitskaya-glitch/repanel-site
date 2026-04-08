@@ -101,7 +101,7 @@ export default function AboutPage() {
               src="/images/Screenshot 2026-03-20 at 22.39.54.png"
               alt="RePanel производство"
               fill
-              sizes="100vw"
+              sizes="(max-width: 1440px) calc(100vw - 40px), 1400px"
               className="object-cover"
               priority
             />

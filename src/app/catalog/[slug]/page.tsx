@@ -3,6 +3,26 @@ import type { Metadata } from "next";
 
 const D = "'Montserrat', var(--font-display), sans-serif";
 
+const catalogFallbacks: Record<string, {
+  name: string;
+  price: string;
+  use: string;
+}> = {
+  "stool-01": { name: "Табурет RePanel", price: "8 500 ₽", use: "Мебель" },
+  "board-serving": { name: "Сервировочная доска", price: "3 200 ₽", use: "Аксессуары" },
+  "organizer-desk": { name: "Органайзер настольный", price: "4 800 ₽", use: "Офис" },
+  "shelf-wall": { name: "Полка модульная", price: "6 900 ₽", use: "Мебель" },
+  "planter-floor": { name: "Кашпо", price: "5 500 ₽", use: "Аксессуары" },
+  "kids-table": { name: "Столик детский", price: "7 200 ₽", use: "Дети" },
+  tray: { name: "Поднос", price: "2 800 ₽", use: "Аксессуары" },
+  bench: { name: "Скамья", price: "12 000 ₽", use: "Мебель" },
+  "menu-holder": { name: "Менюхолдер", price: "3 500 ₽", use: "HoReCa" },
+  "coaster-set": { name: "Подставки (набор)", price: "1 800 ₽", use: "Аксессуары" },
+  "kids-stool": { name: "Табурет детский", price: "6 400 ₽", use: "Дети" },
+  console: { name: "Консоль", price: "15 000 ₽", use: "Мебель" },
+  "menu-stand": { name: "Держатель меню", price: "2 200 ₽", use: "HoReCa" },
+};
+
 const productsData: Record<string, {
   name: string;
   price: string;
@@ -102,19 +122,35 @@ const defaultProduct = {
   features: ["Уникальная фактура", "Переработанный пластик", "Кастомизация"],
 };
 
+function getProduct(slug: string) {
+  const detailed = productsData[slug];
+  if (detailed) return detailed;
+
+  const preview = catalogFallbacks[slug];
+  if (!preview) return defaultProduct;
+
+  return {
+    ...defaultProduct,
+    name: preview.name,
+    price: preview.price,
+    use: preview.use,
+    description: `${preview.name} из переработанного пластика. Доступна кастомизация цвета, размера и тиража под проект.`,
+  };
+}
+
 export async function generateStaticParams() {
-  return Object.keys(productsData).map((slug) => ({ slug }));
+  return Array.from(new Set([...Object.keys(catalogFallbacks), ...Object.keys(productsData)])).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const p = productsData[slug] || defaultProduct;
+  const p = getProduct(slug);
   return { title: `${p.name} — RePanel`, description: p.description };
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const p = productsData[slug] || defaultProduct;
+  const p = getProduct(slug);
 
   return (
     <>

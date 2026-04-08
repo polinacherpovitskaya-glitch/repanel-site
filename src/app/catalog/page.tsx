@@ -8,11 +8,11 @@ const D = "'Montserrat', var(--font-display), sans-serif";
 const filters = ["Все", "Мебель", "Аксессуары", "HoReCa", "Офис", "Дети"];
 
 const products = [
-  { slug: "stool-repanel", name: "Табурет RePanel", price: "8 500 ₽", badge: "Bestseller", cat: "Мебель" },
-  { slug: "serving-board", name: "Сервировочная доска", price: "3 200 ₽", badge: "New", cat: "Аксессуары" },
-  { slug: "desk-organizer", name: "Органайзер настольный", price: "4 800 ₽", badge: "", cat: "Офис" },
-  { slug: "modular-shelf", name: "Полка модульная", price: "6 900 ₽", badge: "", cat: "Мебель" },
-  { slug: "planter", name: "Кашпо", price: "5 500 ₽", badge: "", cat: "Аксессуары" },
+  { slug: "stool-01", name: "Табурет RePanel", price: "8 500 ₽", badge: "Bestseller", cat: "Мебель" },
+  { slug: "board-serving", name: "Сервировочная доска", price: "3 200 ₽", badge: "New", cat: "Аксессуары" },
+  { slug: "organizer-desk", name: "Органайзер настольный", price: "4 800 ₽", badge: "", cat: "Офис" },
+  { slug: "shelf-wall", name: "Полка модульная", price: "6 900 ₽", badge: "", cat: "Мебель" },
+  { slug: "planter-floor", name: "Кашпо", price: "5 500 ₽", badge: "", cat: "Аксессуары" },
   { slug: "kids-table", name: "Столик детский", price: "7 200 ₽", badge: "", cat: "Дети" },
   { slug: "tray", name: "Поднос", price: "2 800 ₽", badge: "New", cat: "Аксессуары" },
   { slug: "bench", name: "Скамья", price: "12 000 ₽", badge: "", cat: "Мебель" },
