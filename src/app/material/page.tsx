@@ -296,7 +296,7 @@ export default async function MaterialPage() {
                   <div key={g.id}>
                     <div className="relative w-full aspect-square overflow-hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={`${CALC_ORIGIN}${g.photo_url}`} alt={`${g.code} — ${g.color}`} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+                      <img src={`${CALC_ORIGIN}${g.photo_url}`} alt={`${g.code} — ${g.color}`} loading="lazy" className="absolute inset-0 object-cover" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }} />
                     </div>
                     <p className="font-bold text-[#171513] pt-1.5" style={{ fontFamily: BODY, fontSize: "12.5px", lineHeight: "17px" }}>
                       {g.code} · {g.color}
@@ -342,9 +342,6 @@ export default async function MaterialPage() {
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
           <GroupTitle>Свойства</GroupTitle>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
-            <div className="md:col-span-2 relative aspect-square overflow-hidden self-start">
-              <Image src="/images/04_texture.png" alt="Фактура RePanel крупным планом" fill sizes="(min-width:768px) 17vw, 100vw" className="object-cover" />
-            </div>
             <div className="md:col-start-4 md:col-span-9">
               <DefRows rows={properties} />
             </div>
@@ -382,6 +379,24 @@ export default async function MaterialPage() {
                   </p>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ УГЛЕРОДНЫЙ СЛЕД — после тех-характеристик ═══ */}
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <GroupTitle>Углеродный след</GroupTitle>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+            <div className="md:col-start-4 md:col-span-9">
+              <DefRows rows={carbonRows} />
+              <p className="pt-5 text-[#171513] max-w-[610px]" style={{ fontFamily: BODY, fontSize: "14.6px", lineHeight: "20px", opacity: 0.7 }}>
+                Данные — из опубликованных EPD европейских производителей панелей из переработанного
+                полистирола (Polygood, Smile Plastics): это материал того же типа, что RePanel.
+                Панели rPS живут в одном диапазоне с деревом и МДФ — и в разы ниже кварца и акрилового
+                камня. Собственная экологическая декларация (EPD) RePanel — в работе.
+              </p>
             </div>
           </div>
         </div>
@@ -440,24 +455,6 @@ export default async function MaterialPage() {
       <section className="px-[var(--site-margins)] border-t border-[#171513] pt-8 lg:pt-12 pb-8 lg:pb-12">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
           <FAQ items={materialFaq} title="Вопросы о материале" />
-        </div>
-      </section>
-
-      {/* ═══ УГЛЕРОДНЫЙ СЛЕД — в конце страницы ═══ */}
-      <section className="px-[var(--site-margins)] border-t border-[#171513] pt-8 lg:pt-12 pb-10 lg:pb-16">
-        <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <GroupTitle>Углеродный след</GroupTitle>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
-            <div className="md:col-start-4 md:col-span-9">
-              <DefRows rows={carbonRows} />
-              <p className="pt-5 text-[#171513] max-w-[610px]" style={{ fontFamily: BODY, fontSize: "14.6px", lineHeight: "20px", opacity: 0.7 }}>
-                Данные — из опубликованных EPD европейских производителей панелей из переработанного
-                полистирола (Polygood, Smile Plastics): это материал того же типа, что RePanel.
-                Панели rPS живут в одном диапазоне с деревом и МДФ — и в разы ниже кварца и акрилового
-                камня. Собственная экологическая декларация (EPD) RePanel — в работе.
-              </p>
-            </div>
-          </div>
         </div>
       </section>
 

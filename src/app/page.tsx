@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 /* ── Data ── */
 
@@ -51,9 +51,15 @@ const marqueeCSS = `
 }
 `;
 
+/* Наборы кадров для героя — листаются за курсором (влево-вправо) */
+const MAT_HERO = Array.from({ length: 9 }, (_, i) => `/images/hero/mat-${i + 1}.jpg`);
+const MAG_HERO = Array.from({ length: 7 }, (_, i) => `/images/hero/mag-${i + 1}.jpg`);
+
 export default function Home() {
   const heroLogoRef = useRef<HTMLDivElement>(null);
   const heroIntroRef = useRef<HTMLDivElement>(null);
+  const [matIdx, setMatIdx] = useState(0);
+  const [magIdx, setMagIdx] = useState(0);
 
   /* Hero «занавес»: логотип уезжает вверх, интро — вниз, проявляя фото и подписи */
   useEffect(() => {
@@ -82,16 +88,23 @@ export default function Home() {
         {/* Sticky hero: две половины — Материал (слева) и Магазин (справа) */}
         <div className="sticky top-0 h-screen w-full flex flex-col md:flex-row overflow-hidden">
           {/* МАТЕРИАЛ */}
-          <Link href="/material" className="group relative flex-1 overflow-hidden block">
-            <Image
-              src="/images/DSC09988-HDR.jpg"
-              alt="Материал RePanel — панели из переработанного полистирола (санузел с синим терраццо)"
-              fill
-              sizes="(max-width: 767px) 100vw, 50vw"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-              style={{ objectPosition: "center 75%" }}
-              priority
-            />
+          <Link
+            href="/material"
+            onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); setMatIdx(Math.min(MAT_HERO.length - 1, Math.max(0, Math.floor(((e.clientX - r.left) / r.width) * MAT_HERO.length)))); }}
+            className="group relative flex-1 overflow-hidden block"
+          >
+            {MAT_HERO.map((src, i) => (
+              <Image
+                key={src}
+                src={src}
+                alt="Материал RePanel — переработанный полистирол"
+                fill
+                sizes="(max-width: 767px) 100vw, 50vw"
+                priority={i === 0}
+                className="object-cover transition-opacity duration-200 ease-out"
+                style={{ objectPosition: "center 50%", opacity: i === matIdx ? 1 : 0 }}
+              />
+            ))}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 2px 34px rgba(0,0,0,0.5)" }}>
@@ -101,16 +114,23 @@ export default function Home() {
             </div>
           </Link>
           {/* МАГАЗИН */}
-          <Link href="/catalog" className="group relative flex-1 overflow-hidden block">
-            <Image
-              src="/images/RE_5292.jpg"
-              alt="Магазин RePanel — готовые изделия"
-              fill
-              sizes="(max-width: 767px) 100vw, 50vw"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-              style={{ objectPosition: "center 28%" }}
-              priority
-            />
+          <Link
+            href="/catalog"
+            onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); setMagIdx(Math.min(MAG_HERO.length - 1, Math.max(0, Math.floor(((e.clientX - r.left) / r.width) * MAG_HERO.length)))); }}
+            className="group relative flex-1 overflow-hidden block"
+          >
+            {MAG_HERO.map((src, i) => (
+              <Image
+                key={src}
+                src={src}
+                alt="Магазин RePanel — готовые изделия"
+                fill
+                sizes="(max-width: 767px) 100vw, 50vw"
+                priority={i === 0}
+                className="object-cover transition-opacity duration-200 ease-out"
+                style={{ objectPosition: "center 50%", opacity: i === magIdx ? 1 : 0 }}
+              />
+            ))}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 2px 34px rgba(0,0,0,0.5)" }}>
