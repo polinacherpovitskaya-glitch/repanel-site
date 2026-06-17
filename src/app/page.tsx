@@ -15,12 +15,12 @@ const directions = [
 ];
 
 const appTiles: { title: string; count: number; cover: string; href: string; soon?: boolean }[] = [
-  { title: "Интерьеры", count: 22, cover: "/images/applications/commercial-kitchen-island.png", href: "/applications#interiors" },
-  { title: "HoReCa", count: 19, cover: "/images/applications/hospitality-entrance-bar-tops.png", href: "/applications#horeca" },
-  { title: "Ритейл", count: 17, cover: "/images/applications/retail-shopfloor-wall-panelling.png", href: "/applications#retail" },
-  { title: "Офис", count: 19, cover: "/images/applications/work-meeting-boardroom-table.png", href: "/applications#office" },
-  { title: "Городская среда", count: 4, cover: "/images/applications/public-outdoor-large-planters.png", href: "/applications#urban" },
-  { title: "Формы и объекты", count: 0, cover: "", href: "/applications", soon: true },
+  { title: "Интерьеры", count: 22, cover: "/images/applications/overview-commercial-developments.png", href: "/applications#interiors" },
+  { title: "HoReCa", count: 19, cover: "/images/applications/overview-hospitality.png", href: "/applications#horeca" },
+  { title: "Ритейл", count: 17, cover: "/images/applications/overview-retail-spaces.png", href: "/applications#retail" },
+  { title: "Офис", count: 19, cover: "/images/applications/overview-work-spaces.png", href: "/applications#office" },
+  { title: "Городская среда", count: 4, cover: "/images/applications/overview-public-outdoor-maf.png", href: "/applications#urban" },
+  { title: "Формы и объекты", count: 0, cover: "/images/applications/overview-small-objects-gifts.png", href: "/applications", soon: true },
 ];
 
 const shopProducts = [
@@ -326,8 +326,9 @@ export default function Home() {
             {appTiles.map((t) =>
               t.soon ? (
                 <div key={t.title} className="block">
-                  <div className="relative w-full overflow-hidden flex items-center justify-center aspect-square lg:aspect-[4/3]" style={{ background: "#EAEAE7" }}>
-                    <span style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "12px", letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(23,21,19,0.35)" }}>Скоро</span>
+                  <div className="relative w-full overflow-hidden aspect-[4/3]" style={{ background: "#EAEAE7" }}>
+                    {t.cover ? <Image src={t.cover} alt={t.title} fill sizes="(min-width:1024px) 33vw, 50vw" quality={95} className="object-cover" /> : null}
+                    <span className="absolute left-3 top-3 px-2 py-[3px]" style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase", background: "rgba(255,255,255,0.9)", color: "#171513", borderRadius: 6 }}>Скоро</span>
                   </div>
                   <div className="pt-2.5">
                     <h3 className="font-bold" style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(18px, 2vw, 26px)", letterSpacing: "-0.02em", lineHeight: 1.1, color: "rgba(23,21,19,0.45)" }}>{t.title}</h3>
@@ -335,7 +336,7 @@ export default function Home() {
                 </div>
               ) : (
                 <Link key={t.title} href={t.href} className="group/tile block">
-                  <div className="relative w-full overflow-hidden aspect-square lg:aspect-[4/3]">
+                  <div className="relative w-full overflow-hidden aspect-[4/3]">
                     <Image src={t.cover} alt={t.title} fill sizes="(min-width:1024px) 33vw, 50vw" quality={95} className="object-cover transition-transform duration-500 ease-out group-hover/tile:scale-[1.04]" />
                   </div>
                   <div className="pt-2.5">
