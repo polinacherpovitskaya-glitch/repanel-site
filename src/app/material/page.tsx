@@ -10,7 +10,7 @@ import { UnderlineLink } from "@/components/UnderlineLink";
 export const metadata: Metadata = {
   title: "Материал — RePanel",
   description:
-    "Переработанный пластик RePanel: вид терраццо и камня, влагостойкость, UV-стабильность, обработка столярным инструментом. Цвета, форматы, характеристики и сравнение с ЛДСП, HPL, камнем и фанерой.",
+    "Переработанный пластик RePanel: вид терраццо и камня, влагостойкость, UV-стабильность, обработка столярным инструментом. Цвета, форматы и технические характеристики.",
 };
 
 /* ── Шрифты (паттерны главной) ── */
@@ -93,16 +93,6 @@ const processing = [
   { t: "Шлифовка", d: "Ленточная или орбитальная машина. Снимает царапины и восстанавливает матовый финиш." },
   { t: "Термоформование", d: "При нагреве лист принимает плавные изгибы и радиусы — изогнутые фасады и скругления." },
   { t: "Склейка", d: "MMA-клеи (типа Plexus) и MS-полимеры: кромка к кромке и крепление к подложке." },
-];
-
-const comparison = [
-  { param: "Влагостойкость", repanel: "Не впитывает воду", ldsp: "Разбухает", hpl: "Устойчив", stone: "Впитывает (пористый)", plywood: "Разбухает" },
-  { param: "Стойкость к пятнам", repanel: "Выше акрилового камня", ldsp: "Кромки уязвимы", hpl: "Устойчив", stone: "Нужна пропитка", plywood: "Впитывает" },
-  { param: "Обработка", repanel: "Столярный инструмент", ldsp: "Столярный инструмент", hpl: "Специнструмент", stone: "Камнерезный", plywood: "Столярный инструмент" },
-  { param: "Ремонтопригодность", repanel: "Шлифуется", ldsp: "Нет", hpl: "Нет", stone: "Полируется", plywood: "Шлифуется" },
-  { param: "Экологичность", repanel: "100 % переработка + buy-back", ldsp: "Формальдегиды", hpl: "Сложная утилизация", stone: "Добыча", plywood: "Клеи" },
-  { param: "Уникальность рисунка", repanel: "Каждый лист уникален", ldsp: "Повтор декора", hpl: "Повтор декора", stone: "Уникален", plywood: "Похожий рисунок" },
-  { param: "Вес (при 18 мм)", repanel: "Средний", ldsp: "Средний", hpl: "Лёгкий", stone: "Тяжёлый", plywood: "Лёгкий" },
 ];
 
 // Embodied carbon (GWP-fossil), кг CO₂e/м² — по EPD европейских производителей rPS-панелей
@@ -376,57 +366,6 @@ export default async function MaterialPage() {
         </div>
       </section>
 
-      {/* ═══ СРАВНЕНИЕ — таблица в хайрлайнах ═══ */}
-      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
-        <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <GroupTitle>Сравнение с другими материалами</GroupTitle>
-          <div className="overflow-x-auto scrollbar-hide -mr-[var(--site-margins)] pr-[var(--site-margins)]">
-            <table className="w-full border-collapse" style={{ fontFamily: BODY, minWidth: 720 }}>
-              <thead>
-                <tr style={{ fontSize: "13px" }}>
-                  <th className="text-left font-bold text-[#171513] pb-3 pr-4 align-bottom">Параметр</th>
-                  <th className="text-left font-bold text-[#171513] pb-3 pr-4 align-bottom">RePanel</th>
-                  <th className="text-left font-bold text-[#171513] pb-3 pr-4 align-bottom" style={{ opacity: 0.55 }}>ЛДСП</th>
-                  <th className="text-left font-bold text-[#171513] pb-3 pr-4 align-bottom" style={{ opacity: 0.55 }}>HPL</th>
-                  <th className="text-left font-bold text-[#171513] pb-3 pr-4 align-bottom" style={{ opacity: 0.55 }}>Камень</th>
-                  <th className="text-left font-bold text-[#171513] pb-3 align-bottom" style={{ opacity: 0.55 }}>Фанера</th>
-                </tr>
-              </thead>
-              <tbody>
-                {comparison.map((row) => (
-                  <tr key={row.param} style={{ borderTop: "1px solid #171513", fontSize: "13.5px" }}>
-                    <td className="font-bold text-[#171513] py-3.5 pr-4 align-top">{row.param}</td>
-                    <td className="font-bold text-[#171513] py-3.5 pr-4 align-top">{row.repanel}</td>
-                    <td className="text-[#171513] py-3.5 pr-4 align-top" style={{ opacity: 0.7 }}>{row.ldsp}</td>
-                    <td className="text-[#171513] py-3.5 pr-4 align-top" style={{ opacity: 0.7 }}>{row.hpl}</td>
-                    <td className="text-[#171513] py-3.5 pr-4 align-top" style={{ opacity: 0.7 }}>{row.stone}</td>
-                    <td className="text-[#171513] py-3.5 align-top" style={{ opacity: 0.7 }}>{row.plywood}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ УГЛЕРОДНЫЙ СЛЕД — деф-строки ═══ */}
-      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
-        <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <GroupTitle>Углеродный след</GroupTitle>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
-            <div className="md:col-start-4 md:col-span-9">
-              <DefRows rows={carbonRows} />
-              <p className="pt-5 text-[#171513] max-w-[610px]" style={{ fontFamily: BODY, fontSize: "14.6px", lineHeight: "20px", opacity: 0.7 }}>
-                Данные — из опубликованных EPD европейских производителей панелей из переработанного
-                полистирола (Polygood, Smile Plastics): это материал того же типа, что RePanel.
-                Панели rPS живут в одном диапазоне с деревом и МДФ — и в разы ниже кварца и акрилового
-                камня. Собственная экологическая декларация (EPD) RePanel — в работе.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ═══ ТЕХ-ХАРАКТЕРИСТИКИ — деф-строки «ярлык + значение» ═══ */}
       <section className="px-[var(--site-margins)] pt-20 lg:pt-36 pb-20 lg:pb-32">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
@@ -501,6 +440,24 @@ export default async function MaterialPage() {
       <section className="px-[var(--site-margins)] border-t border-[#171513] pt-8 lg:pt-12 pb-8 lg:pb-12">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
           <FAQ items={materialFaq} title="Вопросы о материале" />
+        </div>
+      </section>
+
+      {/* ═══ УГЛЕРОДНЫЙ СЛЕД — в конце страницы ═══ */}
+      <section className="px-[var(--site-margins)] border-t border-[#171513] pt-8 lg:pt-12 pb-10 lg:pb-16">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <GroupTitle>Углеродный след</GroupTitle>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+            <div className="md:col-start-4 md:col-span-9">
+              <DefRows rows={carbonRows} />
+              <p className="pt-5 text-[#171513] max-w-[610px]" style={{ fontFamily: BODY, fontSize: "14.6px", lineHeight: "20px", opacity: 0.7 }}>
+                Данные — из опубликованных EPD европейских производителей панелей из переработанного
+                полистирола (Polygood, Smile Plastics): это материал того же типа, что RePanel.
+                Панели rPS живут в одном диапазоне с деревом и МДФ — и в разы ниже кварца и акрилового
+                камня. Собственная экологическая декларация (EPD) RePanel — в работе.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
