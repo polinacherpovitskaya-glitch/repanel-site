@@ -14,9 +14,10 @@ export const metadata: Metadata = {
     "Всё, чтобы заложить RePanel в проект: характеристики, обработка, цвета, документы, 3D/BIM-модели и образцы.",
 };
 
+// map — ссылка на карту материала (текстуру для рендера); пока файлов нет → кнопка «скоро»
 const basePalette = Array.from({ length: 12 }, (_, i) => {
   const n = String(i + 1).padStart(2, "0");
-  return { num: `№ ${n}`, img: `/images/colors/color-${n}.jpg` };
+  return { num: `№ ${n}`, img: `/images/colors/color-${n}.jpg`, map: undefined as string | undefined };
 });
 
 const specs = [
@@ -40,12 +41,12 @@ const processing = [
   { t: "Склейка", d: "MMA-клеи (типа Plexus) и MS-полимеры; механический крепёж с овальными отверстиями под расширение." },
 ];
 
-const documents = [
+// file — ссылка на файл; пока нет → кнопка «Скоро» (disabled)
+const documents: { t: string; d: string; file?: string }[] = [
+  { t: "3D-модели панелей", d: "STEP / ZIP" },
+  { t: "BIM-объекты", d: "Revit / ZIP" },
   { t: "Каталог продукции", d: "PDF" },
   { t: "Технический паспорт", d: "PDF" },
-  { t: "3D-модели панелей", d: "STEP / ZIP" },
-  { t: "Текстуры для визуализации", d: "ZIP" },
-  { t: "BIM-объекты", d: "Revit / ZIP" },
   { t: "Инструкция по монтажу", d: "PDF" },
 ];
 
@@ -83,13 +84,19 @@ export default function ForArchitectsPage() {
         <DefRows rows={processing} />
       </Group>
 
-      {/* Цвета — 12 базовых сочетаний (фото из калькулятора) */}
-      <Group title="Цвета">
+      {/* Цвета и карты материалов — 12 базовых + текстуры для рендера (скачивание по цветам) */}
+      <Group title="Цвета и карты материалов" id="colors">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           <div className="lg:col-span-3 border-t border-[#171513] pt-2.5 self-start">
             <h3 className="font-bold text-[#171513]" style={{ fontFamily: BODY, fontSize: "clamp(22px, 2.2vw, 31.7px)", lineHeight: 1.34, letterSpacing: "-0.5px" }}>12 базовых сочетаний</h3>
-            <p className="text-[#171513] mt-2" style={{ fontFamily: BODY, fontSize: "14.6px", lineHeight: "20px", opacity: 0.7 }}>Плюс миксы из складских цветов и покраска по RAL / Pantone.</p>
-            <div className="mt-4"><UnderlineLink href="/material" fontSize={16}>Подробнее о цвете →</UnderlineLink></div>
+            <p className="text-[#171513] mt-2" style={{ fontFamily: BODY, fontSize: "14.6px", lineHeight: "20px", opacity: 0.7 }}>Плюс миксы из складских цветов и покраска по RAL / Pantone. Карты материалов (текстуры для рендера) — по каждому цвету.</p>
+            <div className="mt-4 flex flex-col gap-3 items-start">
+              <UnderlineLink href="/material" fontSize={16}>Подробнее о цвете →</UnderlineLink>
+              <button disabled className="inline-flex items-center gap-2 cursor-not-allowed" style={{ fontFamily: BODY, fontSize: "13px", fontWeight: 700, color: "rgba(23,21,19,0.4)", border: "1px solid rgba(23,21,19,0.2)", borderRadius: 8, padding: "8px 12px" }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" /></svg>
+                Скачать все карты (ZIP) — скоро
+              </button>
+            </div>
           </div>
           <div className="lg:col-start-4 lg:col-span-9 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
             {basePalette.map((c) => (
@@ -97,17 +104,50 @@ export default function ForArchitectsPage() {
                 <div className="relative w-full aspect-square overflow-hidden">
                   <Image src={c.img} alt={`Базовое сочетание ${c.num}`} fill sizes="(min-width:1024px) 20vw, 45vw" className="object-cover" />
                 </div>
-                <p className="font-bold text-[#171513] pt-2.5" style={{ fontFamily: BODY, fontSize: "13px", lineHeight: "20px" }}>{c.num}</p>
+                <div className="flex items-center justify-between pt-2.5 gap-2">
+                  <p className="font-bold text-[#171513]" style={{ fontFamily: BODY, fontSize: "13px", lineHeight: "20px" }}>{c.num}</p>
+                  {c.map ? (
+                    <a href={c.map} download className="shrink-0 inline-flex items-center justify-center hover:opacity-70 transition-opacity" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid rgba(23,21,19,0.25)", color: "#171513" }} aria-label={`Скачать карту ${c.num}`} title={`Скачать карту ${c.num}`}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" /></svg>
+                    </a>
+                  ) : (
+                    <button disabled className="shrink-0 inline-flex items-center justify-center cursor-not-allowed" style={{ width: 28, height: 28, borderRadius: 7, border: "1px solid rgba(23,21,19,0.2)", color: "rgba(23,21,19,0.4)" }} aria-label={`Карта ${c.num} — скоро`} title="Карта материала — скоро">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" /></svg>
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </Group>
 
-      <Group title="Документы и модели">
-        <DefRows rows={documents} />
+      <Group title="3D-модели и документы" id="downloads">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+          <div className="md:col-start-4 md:col-span-9">
+            {documents.map((r) => (
+              <div key={r.t} className="border-t border-[#171513] flex items-center justify-between gap-4 py-4">
+                <div className="min-w-0">
+                  <h3 className="font-bold text-[#171513]" style={{ fontFamily: BODY, fontSize: "18.6px", lineHeight: "24px", letterSpacing: "-0.4px" }}>{r.t}</h3>
+                  <p className="text-[#171513]" style={{ fontFamily: BODY, fontWeight: 400, fontSize: "12.5px", lineHeight: "18px", letterSpacing: "0.04em", textTransform: "uppercase", opacity: 0.45 }}>{r.d}</p>
+                </div>
+                {r.file ? (
+                  <a href={r.file} download className="shrink-0 inline-flex items-center gap-2 hover:opacity-70 transition-opacity" style={{ fontFamily: BODY, fontSize: "13px", fontWeight: 700, color: "#171513", border: "1px solid rgba(23,21,19,0.3)", borderRadius: 8, padding: "9px 15px" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" /></svg>
+                    Скачать
+                  </a>
+                ) : (
+                  <button disabled className="shrink-0 inline-flex items-center gap-2 cursor-not-allowed" style={{ fontFamily: BODY, fontSize: "13px", fontWeight: 700, color: "rgba(23,21,19,0.4)", border: "1px solid rgba(23,21,19,0.2)", borderRadius: 8, padding: "9px 15px" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" /></svg>
+                    Скоро
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
         <p className="text-[#171513] mt-6 md:ml-[25%]" style={{ fontFamily: BODY, fontSize: "14.6px", lineHeight: "20px", opacity: 0.7 }}>
-          Высылаем по запросу под конкретный проект — <UnderlineLink href="/contacts" fontSize={14}>напишите нам →</UnderlineLink>
+          Нужно под конкретный проект сейчас? <UnderlineLink href="/contacts" fontSize={14}>Напишите нам →</UnderlineLink> — вышлем актуальные файлы.
         </p>
       </Group>
 

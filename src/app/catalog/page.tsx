@@ -80,8 +80,8 @@ export default function CatalogPage() {
 
                 {/* Фото — единая структура (парит на сером, поднимается на ховере) */}
                 <div className="w-full px-5 pt-9 pb-[34px]" style={{ background: "#EAEAE7" }}>
-                  <div className={`relative aspect-square transition-transform duration-300 ease-out group-hover/card:-translate-y-2 ${p.sample ? "w-[70%] mx-auto" : "w-full"}`}>
-                    <Image src={p.img} alt={p.name} fill sizes="(min-width:1024px) 22vw, 45vw" quality={95} className="object-contain" />
+                  <div className="relative w-full aspect-square transition-transform duration-300 ease-out group-hover/card:-translate-y-2">
+                    <Image src={p.img} alt={p.name} fill sizes="(min-width:1024px) 22vw, 45vw" quality={95} className={`object-contain ${p.sample ? "scale-[0.7]" : ""}`} />
                   </div>
                 </div>
 

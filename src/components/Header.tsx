@@ -21,14 +21,21 @@ const panels: Record<string, PanelConfig> = {
       links: [
         { label: "О материале", href: "/material" },
         { label: "Прайс-лист", href: "/prices" },
-        { label: "Архитекторам", href: "/for-architects" },
         { label: "Производство", href: "/production" },
       ],
     },
-    right: { heading: "", links: [] },
+    right: {
+      heading: "Архитекторам и дизайнерам",
+      links: [
+        { label: "Характеристики и обработка", href: "/for-architects" },
+        { label: "Цвета и карты материалов", href: "/for-architects#colors" },
+        { label: "3D / BIM-модели и документы", href: "/for-architects#downloads" },
+        { label: "Заказать образцы", href: "/samples" },
+      ],
+    },
     footer: {
-      hint: "Хотите увидеть материал вживую?",
-      cta: { label: "Заказать образцы →", href: "/samples" },
+      hint: "Заложить RePanel в проект?",
+      cta: { label: "Запросить расчёт →", href: "/contacts" },
     },
   },
   "Применение": {
@@ -39,6 +46,7 @@ const panels: Record<string, PanelConfig> = {
         { label: "HoReCa", href: "/applications#horeca" },
         { label: "Ритейл", href: "/applications#retail" },
         { label: "Офис", href: "/applications#office" },
+        { label: "Городская среда", href: "/applications#urban" },
       ],
     },
     right: { heading: "", links: [] },
@@ -76,8 +84,16 @@ const mobileMenuItems: MobileMenuItem[] = [
         children: [
           { label: "О материале", href: "/material" },
           { label: "Прайс-лист", href: "/prices" },
-          { label: "Архитекторам", href: "/for-architects" },
           { label: "Производство", href: "/production" },
+        ],
+      },
+      {
+        label: "Архитекторам и дизайнерам",
+        children: [
+          { label: "Характеристики и обработка", href: "/for-architects" },
+          { label: "Цвета и карты материалов", href: "/for-architects#colors" },
+          { label: "3D / BIM-модели и документы", href: "/for-architects#downloads" },
+          { label: "Заказать образцы", href: "/samples" },
         ],
       },
     ],
@@ -93,6 +109,7 @@ const mobileMenuItems: MobileMenuItem[] = [
           { label: "HoReCa", href: "/applications#horeca" },
           { label: "Ритейл", href: "/applications#retail" },
           { label: "Офис", href: "/applications#office" },
+          { label: "Городская среда", href: "/applications#urban" },
         ],
       },
     ],

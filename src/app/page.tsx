@@ -9,17 +9,17 @@ import { cases, homeCases } from "@/data/cases";
 
 const directions = [
   { title: "Панели", caption: "Листы из переработанного пластика, палитра и образцы.", href: "/material", img: "/images/ill-panely.jpg" },
-  { title: "Где применяют", caption: "Интерьеры, HoReCa, ритейл, офисы — десятки сценариев.", href: "/applications", img: "/images/ill-resheniya.jpg" },
+  { title: "Готовые решения", caption: "HoReCa, ритейл и мебель — просчитанные изделия с 3D-моделями.", href: "/solutions", img: "/images/ill-resheniya.jpg" },
   { title: "Магазин", caption: "Готовые предметы из переработанного пластика.", href: "/catalog", img: "/images/ill-magazin.jpg" },
   { title: "Проект под ключ", caption: "Интерьеры под ключ — от замера до монтажа.", href: "/contacts", img: "/images/ill-proekt.jpg" },
 ];
 
 const appTiles: { title: string; count: number; cover: string; href: string; soon?: boolean }[] = [
   { title: "Интерьеры", count: 22, cover: "/images/applications/commercial-kitchen-island.png", href: "/applications#interiors" },
-  { title: "HoReCa", count: 10, cover: "/images/applications/hospitality-entrance-bar-tops.png", href: "/applications#horeca" },
+  { title: "HoReCa", count: 19, cover: "/images/applications/hospitality-entrance-bar-tops.png", href: "/applications#horeca" },
   { title: "Ритейл", count: 17, cover: "/images/applications/retail-shopfloor-wall-panelling.png", href: "/applications#retail" },
   { title: "Офис", count: 19, cover: "/images/applications/work-meeting-boardroom-table.png", href: "/applications#office" },
-  { title: "Городская среда", count: 0, cover: "", href: "/applications", soon: true },
+  { title: "Городская среда", count: 4, cover: "/images/applications/public-outdoor-large-planters.png", href: "/applications#urban" },
   { title: "Формы и объекты", count: 0, cover: "", href: "/applications", soon: true },
 ];
 
@@ -137,7 +137,7 @@ export default function Home() {
             ))}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 1px 4px rgba(0,0,0,0.55)" }}>
+              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 2px 10px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.75)" }}>
                 Материал
                 <span className="absolute left-0 bottom-0.5 h-[4px] bg-[#FFFFFF] w-0 group-hover:w-full transition-[width] duration-[450ms] ease-out" />
               </span>
@@ -159,12 +159,12 @@ export default function Home() {
                 priority={i === 0}
                 quality={95}
                 className="object-cover transition-opacity duration-200 ease-out"
-                style={{ objectPosition: "center 50%", opacity: i === magIdx ? 1 : 0 }}
+                style={{ objectPosition: "center 80%", opacity: i === magIdx ? 1 : 0 }}
               />
             ))}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 1px 4px rgba(0,0,0,0.55)" }}>
+              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 2px 10px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.75)" }}>
                 Магазин
                 <span className="absolute left-0 bottom-0.5 h-[4px] bg-[#FFFFFF] w-0 group-hover:w-full transition-[width] duration-[450ms] ease-out" />
               </span>
@@ -209,7 +209,7 @@ export default function Home() {
           <div
             ref={heroIntroRef}
             className="absolute left-0 right-0 bottom-0 z-10 pointer-events-none"
-            style={{ paddingLeft: "var(--site-margins)", paddingRight: "var(--site-margins)", paddingBottom: "clamp(24px, 5vh, 58px)", willChange: "transform" }}
+            style={{ paddingLeft: "var(--site-margins)", paddingRight: "var(--site-margins)", paddingBottom: "calc(clamp(24px, 5vh, 58px) + 52px)", willChange: "transform" }}
           >
             <div className="mx-auto" style={{ maxWidth: 1440 }}>
               <h2
@@ -326,7 +326,7 @@ export default function Home() {
             {appTiles.map((t) =>
               t.soon ? (
                 <div key={t.title} className="block">
-                  <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ aspectRatio: "4 / 3", background: "#EAEAE7" }}>
+                  <div className="relative w-full overflow-hidden flex items-center justify-center aspect-square lg:aspect-[4/3]" style={{ background: "#EAEAE7" }}>
                     <span style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "12px", letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(23,21,19,0.35)" }}>Скоро</span>
                   </div>
                   <div className="pt-2.5">
@@ -335,7 +335,7 @@ export default function Home() {
                 </div>
               ) : (
                 <Link key={t.title} href={t.href} className="group/tile block">
-                  <div className="relative w-full overflow-hidden" style={{ aspectRatio: "4 / 3" }}>
+                  <div className="relative w-full overflow-hidden aspect-square lg:aspect-[4/3]">
                     <Image src={t.cover} alt={t.title} fill sizes="(min-width:1024px) 33vw, 50vw" quality={95} className="object-cover transition-transform duration-500 ease-out group-hover/tile:scale-[1.04]" />
                   </div>
                   <div className="pt-2.5">
@@ -419,7 +419,7 @@ export default function Home() {
       <section className="overflow-x-auto scrollbar-hide py-6 lg:py-9">
         <div
           className="marquee-row flex items-center"
-          style={{ animation: "marquee 42s linear infinite", width: "max-content", gap: "clamp(34px, 5vw, 72px)" }}
+          style={{ animation: "marquee 75s linear infinite", width: "max-content", gap: "clamp(34px, 5vw, 72px)" }}
         >
           {[...trustLogos, ...trustLogos, ...trustLogos].map((l, i) => (
             // eslint-disable-next-line @next/next/no-img-element

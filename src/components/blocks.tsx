@@ -25,9 +25,9 @@ export function GroupTitle({ children }: { children: ReactNode }) {
 }
 
 // Секция с большим верхним воздухом + заголовком (как группы на «Материале»)
-export function Group({ title, children, className = "" }: { title: string; children: ReactNode; className?: string }) {
+export function Group({ title, children, className = "", id }: { title: string; children: ReactNode; className?: string; id?: string }) {
   return (
-    <section className={`px-[var(--site-margins)] pt-20 lg:pt-36 ${className}`}>
+    <section id={id} className={`px-[var(--site-margins)] pt-20 lg:pt-36 ${className}`} style={id ? { scrollMarginTop: 80 } : undefined}>
       <div className="mx-auto" style={{ maxWidth: SITE_MAX }}>
         <GroupTitle>{title}</GroupTitle>
         {children}

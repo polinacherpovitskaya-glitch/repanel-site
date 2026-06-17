@@ -38,7 +38,7 @@ export const appCats: AppCat[] = [
       { cap: "Акцентная мебель", img: "/images/applications/commercial-home-office-feature-furniture.png" },
     ] },
   ] },
-  { key: "horeca", title: "HoReCa", cover: "/images/applications/hospitality-entrance-reception.png", count: 10, spaces: [
+  { key: "horeca", title: "HoReCa", cover: "/images/applications/hospitality-entrance-reception.png", count: 19, spaces: [
     { space: "Зона питания", items: [
       { cap: "Барная зона", img: "/images/applications/hospitality-dining-beverage-area.png" },
       { cap: "Буфет", img: "/images/applications/hospitality-dining-buffet-area.png" },
@@ -52,6 +52,19 @@ export const appCats: AppCat[] = [
       { cap: "Стеллажи", img: "/images/applications/hospitality-entrance-shelving.png" },
       { cap: "Барные столешницы", img: "/images/applications/hospitality-entrance-bar-tops.png" },
       { cap: "Стеновые панели", img: "/images/applications/hospitality-entrance-wall-panelling.png" },
+    ] },
+    { space: "Санузел", items: [
+      { cap: "Столешница раковины", img: "/images/applications/hospitality-washrooms-vanity-top.png" },
+      { cap: "Перегородки кабинок", img: "/images/applications/hospitality-washrooms-stall-divider.png" },
+      { cap: "Столешница", img: "/images/applications/hospitality-washrooms-countertop.png" },
+      { cap: "Панели", img: "/images/applications/hospitality-washrooms-panelling.png" },
+      { cap: "Фартуки", img: "/images/applications/hospitality-washrooms-backsplashes.png" },
+    ] },
+    { space: "Мелочи сервиса", items: [
+      { cap: "Органайзер для специй", img: "/images/applications/hospitality-small-condiment-organizer.png" },
+      { cap: "Поднос для счёта", img: "/images/applications/hospitality-small-bill-tray.png" },
+      { cap: "Подставка для меню", img: "/images/applications/hospitality-small-menu-holder.png" },
+      { cap: "Ценникодержатели", img: "/images/applications/hospitality-small-price-tag-stands.png" },
     ] },
   ] },
   { key: "retail", title: "Ритейл", cover: "/images/applications/retail-shopfloor-tabletops.png", count: 17, spaces: [
@@ -110,6 +123,14 @@ export const appCats: AppCat[] = [
       { cap: "Перегородки кабинок", img: "/images/applications/work-washrooms-stall-divider.png" },
       { cap: "Столешница", img: "/images/applications/work-washrooms-countertop.png" },
       { cap: "Панели", img: "/images/applications/work-washrooms-panelling.png" },
+    ] },
+  ] },
+  { key: "urban", title: "Городская среда", cover: "/images/applications/public-outdoor-large-planters.png", count: 4, spaces: [
+    { space: "Уличная зона", items: [
+      { cap: "Скамьи", img: "/images/applications/public-outdoor-benches.png" },
+      { cap: "Кашпо", img: "/images/applications/public-outdoor-large-planters.png" },
+      { cap: "Мозаичная поверхность", img: "/images/applications/public-outdoor-mosaic-surface.png" },
+      { cap: "Дверные ручки", img: "/images/applications/public-outdoor-entrance-handles.png" },
     ] },
   ] },
 ];
