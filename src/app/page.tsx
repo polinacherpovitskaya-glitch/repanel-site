@@ -213,7 +213,7 @@ export default function Home() {
           >
             <div className="mx-auto" style={{ maxWidth: 1440 }}>
               <h2
-                className="text-left lg:text-right lg:whitespace-nowrap"
+                className="text-right lg:whitespace-nowrap"
                 style={{
                   fontFamily: "'Chalet', 'Gramatika', sans-serif",
                   fontWeight: 700,
