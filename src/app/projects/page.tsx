@@ -1,66 +1,63 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { PageHero } from "@/components/PageHero";
 import { FinalCTA } from "@/components/FinalCTA";
+import { CaseStrip } from "@/components/CaseStrip";
+import { cases, caseFilters } from "@/data/cases";
 
 const BODY = "'Gramatika', sans-serif";
-
-const filters = ["Все", "девелопмент", "ритейл", "horeca", "мебель", "объекты"];
-
-const projects = [
-  { slug: "samolet", title: "САМОЛЕТ — 42 000 органайзеров", description: "Тиражное производство органайзеров из переработанного пластика для девелопера.", photo: "/images/07.jpg", category: "девелопмент" },
-  { slug: "drinkit", title: "Drinkit — мозаика и перегородки", description: "Интерьерное решение для сети кофеен: мозаичные панели и перегородки.", photo: "/images/DSC09441.jpg", category: "horeca" },
-  { slug: "ripple-chopchop", title: "RIPPle × Chop-Chop — ресепшен и стойка", description: "Стойка ресепшен, меню-борды и барная стойка для пространства.", photo: "/images/DSC09389.jpg", category: "horeca" },
-  { slug: "lucky", title: "ЖК Lucky — детская площадка", description: "Малые архитектурные формы для детской площадки жилого комплекса.", photo: "/images/DSC02233.jpg", category: "девелопмент" },
-  { slug: "vkusvill", title: "ВКУСВИЛЛ — POS и навигация", description: "POS-материалы и навигационные элементы для сети магазинов.", photo: "/images/photo_2025-09-09 10.10.09.jpeg", category: "ритейл" },
-  { slug: "kofemania", title: "Кофемания — столешницы и панели", description: "Столешницы и декоративные панели для ресторанов сети.", photo: "/images/photo_2025-09-09 10.10.08.jpeg", category: "horeca" },
-  { slug: "skolkovo", title: "СКОЛКОВО — мебель и декор", description: "Мебель и декоративные элементы для пространств инновационного центра.", photo: "/images/DSC02247.jpg", category: "мебель" },
-  { slug: "yandex", title: "Яндекс — элементы интерьера", description: "Элементы интерьера для офисных пространств из переработанного пластика.", photo: "/images/DSC02232.jpg", category: "объекты" },
-];
+const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
 
 export default function ProjectsPage() {
   const [active, setActive] = useState("Все");
-  const filtered = active === "Все" ? projects : projects.filter((p) => p.category === active);
+  const filtered = active === "Все" ? cases : cases.filter((c) => c.use === active);
 
   return (
     <>
-      <PageHero
-        title="Проекты"
-        image="/images/DSC09389.jpg"
-        imageAlt="Проекты RePanel"
-        lead="Объекты, тиражи и интерьеры из переработанного полистирола — для девелоперов, ритейла, HoReCa и брендов."
-      />
-
-      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
+      <section className="px-[var(--site-margins)] pt-8 lg:pt-12 pb-14 lg:pb-24">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <div className="flex flex-wrap gap-2 mb-8 lg:mb-10">
-            {filters.map((f) => (
-              <button
-                key={f}
-                onClick={() => setActive(f)}
-                className="px-5 py-2.5 transition-colors cursor-pointer"
-                style={{ fontFamily: BODY, fontWeight: 700, fontSize: "13.5px", border: "1px solid #171513", background: active === f ? "#171513" : "transparent", color: active === f ? "#FFFFFF" : "#171513" }}
-              >
-                {f}
-              </button>
-            ))}
+          {/* Заголовок */}
+          <h1 className="font-bold text-[#171513]"
+            style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
+            Проекты
+          </h1>
+          <p className="mt-3 lg:mt-4 text-[#171513] max-w-[640px]" style={{ fontFamily: BODY, fontSize: "clamp(14px, 1.4vw, 17px)", lineHeight: 1.45, opacity: 0.6 }}>
+            Объекты, интерьеры и тиражи из переработанного полистирола — для HoReCa, ритейла, офисов и девелоперов.
+          </p>
+
+          {/* Фильтр по сектору — текстовые лейблы с растущим подчёркиванием (в стиле сайта) */}
+          <div className="flex flex-wrap items-center gap-x-6 lg:gap-x-8 gap-y-2 mt-7 lg:mt-9 mb-10 lg:mb-14">
+            {caseFilters.map((f) => {
+              const isActive = active === f;
+              return (
+                <button
+                  key={f}
+                  onClick={() => setActive(f)}
+                  className={`group/filter relative cursor-pointer pb-1.5 transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-40 hover:opacity-75"}`}
+                  style={{ fontFamily: BODY, fontWeight: 700, fontSize: "clamp(14.5px, 1.4vw, 17px)", color: "#171513", letterSpacing: "-0.01em" }}
+                >
+                  {f}
+                  <span
+                    className={`absolute left-0 bottom-0 h-[2px] transition-[width] duration-300 ease-out ${isActive ? "w-full" : "w-0 group-hover/filter:w-full"}`}
+                    style={{ background: "#66704D" }}
+                  />
+                </button>
+              );
+            })}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10">
-            {filtered.map((p) => (
-              <Link key={p.slug} href={`/projects/${p.slug}`} className="group/card block">
-                <div className="relative w-full overflow-hidden" style={{ aspectRatio: "3 / 2" }}>
-                  <Image src={p.photo} alt={p.title} fill sizes="(min-width:1024px) 33vw, (min-width:768px) 50vw, 100vw" className="object-cover" />
-                </div>
-                <div className="pt-3">
-                  <p className="text-[#171513]" style={{ fontFamily: BODY, fontSize: "12px", letterSpacing: "0.5px", textTransform: "uppercase", opacity: 0.5 }}>{p.category}</p>
-                  <h3 className="font-bold text-[#171513] inline-block relative mt-1" style={{ fontFamily: BODY, fontSize: "clamp(16px, 1.5vw, 19px)", lineHeight: 1.25, letterSpacing: "-0.3px" }}>
-                    {p.title}
-                    <span className="absolute left-0 -bottom-1 h-[1.5px] bg-[#171513] w-0 group-hover/card:w-full transition-[width] duration-[450ms] ease-out" />
+
+          {/* Кейсы — каждый полоса из 4 вертикальных фото вплотную, подпись под кейсом */}
+          <div className="flex flex-col gap-12 lg:gap-[84px]">
+            {filtered.map((c) => (
+              <Link key={c.slug} href={`/projects/${c.slug}`} className="group/case block">
+                <CaseStrip photos={c.photos} alt={c.name} wide={c.wide} />
+                <div className="pt-3 lg:pt-4">
+                  <p className="text-[#171513]" style={{ fontFamily: BODY, fontSize: "12px", letterSpacing: "0.5px", textTransform: "uppercase", opacity: 0.45 }}>{c.use}</p>
+                  <h3 className="font-bold text-[#171513] inline-block relative mt-1" style={{ fontFamily: DISPLAY, fontSize: "clamp(24px, 2.7vw, 42px)", letterSpacing: "-0.02em", lineHeight: 1.05 }}>
+                    {c.name}
+                    <span className="absolute left-0 -bottom-1 h-[2px] bg-[#171513] w-0 group-hover/case:w-full transition-[width] duration-[450ms] ease-out" />
                   </h3>
-                  <p className="text-[#171513] mt-1.5" style={{ fontFamily: BODY, fontSize: "14px", lineHeight: 1.45, opacity: 0.7 }}>{p.description}</p>
                 </div>
               </Link>
             ))}

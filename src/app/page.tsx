@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
+import { homeCases } from "@/data/cases";
 
 /* ── Data ── */
 
@@ -34,13 +35,6 @@ const shopProducts = [
 ];
 
 const productColors = ["#E8A33D", "#F3EFE6", "#171513", "#C9B79A", "#5A6647", "#3C4657", "#16233D"];
-
-const cases = [
-  { name: "PACE", desc: "Тираж из переработанного пластика для крупнейшего российского девелопера.", photos: ["/images/07.jpg", "/images/04.jpg", "/images/05.jpg"], slug: "samolet" },
-  { name: "Drinkit", desc: "Стеновые панели, перегородки и декоративные элементы для сети кофеен.", photos: ["/images/DSC09441.jpg", "/images/DSC09389.jpg", "/images/DSC09429.jpg", "/images/DSC09459.jpg"], slug: "drinkit" },
-  { name: "LAMODA", desc: "Ресепшен, столешницы, полки — всё из одного материала.", photos: ["/images/photo_2025-09-09 10.10.09.jpeg", "/images/photo_2025-09-09 10.10.08.jpeg", "/images/photo_2025-09-09 10.10.10.jpeg", "/images/photo_2025-09-09 10.08.38.jpeg"], slug: "lamoda" },
-  { name: "ЖК Lucky", desc: "Безопасные и долговечные элементы детской площадки.", photos: ["/images/DSC02233.jpg", "/images/DSC02232.jpg", "/images/DSC02247.jpg", "/images/DSC02231.jpg"], slug: "lucky" },
-];
 
 const trustClients = ["САМОЛЕТ", "Drinkit", "RIPPle", "ВКУСВИЛЛ", "Кофемания", "СКОЛКОВО", "Яндекс", "ПИК"];
 
@@ -334,7 +328,7 @@ export default function Home() {
 
           {/* 4 кейса — каждый полоса из 4 вертикальных фото вплотную, подпись под кейсом */}
           <div className="flex flex-col gap-12 lg:gap-[84px]">
-            {cases.slice(0, 4).map((c) => (
+            {homeCases.map((c) => (
               <Link key={c.slug} href={`/projects/${c.slug}`} className="group/case block">
                 <div className="grid grid-cols-4">
                   {[0, 1, 2, 3].map((i) => (
