@@ -14,7 +14,7 @@ const TIERS = [
   { n: 12, price: 5500 },
 ];
 
-const COLORS = Array.from({ length: 12 }, (_, i) => ({ id: i + 1, label: `№ ${i + 1}`, img: `/images/colors/color-${i + 1}.jpg` }));
+const COLORS = Array.from({ length: 12 }, (_, i) => ({ id: i + 1, label: `№ ${i + 1}`, img: `/images/colors/color-${String(i + 1).padStart(2, "0")}.jpg` }));
 
 const fmt = (v: number) => v.toLocaleString("ru-RU") + " ₽";
 

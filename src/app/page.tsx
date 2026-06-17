@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
-import { homeCases } from "@/data/cases";
+import { cases, homeCases } from "@/data/cases";
 
 /* ── Data ── */
 
@@ -36,13 +36,31 @@ const shopProducts = [
 
 const productColors = ["#E8A33D", "#F3EFE6", "#171513", "#C9B79A", "#5A6647", "#3C4657", "#16233D"];
 
-const trustClients = ["САМОЛЕТ", "Drinkit", "RIPPle", "ВКУСВИЛЛ", "Кофемания", "СКОЛКОВО", "Яндекс", "ПИК"];
+// h — индивидуальная высота (эмблемы выше, чтобы читались; широкие вордмарки ниже)
+const trustLogos = [
+  { src: "/images/logos/stone.svg", alt: "Stone", h: 26 },
+  { src: "/images/logos/chaika.svg", alt: "Чайка", h: 34 },
+  { src: "/images/logos/pims.svg", alt: "PIMS", h: 24 },
+  { src: "/images/logos/shagal.svg", alt: "ЖК Шагал", h: 30 },
+  { src: "/images/logos/saga.svg", alt: "Бюро Saga", h: 26 },
+  { src: "/images/logos/leto.svg", alt: "Лето в Москве", h: 40 },
+  { src: "/images/logos/museum.svg", alt: "Музей Транспорта Москвы", h: 38 },
+  { src: "/images/logos/pridex.svg", alt: "Pridex", h: 23 },
+  { src: "/images/logos/meltzer.svg", alt: "Meltzer", h: 24 },
+  { src: "/images/logos/vesna.svg", alt: "ВеснаFlowers", h: 32 },
+  { src: "/images/logos/gnezdo.png", alt: "Гнездо", h: 40 },
+  { src: "/images/logos/laolee.png", alt: "Lao Lee", h: 30 },
+  { src: "/images/logos/pac.png", alt: "PAC Group", h: 26 },
+  { src: "/images/logos/energycraft.png", alt: "Energy Craft", h: 28 },
+  { src: "/images/logos/spaceoffice.png", alt: "Space Office", h: 42 },
+];
 
 const marqueeCSS = `
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+.marquee-row:hover { animation-play-state: paused; }
 `;
 
 /* Наборы кадров для героя — листаются за курсором (влево-вправо) */
@@ -71,6 +89,18 @@ export default function Home() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* Тач-устройства (мобилка): герой листается сам — быстро и со сдвигом верх/низ (не одновременно) */
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia("(hover: none)").matches) return;
+    let tick = 0;
+    const id = setInterval(() => {
+      if (tick % 2 === 0) setMatIdx((i) => (i + 1) % MAT_HERO.length);
+      else setMagIdx((i) => (i + 1) % MAG_HERO.length);
+      tick++;
+    }, 850);
+    return () => clearInterval(id);
   }, []);
 
   return (
@@ -102,7 +132,7 @@ export default function Home() {
             ))}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 2px 34px rgba(0,0,0,0.5)" }}>
+              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 1px 4px rgba(0,0,0,0.55)" }}>
                 Материал
                 <span className="absolute left-0 bottom-0.5 h-[4px] bg-[#FFFFFF] w-0 group-hover:w-full transition-[width] duration-[450ms] ease-out" />
               </span>
@@ -129,7 +159,7 @@ export default function Home() {
             ))}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 2px 34px rgba(0,0,0,0.5)" }}>
+              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 1px 4px rgba(0,0,0,0.55)" }}>
                 Магазин
                 <span className="absolute left-0 bottom-0.5 h-[4px] bg-[#FFFFFF] w-0 group-hover:w-full transition-[width] duration-[450ms] ease-out" />
               </span>
@@ -248,8 +278,8 @@ export default function Home() {
             Преимущество материала
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:items-stretch">
-            {/* Фото — col-span-3, высотой со список (grid-stretch), по Figma 4:8885 */}
-            <div className="md:col-span-3 relative aspect-square md:aspect-auto overflow-hidden">
+            {/* Фото — скрыто на мобилке (занимает место), col-span-3 на десктопе */}
+            <div className="hidden md:block md:col-span-3 relative md:aspect-auto overflow-hidden">
               <Image
                 src="/images/adv-swatches.jpg"
                 alt="Образцы цветов RePanel"
@@ -326,8 +356,8 @@ export default function Home() {
             Кейсы
           </h2>
 
-          {/* 4 кейса — каждый полоса из 4 вертикальных фото вплотную, подпись под кейсом */}
-          <div className="flex flex-col gap-12 lg:gap-[84px]">
+          {/* Десктоп: 4 кейса полосами из 4 вертикальных фото */}
+          <div className="hidden lg:flex flex-col gap-[84px]">
             {homeCases.map((c) => (
               <Link key={c.slug} href={`/projects/${c.slug}`} className="group/case block">
                 <div className="grid grid-cols-4">
@@ -337,7 +367,7 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-                <div className="pt-3 lg:pt-4">
+                <div className="pt-4">
                   <h3 className="font-bold text-[#171513] inline-block relative" style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(24px, 2.7vw, 42px)", letterSpacing: "-0.02em", lineHeight: 1.05 }}>
                     {c.name}
                     <span className="absolute left-0 -bottom-1 h-[2px] bg-[#171513] w-0 group-hover/case:w-full transition-[width] duration-[450ms] ease-out" />
@@ -347,8 +377,24 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Смотреть все проекты — крупно, как заголовок «Магазин» */}
-          <div className="mt-12 lg:mt-[84px]">
+          {/* Мобилка: все проекты одной свайп-строкой, высотой как «Способы применения» */}
+          <div className="lg:hidden flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 -mr-[var(--site-margins)] pr-[var(--site-margins)]">
+            {cases.map((c) => (
+              <Link key={c.slug} href={`/projects/${c.slug}`} className="group/case block shrink-0 w-[clamp(240px,42vw,330px)] snap-start">
+                <div className="relative overflow-hidden" style={{ aspectRatio: "455 / 606" }}>
+                  <Image src={c.photos[0]} alt={c.name} fill sizes="60vw" className="object-cover" />
+                </div>
+                <div className="pt-2">
+                  <h3 className="font-bold text-[#171513]" style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(19px, 5vw, 24px)", letterSpacing: "-0.02em", lineHeight: 1.05 }}>
+                    {c.name}
+                  </h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {/* Смотреть все проекты — близко к последнему кейсу */}
+          <div className="mt-5 lg:mt-6">
             <Link href="/projects" className="group/all inline-block relative font-bold text-[#171513]"
               style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
               Смотреть все проекты →
@@ -358,17 +404,22 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 6. ДОВЕРИЕ — gray logos, no borders ═══ */}
-      <section className="overflow-hidden py-5 lg:py-6">
+      {/* ═══ 6. ДОВЕРИЕ — реальные лого клиентов, серо-моно ═══ */}
+      <section className="overflow-x-auto scrollbar-hide py-6 lg:py-9">
         <div
-          className="flex items-center"
-          style={{ animation: "marquee 20s linear infinite", width: "max-content", gap: 32 }}
+          className="marquee-row flex items-center"
+          style={{ animation: "marquee 42s linear infinite", width: "max-content", gap: "clamp(34px, 5vw, 72px)" }}
         >
-          {[...trustClients, ...trustClients, ...trustClients].map((name, i) => (
-            <span key={`${name}-${i}`} className="text-[clamp(22px,6vw,52px)] font-bold font-[Gramatika] tracking-[-0.03em] whitespace-nowrap"
-              style={{ color: "#C0C0C0" }}>
-              {name}
-            </span>
+          {[...trustLogos, ...trustLogos, ...trustLogos].map((l, i) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={`${l.src}-${i}`}
+              src={l.src}
+              alt={l.alt}
+              className="shrink-0 select-none"
+              style={{ height: `${l.h}px`, width: "auto", filter: "brightness(0) invert(0.62)", opacity: 0.85 }}
+              draggable={false}
+            />
           ))}
         </div>
       </section>
@@ -376,7 +427,7 @@ export default function Home() {
       {/* ═══ 8. МАГАЗИН — сетка товаров (по Figma 4:9554) ═══ */}
       <section className="px-[var(--site-margins)] pt-6 lg:pt-8 pb-12 lg:pb-20">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <div className="border-t border-[#171513] pt-5 lg:pt-6">
+          <div className="pt-5 lg:pt-6">
             <h2 className="font-bold text-[#171513] mb-6 lg:mb-8"
               style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.8px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
               Магазин
@@ -417,7 +468,7 @@ export default function Home() {
       {/* ═══ О НАС (по Figma 12:5556 десктоп / 17:6681 мобайл) ═══ */}
       <section className="px-[var(--site-margins)] pt-6 lg:pt-8 pb-12 lg:pb-16">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <div className="border-t border-[#171513] pt-5 lg:pt-6">
+          <div className="pt-5 lg:pt-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
               <div className="flex flex-col">
                 <h2 className="font-bold text-[#171513] mb-4"
