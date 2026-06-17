@@ -52,7 +52,7 @@ const marqueeCSS = `
 `;
 
 /* Наборы кадров для героя — листаются за курсором (влево-вправо) */
-const MAT_HERO = Array.from({ length: 9 }, (_, i) => `/images/hero/mat-${i + 1}.jpg`);
+const MAT_HERO = Array.from({ length: 7 }, (_, i) => `/images/hero/mat-${i + 1}.jpg`);
 const MAG_HERO = Array.from({ length: 7 }, (_, i) => `/images/hero/mag-${i + 1}.jpg`);
 
 export default function Home() {
@@ -101,6 +101,7 @@ export default function Home() {
                 fill
                 sizes="(max-width: 767px) 100vw, 50vw"
                 priority={i === 0}
+                quality={90}
                 className="object-cover transition-opacity duration-200 ease-out"
                 style={{ objectPosition: "center 50%", opacity: i === matIdx ? 1 : 0 }}
               />
@@ -127,6 +128,7 @@ export default function Home() {
                 fill
                 sizes="(max-width: 767px) 100vw, 50vw"
                 priority={i === 0}
+                quality={90}
                 className="object-cover transition-opacity duration-200 ease-out"
                 style={{ objectPosition: "center 50%", opacity: i === magIdx ? 1 : 0 }}
               />
