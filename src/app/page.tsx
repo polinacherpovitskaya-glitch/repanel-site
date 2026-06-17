@@ -2,57 +2,44 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRef, useEffect, useState, useCallback } from "react";
-import { FAQ } from "@/components/FAQ";
+import { useRef, useEffect } from "react";
 
 /* ── Data ── */
 
-const faqItems = [
-  { question: "Можно ли купить только панели?", answer: "Да, мы поставляем листовой материал для вашего производства или подрядчика. Форматы: 1000×1000 и 1100×2100 мм, толщина 12–30 мм." },
-  { question: "Делаете ли вы объекты под ключ?", answer: "Да. Мы проектируем и производим готовые решения: стойки, мебель, торговое оборудование, бренд-объекты и элементы интерьера." },
-  { question: "Можно ли кастомизировать цвет?", answer: "Есть базовая палитра из 12 цветов и возможность создать кастомный цвет под проект. Рекомендуем начать с заказа образцов." },
-  { question: "Есть ли минимальная партия?", answer: "Зависит от формата работы. Для листового материала — от нескольких панелей. Для готовых изделий обсуждаем индивидуально." },
-  { question: "Как получить расчёт?", answer: "Отправьте бриф через форму на сайте или напишите в Telegram. Мы ответим в течение рабочего дня." },
-  { question: "Можно ли посмотреть материал вживую?", answer: "Да. Закажите образцы (бесплатно для архитекторов в МО) или приезжайте на производство по предварительной договорённости." },
-];
-
 const directions = [
-  { title: "Панели", desc: "Листовой материал. От 3 дней.", href: "/material", img: "/images/direction-panels.jpg" },
-  { title: "Готовые решения", desc: "Стойки, столы, стеллажи. Готовая цена.", href: "/solutions", img: "/images/direction-solutions.jpg" },
-  { title: "Магазин", desc: "Из каталога с быстрой доставкой.", href: "/catalog", img: "/images/direction-shop.jpg" },
-  { title: "Проекты под ключ", desc: "От обмеров до монтажа.", href: "/contacts", img: "/images/direction-projects.jpg" },
+  { title: "Панели", caption: "Листы из переработанного пластика, палитра и образцы.", href: "/material", img: "/images/ill-panely.jpg" },
+  { title: "Готовые решения", caption: "HoReCa, торговое оборудование, готовая мебель.", href: "/solutions", img: "/images/ill-resheniya.jpg" },
+  { title: "Магазин", caption: "Готовые предметы из переработанного пластика.", href: "/catalog", img: "/images/ill-magazin.jpg" },
+  { title: "Проект под ключ", caption: "Интерьеры под ключ — от замера до монтажа.", href: "/contacts", img: "/images/ill-proekt.jpg" },
 ];
 
-const fears = [
-  { objection: "«Пластик — это дёшево и непрезентабельно»", answer: "RePanel выглядит и ощущается как терраццо или камень. Каждая панель уникальна по текстуре — это не принт, а структура самого материала.", img: "/images/why-texture.jpg" },
-  { objection: "«Переработанный = ненадёжный»", answer: "ЕАС-сертифицированный материал. Выдерживает воду, УФ и механические нагрузки. Срок службы — десятилетия.", img: "/images/why-reliable.jpg" },
-  { objection: "«Сложно интегрировать в проект»", answer: "Обрабатывается стандартным столярным инструментом. Режется, фрезеруется, клеится. Мы даём чертежи и техподдержку.", img: "/images/why-easy.jpg" },
-  { objection: "«Долго ждать и непонятно по цене»", answer: "Стандартные панели — от 3 дней. Готовые решения — от 1 недели. Прозрачное ценообразование с первого запроса.", img: "/images/why-fast.jpg" },
+const applications = [
+  { title: "Кухонные фасады", href: "/material", img: "/images/sposoby/sp-kitchen.png" },
+  { title: "Фартуки на кухню", href: "/material", img: "/images/sposoby/sp-backsplash.png" },
+  { title: "Мебель для ванной", href: "/material", img: "/images/sposoby/sp-bathroom.png" },
+  { title: "Подоконники", href: "/material", img: "/images/sposoby/sp-windowsill.png" },
+  { title: "Стеновые панели", href: "/material", img: "/images/sposoby/sp-wall.png" },
+  { title: "Изголовья кроватей", href: "/material", img: "/images/sposoby/sp-headboard.png" },
+  { title: "Городская среда", href: "/material", img: "/images/sposoby/sp-urban.png" },
+  { title: "Офисные столешницы", href: "/material", img: "/images/sposoby/sp-office.png" },
 ];
 
-const whereWorks = [
-  { label: "Столешницы", img: "/images/sposoby/a-modern-kitchen-counter-close-up-shot--countertop.png" },
-  { label: "Кухонные фасады", img: "/images/sposoby/a-modern-kitchen-sink-area--slight-3-4-angle-shot-.png" },
-  { label: "Ванные комнаты", img: "/images/sposoby/bathroom-countertop-close-up--slight-angle--counte.png" },
-  { label: "Стеновые панели", img: "/images/sposoby/large-translucent-recycled-plastic-panel-wall--low.png" },
-  { label: "Мебель и объекты", img: "/images/sposoby/three-modular-lounge-chairs-made-entirely-of-flat-.png" },
-  { label: "Ритейл и HoReCa", img: "/images/sposoby/a-bright--modern-boutique-interior-for-a-sustainab.png" },
-  { label: "Офисные пространства", img: "/images/sposoby/open-plan-office-interior--freestanding-room-divid.png" },
-  { label: "Городская среда", img: "/images/DSC02233.jpg" },
-  { label: "Переговорные", img: "/images/sposoby/--prompt-------a-modern-loft-style-meeting-room-in.png" },
-  { label: "Урны и контейнеры", img: "/images/sposoby/a-single-modern-waste-bin-on-small-black-wheels--r.png" },
-  { label: "Подоконники и откосы", img: "/images/sposoby/interior-architectural-detail-of-a-window-wall--wi.png" },
-  { label: "Гостиницы и спальни", img: "/images/sposoby/minimalist-hotel-bedroom-interior--large-wall-moun.png" },
-  { label: "Лестницы", img: "/images/sposoby/modern-interior-staircase--straight-on-side-angle-.png" },
-  { label: "Барные стулья", img: "/images/sposoby/two-round-bar-stools-shot-from-above-at-slight-ang.png" },
-  { label: "Раздевалки и фитнес", img: "/images/sposoby/a-modern-gym-changing-room-interior--long-vanity-c.png" },
+const shopProducts = [
+  { name: "Приставной столик", price: "12 900", img: "/images/shop/shop-stolik.png", badge: "Хит" },
+  { name: "Настольные часы", price: "4 500", img: "/images/shop/shop-chasy.png" },
+  { name: "Лошадка-качалка", price: "8 900", img: "/images/shop/shop-loshadka.png", badge: "Хит" },
+  { name: "Стул-стремянка", price: "9 900", img: "/images/shop/shop-stremianka.png" },
+  { name: "Табурет", price: "7 500", img: "/images/shop/shop-taburet.png", badge: "Новинка" },
+  { name: "Скамья", price: "14 900", img: "/images/shop/shop-skameika.png" },
 ];
+
+const productColors = ["#E8A33D", "#F3EFE6", "#171513", "#C9B79A", "#5A6647", "#3C4657", "#16233D"];
 
 const cases = [
   { name: "PACE", desc: "Тираж из переработанного пластика для крупнейшего российского девелопера.", photos: ["/images/07.jpg", "/images/04.jpg", "/images/05.jpg"], slug: "samolet" },
-  { name: "Drinkit", desc: "Стеновые панели, перегородки и декоративные элементы для сети кофеен.", photos: ["/images/DSC09441.jpg", "/images/DSC09389.jpg", "/images/DSC09429.jpg"], slug: "drinkit" },
-  { name: "LAMODA", desc: "Ресепшен, столешницы, полки — всё из одного материала.", photos: ["/images/photo_2025-09-09 10.10.09.jpeg", "/images/photo_2025-09-09 10.10.08.jpeg", "/images/photo_2025-09-09 10.10.10.jpeg"], slug: "lamoda" },
-  { name: "ЖК Lucky", desc: "Безопасные и долговечные элементы детской площадки.", photos: ["/images/DSC02233.jpg", "/images/DSC02232.jpg", "/images/DSC02247.jpg"], slug: "lucky" },
+  { name: "Drinkit", desc: "Стеновые панели, перегородки и декоративные элементы для сети кофеен.", photos: ["/images/DSC09441.jpg", "/images/DSC09389.jpg", "/images/DSC09429.jpg", "/images/DSC09459.jpg"], slug: "drinkit" },
+  { name: "LAMODA", desc: "Ресепшен, столешницы, полки — всё из одного материала.", photos: ["/images/photo_2025-09-09 10.10.09.jpeg", "/images/photo_2025-09-09 10.10.08.jpeg", "/images/photo_2025-09-09 10.10.10.jpeg", "/images/photo_2025-09-09 10.08.38.jpeg"], slug: "lamoda" },
+  { name: "ЖК Lucky", desc: "Безопасные и долговечные элементы детской площадки.", photos: ["/images/DSC02233.jpg", "/images/DSC02232.jpg", "/images/DSC02247.jpg", "/images/DSC02231.jpg"], slug: "lucky" },
 ];
 
 const trustClients = ["САМОЛЕТ", "Drinkit", "RIPPle", "ВКУСВИЛЛ", "Кофемания", "СКОЛКОВО", "Яндекс", "ПИК"];
@@ -65,140 +52,171 @@ const marqueeCSS = `
 `;
 
 export default function Home() {
-  /* ── Drag-scroll for "where works" carousel ── */
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const scrollLeft = useRef(0);
-  const autoRef = useRef<number>(0);
-  const [autoPaused, setAutoPaused] = useState(false);
+  const heroLogoRef = useRef<HTMLDivElement>(null);
+  const heroIntroRef = useRef<HTMLDivElement>(null);
 
-  const startAutoScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const tick = () => {
-      if (!isDragging.current && !autoPaused) {
-        el.scrollLeft += 0.5;
-        // Loop back when reaching half (duplicated content)
-        if (el.scrollLeft >= el.scrollWidth / 2) {
-          el.scrollLeft = 0;
-        }
-      }
-      autoRef.current = requestAnimationFrame(tick);
-    };
-    autoRef.current = requestAnimationFrame(tick);
-  }, [autoPaused]);
-
+  /* Hero «занавес»: логотип уезжает вверх, интро — вниз, проявляя фото и подписи */
   useEffect(() => {
-    startAutoScroll();
-    return () => cancelAnimationFrame(autoRef.current);
-  }, [startAutoScroll]);
-
-  const onPointerDown = (e: React.PointerEvent) => {
-    isDragging.current = true;
-    startX.current = e.clientX;
-    scrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
-    scrollRef.current?.setPointerCapture(e.pointerId);
-  };
-  const onPointerMove = (e: React.PointerEvent) => {
-    if (!isDragging.current) return;
-    const dx = e.clientX - startX.current;
-    if (scrollRef.current) scrollRef.current.scrollLeft = scrollLeft.current - dx;
-  };
-  const onPointerUp = () => { isDragging.current = false; };
+    const logo = heroLogoRef.current;
+    const intro = heroIntroRef.current;
+    const labels = Array.from(document.querySelectorAll<HTMLElement>("[data-hero-label]"));
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (logo) logo.style.transform = `translateY(${-y * 0.9}px)`;
+      if (intro) intro.style.transform = `translateY(${y * 0.9}px)`;
+      // подписи «Материал»/«Магазин» проступают по мере раскрытия
+      const o = Math.min(1, Math.max(0, (y - 20) / 240));
+      labels.forEach((l) => { l.style.opacity = String(o); });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: marqueeCSS }} />
 
-      {/* ═══ 1. HERO (untouched) ═══ */}
-      <section style={{ padding: "0 20px" }}>
-        <div
-          style={{
-            position: "sticky",
-            top: 64,
-            height: "calc(100vh - 64px - 40px)",
-            zIndex: 0,
-            display: "flex",
-            gap: 16,
-          }}
-        >
-          <div className="relative flex-1 overflow-hidden">
+      {/* ═══ 1. HERO — Figma: 2 фото + гигантский белый логотип поверх ═══ */}
+      <section className="relative" style={{ backgroundColor: "#171513" }}>
+        {/* Sticky hero: две половины — Материал (слева) и Магазин (справа) */}
+        <div className="sticky top-0 h-screen w-full flex flex-col md:flex-row overflow-hidden">
+          {/* МАТЕРИАЛ */}
+          <Link href="/material" className="group relative flex-1 overflow-hidden block">
             <Image
-              src="/images/ro0151.jpg"
-              alt="RePanel"
+              src="/images/DSC09988-HDR.jpg"
+              alt="Материал RePanel — панели из переработанного полистирола (санузел с синим терраццо)"
               fill
-              sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1023px) calc((100vw - 56px) / 2), calc((100vw - 72px) / 3)"
-              className="object-cover"
+              sizes="(max-width: 767px) 100vw, 50vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              style={{ objectPosition: "center 75%" }}
               priority
+            />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 2px 34px rgba(0,0,0,0.5)" }}>
+                Материал
+                <span className="absolute left-0 bottom-0.5 h-[4px] bg-[#FFFFFF] w-0 group-hover:w-full transition-[width] duration-[450ms] ease-out" />
+              </span>
+            </div>
+          </Link>
+          {/* МАГАЗИН */}
+          <Link href="/catalog" className="group relative flex-1 overflow-hidden block">
+            <Image
+              src="/images/RE_5292.jpg"
+              alt="Магазин RePanel — готовые изделия"
+              fill
+              sizes="(max-width: 767px) 100vw, 50vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              style={{ objectPosition: "center 28%" }}
+              priority
+            />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 2px 34px rgba(0,0,0,0.5)" }}>
+                Магазин
+                <span className="absolute left-0 bottom-0.5 h-[4px] bg-[#FFFFFF] w-0 group-hover:w-full transition-[width] duration-[450ms] ease-out" />
+              </span>
+            </div>
+          </Link>
+
+          {/* Top scrim — читаемость навигации */}
+          <div
+            className="absolute top-0 left-0 right-0 z-[5] pointer-events-none"
+            style={{ height: "42%", background: "linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0))" }}
+          />
+          {/* Bottom scrim — читаемость интро */}
+          <div
+            className="absolute bottom-0 left-0 right-0 z-[5] pointer-events-none"
+            style={{ height: "44%", background: "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0))" }}
+          />
+
+          {/* Гигантский белый логотип «RePanel» — сверху, уезжает вверх на скролле */}
+          <div
+            ref={heroLogoRef}
+            className="absolute left-0 right-0 z-10 pointer-events-none pt-[76px] lg:pt-[14px]"
+            style={{ top: 0, paddingLeft: "var(--site-margins)", paddingRight: "var(--site-margins)", willChange: "transform" }}
+          >
+            <div
+              style={{
+                width: "100%",
+                aspectRatio: "1430.1 / 294.4",
+                backgroundColor: "#FFFFFF",
+                WebkitMaskImage: "url(/logo/repanel.svg)",
+                maskImage: "url(/logo/repanel.svg)",
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                WebkitMaskSize: "contain",
+                maskSize: "contain",
+                WebkitMaskPosition: "center top",
+                maskPosition: "center top",
+              }}
             />
           </div>
-          <div className="relative flex-1 overflow-hidden hidden md:block">
-            <Image
-              src="/images/ro0184.jpg"
-              alt="RePanel"
-              fill
-              sizes="(max-width: 1023px) calc((100vw - 56px) / 2), calc((100vw - 72px) / 3)"
-              className="object-cover"
-              priority
-            />
-          </div>
-          <div className="relative flex-1 overflow-hidden hidden lg:block">
-            <Image
-              src="/images/ro0164.jpg"
-              alt="RePanel"
-              fill
-              sizes="calc((100vw - 72px) / 3)"
-              className="object-cover"
-              priority
-            />
+
+          {/* Интро — снизу героя, белым; уезжает вниз на скролле */}
+          <div
+            ref={heroIntroRef}
+            className="absolute left-0 right-0 bottom-0 z-10 pointer-events-none"
+            style={{ paddingLeft: "var(--site-margins)", paddingRight: "var(--site-margins)", paddingBottom: "clamp(24px, 5vh, 58px)", willChange: "transform" }}
+          >
+            <div className="mx-auto" style={{ maxWidth: 1440 }}>
+              <h2
+                className="text-left lg:text-right lg:whitespace-nowrap"
+                style={{
+                  fontFamily: "'Chalet', 'Gramatika', sans-serif",
+                  fontWeight: 700,
+                  color: "#FFFFFF",
+                  fontSize: "clamp(32px, 5.3vw, 75.5px)",
+                  lineHeight: 1.05,
+                  letterSpacing: "-0.021em",
+                  margin: 0,
+                  textShadow: "0 2px 30px rgba(0,0,0,0.5)",
+                }}
+              >
+                Панели из переработанного пластика...
+              </h2>
+            </div>
           </div>
         </div>
 
-        <div
-          style={{
-            position: "relative",
-            zIndex: 1,
-            marginTop: "calc(-24.02vw + 1.6px)",
-          }}
-        >
-          <img src="/logo/repanel.svg" alt="RePanel" style={{ display: "block", width: "100%", height: "auto" }} />
-          <img src="/logo/subtitle.svg" alt="Панели из переработанного пластика" style={{ display: "block", width: "100%", height: "auto", marginTop: 8 }} />
-          <div style={{ height: "100vh" }} />
-        </div>
+        {/* Длина прокрутки для хореографии «занавеса» */}
+        <div style={{ height: "62vh" }} />
       </section>
 
-      {/* ── Divider between hero and directions ── */}
-      <div className="px-[var(--site-margins)] py-5">
-        <div className="w-full h-px bg-[#171513]" />
-      </div>
-
-      {/* ═══ 2. ЧЕТЫРЕ НАПРАВЛЕНИЯ ═══ */}
-      <section className="px-[var(--site-margins)] pt-10 lg:pt-14 pb-8 lg:pb-12">
+      {/* ═══ 3. ЧЕТЫРЕ НАПРАВЛЕНИЯ (по Figma 1:3470) ═══ */}
+      <section className="px-[var(--site-margins)] pt-6 lg:pt-8 pb-10 lg:pb-16">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <h2 className="font-bold font-[Montserrat] text-[#171513] mb-5 lg:mb-8"
-            style={{ fontSize: "clamp(28px, 9vw, 64px)", lineHeight: 1, letterSpacing: "-0.03em" }}>
-            Четыре направления работы
+          <h2 className="font-bold text-[#171513] mb-4 lg:mb-5"
+            style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
+            Четыре направления нашей работы<span style={{ fontSize: "0.27em", fontWeight: 700, letterSpacing: "-0.02em", marginLeft: "0.06em", position: "relative", top: "-1.75em", display: "inline-block" }}>(4)</span>
           </h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-5">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-8 lg:gap-x-5 lg:gap-y-[44px]">
             {directions.map((d) => (
-              <Link
-                key={d.title}
-                href={d.href}
-                className="group/card block overflow-hidden"
-              >
-                <div className="relative overflow-hidden aspect-square bg-[#171513]">
+              <Link key={d.title} href={d.href} className="group/card block">
+                <div className="relative w-full aspect-square overflow-hidden">
                   <Image
                     src={d.img}
                     alt={d.title}
                     fill
                     sizes="(min-width:1024px) 25vw, 50vw"
-                    className="object-cover transition-transform duration-500 group-hover/card:scale-[1.03]"
+                    className="object-cover transition-transform duration-500 ease-out group-hover/card:scale-[1.04]"
                   />
                 </div>
-                <div className="px-3 lg:px-4 pb-2 lg:pb-3 pt-1.5 lg:pt-2">
-                  <h3 className="text-[13px] lg:text-[16px] font-bold font-[Montserrat] text-[#171513] leading-tight">{d.title}</h3>
-                  <p className="text-[13px] lg:text-[16px] text-[#171513] leading-tight mt-0.5">{d.desc}</p>
+                <div className="pt-2.5">
+                  <h3
+                    className="font-bold text-[#171513] inline-block relative"
+                    style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "clamp(15px, 1.5vw, 18px)", letterSpacing: "-0.3px", lineHeight: 1.2 }}
+                  >
+                    {d.title}
+                    <span className="absolute left-0 -bottom-1 h-[1.5px] bg-[#171513] w-0 group-hover/card:w-full transition-[width] duration-[450ms] ease-out" />
+                  </h3>
+                  <p
+                    className="text-[#171513] mt-1.5"
+                    style={{ fontFamily: "'Gramatika', sans-serif", fontWeight: 400, fontSize: "clamp(13.5px, 1.05vw, 15.5px)", lineHeight: 1.4, opacity: 0.5 }}
+                  >
+                    {d.caption}
+                  </p>
                 </div>
               </Link>
             ))}
@@ -206,128 +224,120 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 3. ПОЧЕМУ ЭТО РАБОТАЕТ ═══ */}
-      <section className="px-[var(--site-margins)] pt-8 pb-8 lg:pb-12">
+      {/* ═══ 4. ПРЕИМУЩЕСТВО МАТЕРИАЛА (по Figma 4:8885) ═══ */}
+      <section className="px-[var(--site-margins)] pt-6 lg:pt-8 pb-10 lg:pb-16">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <h2 className="font-bold font-[Montserrat] text-[#171513] mb-5 lg:mb-8"
-            style={{ fontSize: "clamp(28px, 9vw, 64px)", lineHeight: 1, letterSpacing: "-0.03em" }}>
-            Почему это работает
+          <h2 className="font-bold text-[#171513] mb-5 lg:mb-7"
+            style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
+            Преимущество материала
           </h2>
-          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-0">
-            {fears.map((f, i) => (
-              <div key={i} className="border-t border-[#171513] py-5 lg:py-6 lg:pr-8 flex gap-4 lg:gap-5 items-start">
-                <div className="shrink-0 w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] relative">
-                  <Image src={f.img} alt="" fill sizes="80px" className="object-cover" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-[15px] lg:text-[18px] leading-[1.4] text-[#171513] font-[Montserrat] font-bold mb-2 lg:mb-3">
-                    {f.objection}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:items-stretch">
+            {/* Фото — col-span-3, высотой со список (grid-stretch), по Figma 4:8885 */}
+            <div className="md:col-span-3 relative aspect-square md:aspect-auto overflow-hidden">
+              <Image
+                src="/images/adv-swatches.jpg"
+                alt="Образцы цветов RePanel"
+                fill
+                sizes="(min-width:768px) 25vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+            {/* Список преимуществ — col-span-9 (по Figma 4:8885) */}
+            <div className="md:col-start-4 md:col-span-9">
+              {[
+                { title: "Безопасный", desc: "ЕАС-сертифицированный материал. Выдерживает воду, УФ и механические нагрузки. Срок службы — десятилетия." },
+                { title: "Лёгкий в обработке", desc: "Обрабатывается стандартным столярным инструментом. Режется, фрезеруется, клеится. Мы даём чертежи и техподдержку." },
+                { title: "Тактильно приятный", desc: "RePanel выглядит и ощущается как терраццо или камень. Каждая панель уникальна по текстуре — это не принт, а структура самого материала." },
+                { title: "Быстрые сроки производства", desc: "Стандартные панели — от 3 дней. Готовые решения — от 1 недели. Прозрачное ценообразование с первого запроса." },
+              ].map((a) => (
+                <div key={a.title} className="border-t border-[#171513] grid grid-cols-1 md:grid-cols-9 gap-y-1 gap-x-5 pt-3 pb-5">
+                  <h3 className="md:col-span-5 font-bold text-[#171513]" style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "18.6px", lineHeight: "26.66px", letterSpacing: "-0.4px" }}>
+                    {a.title}
+                  </h3>
+                  <p className="md:col-span-4 text-[#171513]" style={{ fontFamily: "'Gramatika', sans-serif", fontWeight: 400, fontSize: "14.6px", lineHeight: "20px" }}>
+                    {a.desc}
                   </p>
-                  <p className="text-[14px] lg:text-[16px] leading-[1.5] text-[#171513]">
-                    {f.answer}
-                  </p>
                 </div>
-              </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 5. СПОСОБЫ ПРИМЕНЕНИЯ (по Figma 7:3371) ═══ */}
+      <section className="px-[var(--site-margins)] pt-6 lg:pt-8 pb-10 lg:pb-16">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <h2 className="font-bold text-[#171513] mb-4 lg:mb-5"
+            style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
+            Способы применения
+          </h2>
+          <div className="flex gap-3 lg:gap-5 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 -mr-[var(--site-margins)] pr-[var(--site-margins)]">
+            {applications.map((d) => (
+              <Link key={d.title} href={d.href} className="group/card block shrink-0 w-[clamp(240px,42vw,330px)] snap-start">
+                <div className="relative overflow-hidden" style={{ aspectRatio: "455 / 606" }}>
+                  <Image
+                    src={d.img}
+                    alt={d.title}
+                    fill
+                    sizes="(min-width:1024px) 25vw, 50vw"
+                    className="object-cover"
+                  />
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{ background: "rgba(255, 255, 255,0.82)" }}
+                  />
+                </div>
+                <div className="pt-1.5">
+                  <h3
+                    className="font-bold text-[#171513] inline-block relative"
+                    style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "clamp(15px, 1.5vw, 18px)", letterSpacing: "-0.3px", lineHeight: 1.2 }}
+                  >
+                    {d.title}
+                    <span className="absolute left-0 -bottom-1 h-[1.5px] bg-[#171513] w-0 group-hover/card:w-full transition-[width] duration-[450ms] ease-out" />
+                  </h3>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══ 4. ГДЕ РАБОТАЕТ — draggable + auto-scroll carousel ═══ */}
-      <section className="pt-8 pb-8 lg:pb-12">
-        <div className="px-[var(--site-margins)] mx-auto" style={{ maxWidth: 1440 }}>
-          <h2 className="font-bold font-[Montserrat] text-[#171513] mb-5 lg:mb-8"
-            style={{ fontSize: "clamp(28px, 9vw, 64px)", lineHeight: 1, letterSpacing: "-0.03em" }}>
-            Где работает материал
-          </h2>
-        </div>
-
-        <div
-          ref={scrollRef}
-          className="flex overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
-          style={{ gap: 12, paddingLeft: "var(--site-margins)", paddingRight: "var(--site-margins)", scrollbarWidth: "none" }}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerLeave={onPointerUp}
-          onMouseEnter={() => setAutoPaused(true)}
-          onMouseLeave={() => setAutoPaused(false)}
-        >
-          {[...whereWorks, ...whereWorks].map((w, i) => (
-            <div
-              key={`${w.label}-${i}`}
-              className="shrink-0 flex flex-col overflow-hidden w-[calc(50vw-16px)] lg:w-[calc((100vw-100px)/5)]"
-              style={{ userSelect: "none" }}
-            >
-              <div className="relative aspect-[3/4] overflow-hidden">
-                <Image src={w.img} alt={w.label} fill sizes="(min-width:1024px) 20vw, 50vw" className="object-cover pointer-events-none" draggable={false} />
-              </div>
-              <div className="px-2 lg:px-4 pb-2 lg:pb-3 pt-1.5 lg:pt-2">
-                <span className="text-[13px] lg:text-[16px] font-bold font-[Montserrat] text-[#171513]">{w.label}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══ 5. КЕЙСЫ ═══ */}
-      <section className="px-[var(--site-margins)] pt-8 pb-0">
+      {/* ═══ 7. КЕЙСЫ — 4 кейса, полоса из 4 вертикальных фото + подпись под ним ═══ */}
+      <section className="px-[var(--site-margins)] pt-6 lg:pt-8 pb-10 lg:pb-16">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <h2 className="font-bold font-[Montserrat] text-[#171513] mb-5 lg:mb-8"
-            style={{ fontSize: "clamp(28px, 9vw, 64px)", lineHeight: 1, letterSpacing: "-0.03em" }}>
+          <h2 className="font-bold text-[#171513] mb-5 lg:mb-7"
+            style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
             Кейсы
           </h2>
 
-          <div className="flex flex-col">
-            {cases.map((c) => (
-              <Link
-                key={c.name}
-                href={`/projects/${c.slug}`}
-                className="group block border-t border-[#171513] pt-5 lg:pt-6 pb-6 lg:pb-8"
-              >
-                {/* ── MOBILE: stacked layout ── */}
-                <div className="lg:hidden">
-                  <h3 className="text-[clamp(28px,9vw,44px)] font-bold font-[Montserrat] text-[#171513] leading-none tracking-[-0.03em] mb-2">
-                    {c.name}
-                  </h3>
-                  <p className="text-[14px] leading-[1.5] text-[#171513] mb-3">{c.desc}</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="relative overflow-hidden bg-[#171513] aspect-[3/4]">
-                      <Image src={c.photos[0]} alt={c.name} fill sizes="50vw" className="object-cover" />
+          {/* 4 кейса — каждый полоса из 4 вертикальных фото вплотную, подпись под кейсом */}
+          <div className="flex flex-col gap-12 lg:gap-[84px]">
+            {cases.slice(0, 4).map((c) => (
+              <Link key={c.slug} href={`/projects/${c.slug}`} className="group/case block">
+                <div className="grid grid-cols-4">
+                  {[0, 1, 2, 3].map((i) => (
+                    <div key={i} className="relative overflow-hidden" style={{ aspectRatio: "455 / 606" }}>
+                      <Image src={c.photos[i % c.photos.length]} alt={`${c.name} — фото ${i + 1}`} fill sizes="25vw" className="object-cover" />
                     </div>
-                    <div className="relative overflow-hidden bg-[#171513] aspect-[3/4]">
-                      <Image src={c.photos[1]} alt={c.name} fill sizes="50vw" className="object-cover" />
-                    </div>
-                  </div>
+                  ))}
                 </div>
-
-                {/* ── DESKTOP: row 1 = title + desc aligned, row 2 = 3 photos ── */}
-                <div className="hidden lg:block">
-                  {/* Text row: title (1/3) + desc (2/3), aligned at bottom */}
-                  <div className="flex items-end mb-2" style={{ gap: 16 }}>
-                    <h3 className="flex-1 text-[clamp(28px,3.5vw,52px)] font-bold font-[Montserrat] text-[#171513] leading-none tracking-[-0.03em]">
-                      {c.name}
-                    </h3>
-                    <p className="flex-[2] text-[16px] leading-[1.5] text-[#171513]">{c.desc}</p>
-                  </div>
-                  {/* Photos row: 3 equal columns */}
-                  <div className="flex" style={{ gap: 16 }}>
-                    <div className="relative overflow-hidden flex-1 bg-[#171513]" style={{ aspectRatio: "3/4" }}>
-                      <Image src={c.photos[0]} alt={c.name} fill sizes="calc((100vw - 72px) / 3)"
-                        className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
-                    </div>
-                    <div className="relative overflow-hidden flex-1 bg-[#171513]" style={{ aspectRatio: "3/4" }}>
-                      <Image src={c.photos[1]} alt={c.name} fill sizes="calc((100vw - 72px) / 3)"
-                        className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
-                    </div>
-                    <div className="relative overflow-hidden flex-1 bg-[#171513]" style={{ aspectRatio: "3/4" }}>
-                      <Image src={c.photos[2]} alt={c.name} fill sizes="calc((100vw - 72px) / 3)"
-                        className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
-                    </div>
-                  </div>
+                <div className="pt-3 lg:pt-4">
+                  <h3 className="font-bold text-[#171513] inline-block relative" style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(24px, 2.7vw, 42px)", letterSpacing: "-0.02em", lineHeight: 1.05 }}>
+                    {c.name}
+                    <span className="absolute left-0 -bottom-1 h-[2px] bg-[#171513] w-0 group-hover/case:w-full transition-[width] duration-[450ms] ease-out" />
+                  </h3>
                 </div>
               </Link>
             ))}
+          </div>
+
+          {/* Смотреть все проекты — крупно, как заголовок «Магазин» */}
+          <div className="mt-12 lg:mt-[84px]">
+            <Link href="/projects" className="group/all inline-block relative font-bold text-[#171513]"
+              style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
+              Смотреть все проекты →
+              <span className="absolute left-0 -bottom-1 h-[3px] bg-[#171513] w-0 group-hover/all:w-full transition-[width] duration-[450ms] ease-out" />
+            </Link>
           </div>
         </div>
       </section>
@@ -339,7 +349,7 @@ export default function Home() {
           style={{ animation: "marquee 20s linear infinite", width: "max-content", gap: 32 }}
         >
           {[...trustClients, ...trustClients, ...trustClients].map((name, i) => (
-            <span key={`${name}-${i}`} className="text-[clamp(22px,6vw,52px)] font-bold font-[Montserrat] tracking-[-0.03em] whitespace-nowrap"
+            <span key={`${name}-${i}`} className="text-[clamp(22px,6vw,52px)] font-bold font-[Gramatika] tracking-[-0.03em] whitespace-nowrap"
               style={{ color: "#C0C0C0" }}>
               {name}
             </span>
@@ -347,105 +357,113 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 7. СМОТРЕТЬ ВСЕ КЕЙСЫ ═══ */}
-      <section className="px-[var(--site-margins)] pb-8 lg:pb-12">
+      {/* ═══ 8. МАГАЗИН — сетка товаров (по Figma 4:9554) ═══ */}
+      <section className="px-[var(--site-margins)] pt-6 lg:pt-8 pb-12 lg:pb-20">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <Link
-            href="/projects"
-            className="font-bold font-[Montserrat] text-[#171513] underline underline-offset-4 hover:opacity-60 transition-opacity inline-block"
-            style={{ fontSize: "clamp(22px,6vw,52px)", letterSpacing: "-0.03em" }}
-          >
-            Смотреть все кейсы →
-          </Link>
-        </div>
-      </section>
-
-      {/* ═══ 8. ВЫБЕРИТЕ СВОЙ ПУТЬ ═══ */}
-      <section className="px-[var(--site-margins)] pt-8 pb-8 lg:pb-12">
-        <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <h2 className="font-bold font-[Montserrat] text-[#171513] mb-5 lg:mb-8"
-            style={{ fontSize: "clamp(28px, 9vw, 64px)", lineHeight: 1, letterSpacing: "-0.03em" }}>
-            Выберите свой путь
-          </h2>
-
-          <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4">
-            {[
-              { title: "Архитекторам", desc: "Образцы, техкарты, чертежи и поддержка на каждом этапе проекта. Бесплатная доставка образцов в МО.", href: "/for-architects", link: "Подробнее →" },
-              { title: "Производителям", desc: "Листовой материал для вашего производства. Стабильные поставки, 12 базовых цветов, кастом.", href: "/material", link: "О материале →" },
-              { title: "Готовые решения", desc: "Каталог изделий с фиксированной ценой и доставкой. Стойки, мебель, декор.", href: "/catalog", link: "Каталог →" },
-            ].map((a) => (
-              <Link
-                key={a.title}
-                href={a.href}
-                className="block border border-[#171513] p-[5px] transition-all duration-200"
-                style={{ textDecoration: "none", borderRadius: 20 }}
-                onMouseEnter={(e) => {
-                  const inner = e.currentTarget.querySelector("[data-inner]") as HTMLElement;
-                  if (inner) { inner.style.backgroundColor = "#171513"; }
-                  e.currentTarget.querySelectorAll("[data-txt]").forEach((t) => { (t as HTMLElement).style.color = "#FFFFFF"; });
-                }}
-                onMouseLeave={(e) => {
-                  const inner = e.currentTarget.querySelector("[data-inner]") as HTMLElement;
-                  if (inner) { inner.style.backgroundColor = ""; }
-                  e.currentTarget.querySelectorAll("[data-txt]").forEach((t) => { (t as HTMLElement).style.color = "#171513"; });
-                }}
-              >
-                <div data-inner className="flex flex-col justify-between p-5 lg:p-7 h-full transition-colors duration-200"
-                  style={{ borderRadius: 14 }}>
-                  <div>
-                    <h3 data-txt className="font-bold font-[Montserrat] leading-none tracking-[-0.03em] mb-3 lg:mb-4 transition-colors duration-200"
-                      style={{ fontSize: "clamp(22px,6vw,36px)", color: "#171513" }}>
-                      {a.title}
-                    </h3>
-                    <p data-txt className="text-[14px] lg:text-[16px] leading-[1.5] transition-colors duration-200"
-                      style={{ color: "#171513" }}>
-                      {a.desc}
-                    </p>
-                  </div>
-                  <span data-txt className="text-[14px] lg:text-[16px] font-bold font-[Montserrat] mt-5 lg:mt-8 inline-block transition-colors duration-200"
-                    style={{ color: "#171513" }}>
-                    {a.link}
+          <div className="border-t border-[#171513] pt-5 lg:pt-6">
+            <h2 className="font-bold text-[#171513] mb-6 lg:mb-8"
+              style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.8px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
+              Магазин
+            </h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-5">
+              {shopProducts.map((p) => (
+                <Link key={p.name} href="/catalog" className="group/card relative flex flex-col bg-[#EAEAE7]" style={{ border: "1px solid rgba(23,21,19,0.1)" }}>
+                  {p.badge && (
+                    <span className="absolute left-2.5 top-2.5 z-10 px-2 py-[3px] text-[12px] leading-[1.3]" style={{ fontFamily: "'Gramatika', sans-serif", background: "rgba(23,21,19,0.1)", color: "#171513", borderRadius: "6px" }}>{p.badge}</span>
+                  )}
+                  {/* лупа — появляется при наведении */}
+                  <span className="absolute left-2.5 top-11 z-10 flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity duration-300" style={{ width: 38, height: 38, borderRadius: 10, background: "#171513" }} aria-hidden>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round"><circle cx="10.5" cy="10.5" r="7" /><path d="M21 21l-5-5" /></svg>
                   </span>
+                  <div className="w-full px-5 pt-7 pb-[38px]" style={{ background: "#EAEAE7" }}>
+                    <div className="relative w-full aspect-square transition-transform duration-300 ease-out group-hover/card:-translate-y-2">
+                      <Image src={p.img} alt={p.name} fill sizes="(min-width:1024px) 22vw, 45vw" className="object-contain" />
+                    </div>
+                  </div>
+                  <div className="relative w-full px-2.5 pb-2.5 pt-1">
+                    <div className="transition-transform duration-300 ease-out group-hover/card:-translate-y-[26px]">
+                      <p className="text-[#171513]" style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "14.4px", lineHeight: "20px", fontWeight: 700 }}>{p.name}</p>
+                      <p className="text-[#171513]" style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "13.8px", lineHeight: "20px", fontWeight: 400 }}>от {p.price} ₽</p>
+                    </div>
+                    <div className="absolute inset-x-2.5 bottom-2.5 flex flex-wrap items-center gap-[5px] opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 ease-out" style={{ transitionDelay: "80ms" }}>
+                      {productColors.map((c, i) => (
+                        <span key={i} style={{ width: 15, height: 15, borderRadius: 9999, background: c, border: "1px solid rgba(0,0,0,0.12)", flexShrink: 0 }} />
+                      ))}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ О НАС (по Figma 12:5556 десктоп / 17:6681 мобайл) ═══ */}
+      <section className="px-[var(--site-margins)] pt-6 lg:pt-8 pb-12 lg:pb-16">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <div className="border-t border-[#171513] pt-5 lg:pt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+              <div className="flex flex-col">
+                <h2 className="font-bold text-[#171513] mb-4"
+                  style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(48px, 7vw, 73px)", lineHeight: 1.05, letterSpacing: "-1.6px" }}>
+                  О нас
+                </h2>
+                <p className="text-[#171513] max-w-[390px]"
+                  style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "14.6px", lineHeight: "20px" }}>
+                  RePanel превращает переработанный пластик в долговечные панели и изделия — на вид как терраццо или камень, но легче и не боятся воды. Производим в России: от сортировки сырья до решения под ключ.
+                </p>
+                <div className="mt-8 lg:mt-11">
+                  <Link href="/about" className="group/ul relative inline-block self-start pb-[3px]"
+                    style={{ fontFamily: "'Gramatika', sans-serif", fontWeight: 700, fontSize: "16px", color: "#171513" }}>
+                    Подробнее →
+                    <span className="pointer-events-none absolute left-0 bottom-0 h-[2px] w-full bg-[#171513] origin-right scale-x-100 group-hover/ul:scale-x-0 transition-transform duration-[450ms] ease-out" />
+                  </Link>
                 </div>
+              </div>
+              <div className="relative w-full aspect-square overflow-hidden">
+                <Image src="/images/DSC00437-HDR.jpg" alt="RePanel — переработанный пластик" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 9. ФИНАЛЬНЫЙ CTA — крупный акцент в стиле страницы ═══ */}
+      <section className="px-[var(--site-margins)] pt-6 lg:pt-8 pb-20 lg:pb-32">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <div className="border-t border-[#171513] pt-10 lg:pt-16">
+            <h2 className="font-bold text-[#171513]"
+              style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(40px, 7vw, 96px)", lineHeight: 1.0, letterSpacing: "-0.03em" }}>
+              Обсудим ваш проект?
+            </h2>
+            <p className="text-[#171513] mt-5 lg:mt-7 max-w-[560px]"
+              style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "clamp(15px, 1.3vw, 18px)", lineHeight: 1.5 }}>
+              Опишите задачу — подберём материал, цвет и формат. Бесплатные образцы, чертёж и расчёт под ваш проект.
+            </p>
+            <div className="mt-8 lg:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <a
+                href="https://t.me/panelpanelre"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/ul relative inline-block self-start pb-[3px]"
+                style={{ fontFamily: "'Gramatika', sans-serif", fontWeight: 700, fontSize: "18px", color: "#171513" }}
+              >
+                Написать в Telegram →
+                <span className="pointer-events-none absolute left-0 bottom-0 h-[2px] w-full bg-[#171513] origin-right scale-x-100 group-hover/ul:scale-x-0 transition-transform duration-[450ms] ease-out" />
+              </a>
+              <Link
+                href="/contacts"
+                className="group/ul relative inline-block self-start pb-[3px]"
+                style={{ fontFamily: "'Gramatika', sans-serif", fontWeight: 700, fontSize: "18px", color: "#171513" }}
+              >
+                Запросить расчёт →
+                <span className="pointer-events-none absolute left-0 bottom-0 h-[2px] w-full bg-[#171513] origin-right scale-x-100 group-hover/ul:scale-x-0 transition-transform duration-[450ms] ease-out" />
               </Link>
-            ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ 9. FAQ ═══ */}
-      <section className="px-[var(--site-margins)] pt-8 pb-8 lg:pb-12">
-        <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <FAQ items={faqItems} />
-        </div>
-      </section>
-
-      {/* ═══ 10. ФИНАЛЬНЫЙ CTA ═══ */}
-      <section className="px-[var(--site-margins)] py-10 lg:py-20">
-        <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <h2 className="font-bold font-[Montserrat] text-[#171513]"
-            style={{ fontSize: "clamp(28px, 9vw, 64px)", lineHeight: 1.1, letterSpacing: "-0.03em" }}>
-            Не знаете с чего начать?<br />Опишите задачу — подберём формат.
-          </h2>
-
-          <div className="mt-6 lg:mt-8 flex flex-col gap-4 lg:flex-row lg:gap-6">
-            <Link
-              href="/contacts"
-              className="text-[15px] lg:text-[16px] font-bold font-[Montserrat] text-[#171513] underline underline-offset-4 hover:opacity-60 transition-opacity"
-            >
-              Запросить расчёт →
-            </Link>
-            <a
-              href="https://t.me/repanel"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[15px] lg:text-[16px] font-bold font-[Montserrat] text-[#171513] underline underline-offset-4 hover:opacity-60 transition-opacity"
-            >
-              Написать в Телеграм →
-            </a>
-          </div>
-        </div>
-      </section>
     </>
   );
 }

@@ -1,4 +1,4 @@
-const D = "'Montserrat', var(--font-display), sans-serif";
+const D = "'Gramatika', var(--font-display), sans-serif";
 
 interface SectionHeadingProps {
   title: string;

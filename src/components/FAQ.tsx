@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const D = "'Montserrat', var(--font-display), sans-serif";
+const D = "'Gramatika', var(--font-display), sans-serif";
 
 interface FAQItem {
   question: string;
@@ -17,7 +17,7 @@ export function FAQ({ items, title = "Частые вопросы" }: { items: F
       {title && (
         <h2
           className="font-bold leading-[0.92] mb-8"
-          style={{ fontFamily: D, fontSize: "clamp(32px, 3.6vw, 52px)", letterSpacing: "-1.5px" }}
+          style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(32px, 3.6vw, 52px)", letterSpacing: "-1.5px" }}
         >
           {title}
         </h2>

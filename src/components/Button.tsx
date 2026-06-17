@@ -27,13 +27,13 @@ export function Button({
       background: "#171513",
       color: "#fff",
       border: "2px solid #171513",
-      fontFamily: "'Montserrat', var(--font-display), sans-serif",
+      fontFamily: "'Gramatika', var(--font-display), sans-serif",
     },
     outline: {
       background: "transparent",
       color: "#171513",
       border: "2px solid #171513",
-      fontFamily: "'Montserrat', var(--font-display), sans-serif",
+      fontFamily: "'Gramatika', var(--font-display), sans-serif",
     },
     ghost: {
       background: "transparent",
@@ -41,7 +41,7 @@ export function Button({
       border: "none",
       textDecoration: "underline",
       textUnderlineOffset: "4px",
-      fontFamily: "'Montserrat', var(--font-display), sans-serif",
+      fontFamily: "'Gramatika', var(--font-display), sans-serif",
     },
   };
 

@@ -2,19 +2,21 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { PageHero } from "@/components/PageHero";
+import { FinalCTA } from "@/components/FinalCTA";
 
-const D = "'Montserrat', var(--font-display), sans-serif";
+const BODY = "'Gramatika', sans-serif";
 
 const filters = ["Все", "Мебель", "Аксессуары", "HoReCa", "Офис", "Дети"];
 
 const products = [
-  { slug: "stool-01", name: "Табурет RePanel", price: "8 500 ₽", badge: "Bestseller", cat: "Мебель" },
-  { slug: "board-serving", name: "Сервировочная доска", price: "3 200 ₽", badge: "New", cat: "Аксессуары" },
+  { slug: "stool-01", name: "Табурет RePanel", price: "8 500 ₽", badge: "Хит", cat: "Мебель" },
+  { slug: "board-serving", name: "Сервировочная доска", price: "3 200 ₽", badge: "Новинка", cat: "Аксессуары" },
   { slug: "organizer-desk", name: "Органайзер настольный", price: "4 800 ₽", badge: "", cat: "Офис" },
   { slug: "shelf-wall", name: "Полка модульная", price: "6 900 ₽", badge: "", cat: "Мебель" },
   { slug: "planter-floor", name: "Кашпо", price: "5 500 ₽", badge: "", cat: "Аксессуары" },
   { slug: "kids-table", name: "Столик детский", price: "7 200 ₽", badge: "", cat: "Дети" },
-  { slug: "tray", name: "Поднос", price: "2 800 ₽", badge: "New", cat: "Аксессуары" },
+  { slug: "tray", name: "Поднос", price: "2 800 ₽", badge: "Новинка", cat: "Аксессуары" },
   { slug: "bench", name: "Скамья", price: "12 000 ₽", badge: "", cat: "Мебель" },
   { slug: "menu-holder", name: "Менюхолдер", price: "3 500 ₽", badge: "", cat: "HoReCa" },
   { slug: "coaster-set", name: "Подставки (набор)", price: "1 800 ₽", badge: "", cat: "Аксессуары" },
@@ -25,104 +27,46 @@ const products = [
 
 export default function CatalogPage() {
   const [active, setActive] = useState("Все");
-
   const filtered = active === "Все" ? products : products.filter((p) => p.cat === active);
 
   return (
     <>
-      {/* Hero */}
-      <section style={{ padding: "60px 20px 40px" }}>
-        <div className="mx-auto max-w-[1440px]">
-          <div className="max-w-3xl pt-10">
-            <h1
-              className="font-bold mb-6"
-              style={{
-                fontFamily: D,
-                fontSize: "clamp(34px, 4.5vw, 56px)",
-                letterSpacing: "-2px",
-                lineHeight: 0.95,
-              }}
-            >
-              Каталог изделий
-            </h1>
-            <p
-              className="text-[17px] md:text-[20px] leading-[1.55] max-w-[640px]"
-              style={{ opacity: 0.55 }}
-            >
-              Готовые предметы из переработанного пластика. Каждый можно адаптировать под цвет, размер и тираж.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        title="Магазин"
+        image="/images/DSC02233.jpg"
+        imageAlt="Каталог изделий RePanel"
+        lead="Готовые предметы из переработанного полистирола. Каждый можно адаптировать под цвет, размер и тираж."
+      />
 
-      {/* Filters */}
-      <section style={{ padding: "0 20px 40px" }}>
-        <div className="mx-auto max-w-[1440px]">
-          <div className="flex flex-wrap gap-2">
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36 pb-20 lg:pb-32">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <div className="flex flex-wrap gap-2 mb-8 lg:mb-10">
             {filters.map((f) => (
               <button
                 key={f}
                 onClick={() => setActive(f)}
-                className="rounded-pill text-[14px] font-bold px-6 py-2.5 transition-colors"
-                style={{
-                  fontFamily: D,
-                  background: active === f ? "#171513" : "transparent",
-                  color: active === f ? "#FFFFFF" : "#171513",
-                  border: active === f ? "1px solid #171513" : "1px solid rgba(23,21,19,0.2)",
-                }}
+                className="px-5 py-2.5 transition-colors cursor-pointer"
+                style={{ fontFamily: BODY, fontWeight: 700, fontSize: "13.5px", border: "1px solid #171513", background: active === f ? "#171513" : "transparent", color: active === f ? "#FFFFFF" : "#171513" }}
               >
                 {f}
               </button>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Product Grid */}
-      <section style={{ padding: "0 20px 80px" }}>
-        <div className="mx-auto max-w-[1440px]">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-5">
             {filtered.map((p) => (
-              <Link
-                key={p.slug}
-                href={`/catalog/${p.slug}`}
-                className="card-hover group block"
-                style={{ border: "1px solid rgba(23,21,19,0.1)", overflow: "hidden" }}
-              >
-                {/* Photo placeholder */}
-                <div
-                  className="relative flex items-center justify-center"
-                  style={{ aspectRatio: "4/3", background: "#F5F5F5" }}
-                >
-                  <span style={{ fontSize: 12, opacity: 0.25 }}>Фото</span>
-                  {p.badge && (
-                    <span
-                      className="absolute top-3 left-3 text-[11px] font-bold uppercase tracking-wider px-3 py-1"
-                      style={{
-                        fontFamily: D,
-                        background: p.badge === "Bestseller" ? "#171513" : "#171513",
-                        color: "#FFFFFF",
-                      }}
-                    >
-                      {p.badge}
-                    </span>
-                  )}
+              <Link key={p.slug} href={`/catalog/${p.slug}`} className="group/card relative flex flex-col bg-[#EAEAE7]" style={{ border: "1px solid rgba(23,21,19,0.1)" }}>
+                {p.badge && (
+                  <span className="absolute left-2.5 top-2.5 z-[2] px-2.5 py-1 text-[#171513]" style={{ fontFamily: BODY, fontWeight: 700, fontSize: "11px", background: "rgba(23,21,19,0.1)" }}>{p.badge}</span>
+                )}
+                <div className="w-full px-5 pt-7 pb-[38px]">
+                  <div className="relative w-full aspect-square flex items-center justify-center transition-transform duration-300 ease-out group-hover/card:-translate-y-2" style={{ background: "#EAEAE7" }}>
+                    <span style={{ fontFamily: BODY, fontSize: "12px", opacity: 0.3 }}>Фото</span>
+                  </div>
                 </div>
-
-                {/* Info */}
-                <div style={{ padding: "16px 16px 20px" }}>
-                  <p className="text-[12px] mb-1" style={{ opacity: 0.4 }}>
-                    {p.cat}
-                  </p>
-                  <h3
-                    className="font-bold mb-2 group-hover:opacity-60 transition-opacity"
-                    style={{ fontFamily: D, fontSize: 16, lineHeight: 1.25 }}
-                  >
-                    {p.name}
-                  </h3>
-                  <span className="font-bold" style={{ fontFamily: D, fontSize: 16 }}>
-                    {p.price}
-                  </span>
+                <div className="w-full px-2.5 pb-2.5 pt-1">
+                  <p className="text-[#171513]" style={{ fontFamily: BODY, fontSize: "11.5px", opacity: 0.45 }}>{p.cat}</p>
+                  <p className="text-[#171513]" style={{ fontFamily: BODY, fontWeight: 700, fontSize: "14.4px", lineHeight: 1.25 }}>{p.name}</p>
+                  <p className="text-[#171513] mt-0.5" style={{ fontFamily: BODY, fontWeight: 400, fontSize: "13.8px" }}>{p.price}</p>
                 </div>
               </Link>
             ))}
@@ -130,34 +74,7 @@ export default function CatalogPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section
-        style={{
-          padding: "60px 20px",
-          borderTop: "1px solid rgba(23,21,19,0.1)",
-        }}
-      >
-        <div className="mx-auto max-w-[1440px] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div>
-            <h2
-              className="font-bold mb-2"
-              style={{ fontFamily: D, fontSize: "clamp(24px, 2.5vw, 36px)", letterSpacing: "-1px" }}
-            >
-              Нужно что-то особенное?
-            </h2>
-            <p className="text-[16px]" style={{ opacity: 0.5 }}>
-              Разработаем предмет с нуля или адаптируем существующий под ваши задачи.
-            </p>
-          </div>
-          <Link
-            href="/custom"
-            className="inline-block text-[15px] font-bold px-8 py-3 rounded-pill"
-            style={{ background: "#171513", color: "#FFFFFF", fontFamily: D }}
-          >
-            Обсудить проект
-          </Link>
-        </div>
-      </section>
+      <FinalCTA heading="Нужно что-то особенное?" text="Разработаем предмет с нуля или адаптируем существующий под ваши задачи и тираж." />
     </>
   );
 }

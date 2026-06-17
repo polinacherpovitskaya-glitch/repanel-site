@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { usePathname } from "next/navigation";
 
-const D = "'Montserrat', var(--font-display), sans-serif";
+const D = "'Gramatika', system-ui, sans-serif";
 
 /* ── Panel configs (RO-style fullwidth dropdowns) ── */
 
@@ -19,8 +20,9 @@ const panels: Record<string, PanelConfig> = {
       heading: "",
       links: [
         { label: "О материале", href: "/material" },
+        { label: "Прайс-лист", href: "/prices" },
+        { label: "Архитекторам", href: "/for-architects" },
         { label: "Производство", href: "/production" },
-        { label: "Для архитекторов", href: "/for-architects" },
       ],
     },
     right: { heading: "", links: [] },
@@ -31,69 +33,28 @@ const panels: Record<string, PanelConfig> = {
   },
   "Решения": {
     left: {
-      heading: "По направлению",
+      heading: "",
       links: [
-        { label: "Все решения", href: "/solutions" },
-        { label: "Ритейл", href: "/solutions/retail" },
         { label: "HoReCa", href: "/solutions/horeca" },
-        { label: "Девелопмент", href: "/solutions/public" },
-        { label: "Мебель и объекты", href: "/solutions/furniture-objects" },
-      ],
-    },
-    right: {
-      heading: "По задаче",
-      links: [
-        { label: "Стойки и ресепшен", href: "/solutions" },
-        { label: "Стеновые панели", href: "/solutions" },
-        { label: "Столешницы", href: "/solutions" },
-        { label: "Городская среда", href: "/solutions" },
-      ],
-    },
-    footer: {
-      hint: "",
-      cta: { label: "Получить расчёт →", href: "/contacts" },
-    },
-  },
-  "Каталог": {
-    left: {
-      heading: "",
-      links: [
-        { label: "Все изделия", href: "/catalog" },
-        { label: "На заказ", href: "/custom" },
-        { label: "Магазин", href: "/ready-made" },
+        { label: "Торговое оборудование", href: "/solutions/retail" },
+        { label: "Готовая мебель", href: "/solutions/furniture-objects" },
       ],
     },
     right: { heading: "", links: [] },
     footer: {
-      hint: "Нужна помощь с выбором?",
-      cta: { label: "Связаться с менеджером →", href: "/contacts" },
-    },
-  },
-  "О нас": {
-    left: {
-      heading: "",
-      links: [
-        { label: "О бренде", href: "/about" },
-        { label: "Производство", href: "/production" },
-      ],
-    },
-    right: { heading: "", links: [] },
-    footer: {
-      hint: "",
-      cta: { label: "Контакты →", href: "/contacts" },
+      hint: "3D-модели и образцы под проект",
+      cta: { label: "Обсудить проект →", href: "/contacts" },
     },
   },
 };
 
 /* ── Nav items for top bar ── */
-const navItems: { label: string; href: string; hasPanel: boolean }[] = [
-  { label: "Материал", href: "/material", hasPanel: true },
-  { label: "Решения", href: "/solutions", hasPanel: true },
-  { label: "Каталог", href: "/catalog", hasPanel: true },
-  { label: "Проекты", href: "/projects", hasPanel: false },
-  { label: "Архитекторам", href: "/for-architects", hasPanel: false },
-  { label: "О нас", href: "/about", hasPanel: true },
-  { label: "Контакты", href: "/contacts", hasPanel: false },
+const navItems: { label: string; href: string; hasPanel: boolean; left: string; center?: boolean }[] = [
+  { label: "Материал", href: "/material", hasPanel: true, left: "22%", center: true },
+  { label: "Решения", href: "/solutions", hasPanel: true, left: "54%" },
+  { label: "Магазин", href: "/catalog", hasPanel: false, left: "62%" },
+  { label: "Проекты", href: "/projects", hasPanel: false, left: "70%" },
+  { label: "Контакты", href: "/contacts", hasPanel: false, left: "78%" },
 ];
 
 /* ── Mobile menu structure ── */
@@ -110,11 +71,12 @@ const mobileMenuItems: MobileMenuItem[] = [
     hasSubmenu: true,
     submenu: [
       {
-        label: "Материал",
+        label: "",
         children: [
           { label: "О материале", href: "/material" },
+          { label: "Прайс-лист", href: "/prices" },
+          { label: "Архитекторам", href: "/for-architects" },
           { label: "Производство", href: "/production" },
-          { label: "Для архитекторов", href: "/for-architects" },
         ],
       },
     ],
@@ -124,55 +86,17 @@ const mobileMenuItems: MobileMenuItem[] = [
     hasSubmenu: true,
     submenu: [
       {
-        label: "По направлению",
+        label: "",
         children: [
-          { label: "Все решения", href: "/solutions" },
-          { label: "Ритейл", href: "/solutions/retail" },
           { label: "HoReCa", href: "/solutions/horeca" },
-          { label: "Девелопмент", href: "/solutions/public" },
-          { label: "Мебель и объекты", href: "/solutions/furniture-objects" },
-        ],
-      },
-      {
-        label: "По задаче",
-        children: [
-          { label: "Стойки и ресепшен", href: "/solutions" },
-          { label: "Стеновые панели", href: "/solutions" },
-          { label: "Столешницы", href: "/solutions" },
-          { label: "Городская среда", href: "/solutions" },
+          { label: "Торговое оборудование", href: "/solutions/retail" },
+          { label: "Готовая мебель", href: "/solutions/furniture-objects" },
         ],
       },
     ],
   },
-  {
-    label: "Каталог",
-    hasSubmenu: true,
-    submenu: [
-      {
-        label: "Каталог",
-        children: [
-          { label: "Все изделия", href: "/catalog" },
-          { label: "На заказ", href: "/custom" },
-          { label: "Магазин", href: "/ready-made" },
-        ],
-      },
-    ],
-  },
+  { label: "Магазин", href: "/catalog", hasSubmenu: false },
   { label: "Проекты", href: "/projects", hasSubmenu: false },
-  { label: "Архитекторам", href: "/for-architects", hasSubmenu: false },
-  {
-    label: "О нас",
-    hasSubmenu: true,
-    submenu: [
-      {
-        label: "О компании",
-        children: [
-          { label: "О бренде", href: "/about" },
-          { label: "Производство", href: "/production" },
-        ],
-      },
-    ],
-  },
   { label: "Контакты", href: "/contacts", hasSubmenu: false },
 ];
 
@@ -181,16 +105,33 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSubmenu, setMobileSubmenu] = useState<number | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const hoverLeaveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const headerRef = useRef<HTMLElement>(null);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const [scrolled, setScrolled] = useState(false);
 
-  const hoverActive = isHovered || !!openPanel;
-  const fg = hoverActive ? "#fff" : "#000";
-  const bg = hoverActive ? "#171513" : "#fff";
-  const panelBg = "#171513";
-  const panelText = "#fff";
+  /* Homepage: transparent over hero, solid after scrolling past it */
+  useEffect(() => {
+    if (!isHome) { setScrolled(true); return; }
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
+
+  const hoverActive = isHovered || !!openPanel || searchOpen;
+  // White text only over the hero photos; everywhere else (incl. hover) milky bg + ink text
+  const overHero = isHome && !scrolled && !mobileOpen && !hoverActive;
+  const fg = overHero ? "#FFFFFF" : "#171513";
+  const bg = overHero ? "transparent" : "#FFFFFF";
+  const panelBg = "#FFFFFF";
+  const panelText = "#171513";
 
   const toggle = useCallback((key: string) => {
+    setSearchOpen(false);
     setOpenPanel((prev) => (prev === key ? null : key));
   }, []);
 
@@ -201,6 +142,7 @@ export function Header() {
 
   const closeAll = useCallback(() => {
     setOpenPanel(null);
+    setSearchOpen(false);
     closeMobileMenu();
   }, [closeMobileMenu]);
 
@@ -218,6 +160,7 @@ export function Header() {
     const onClick = (e: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
         setOpenPanel(null);
+        setSearchOpen(false);
       }
     };
     document.addEventListener("mousedown", onClick);
@@ -239,12 +182,17 @@ export function Header() {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
+  /* Focus the search field when the search drawer opens */
+  useEffect(() => {
+    if (searchOpen) searchInputRef.current?.focus();
+  }, [searchOpen]);
+
   const panel = openPanel ? panels[openPanel] : null;
 
   return (
     <header
       ref={headerRef}
-      className={`sticky top-0 ${mobileOpen ? "z-[90]" : hoverActive ? "z-[70]" : "z-[50]"}`}
+      className={`${isHome ? "fixed top-0 left-0 right-0" : "sticky top-0"} ${mobileOpen ? "z-[90]" : hoverActive ? "z-[70]" : "z-[50]"}`}
       onMouseEnter={() => {
         if (hoverLeaveTimer.current) clearTimeout(hoverLeaveTimer.current);
         setIsHovered(true);
@@ -255,12 +203,13 @@ export function Header() {
     >
       {/* ── Top nav bar ── */}
       <nav
-        className="relative z-10 flex items-center h-[64px] transition-all duration-300"
+        className="relative z-10 flex items-center h-[54px] transition-all duration-300"
         style={{
-          backgroundColor: mobileOpen ? "#171513" : bg,
-          borderBottom: hoverActive
-            ? "1px solid rgba(255,255,255,0.15)"
-            : "1px solid rgba(0,0,0,0.1)",
+          backgroundColor: bg,
+          borderBottom: (overHero || mobileOpen)
+            ? "1px solid transparent"
+            : "1px solid #171513",
+          textShadow: overHero ? "0 1px 16px rgba(0,0,0,0.45)" : "none",
           padding: "0 var(--site-margins)",
         }}
       >
@@ -268,115 +217,138 @@ export function Header() {
         <div className="flex items-center w-full lg:hidden">
           {/* Left: Menu / Close */}
           <button
-            className="text-[15px] font-bold transition-colors duration-300 cursor-pointer shrink-0"
-            style={{ color: mobileOpen ? "#fff" : fg, fontFamily: D }}
+            className="text-[14px] font-bold cursor-pointer shrink-0"
+            style={{ color: fg, fontFamily: D }}
             onClick={() => {
               if (mobileOpen) closeMobileMenu();
-              else { setMobileOpen(true); setOpenPanel(null); }
+              else { setMobileOpen(true); setOpenPanel(null); setSearchOpen(false); }
             }}
           >
             {mobileOpen ? "Закрыть" : "Меню"}
           </button>
 
-          {/* Center: Logo */}
+          {/* Center: Logo — appears only when not over the hero (menu open / scrolled) */}
           <Link
             href="/"
-            className="absolute left-1/2 -translate-x-1/2 transition-all duration-300"
+            className="absolute left-1/2 -translate-x-1/2 transition-opacity duration-300"
+            style={{ opacity: overHero ? 0 : 1, pointerEvents: overHero ? "none" : "auto" }}
             onClick={closeMobileMenu}
           >
-            <img
-              src="/logo/repanel.svg"
-              alt="RePanel"
-              style={{
-                height: 20,
-                width: "auto",
-                filter: mobileOpen ? "invert(1)" : fg === "#fff" ? "invert(1)" : "none",
-                transition: "filter 0.3s",
-              }}
-            />
+            <img src="/logo/repanel.svg" alt="RePanel" style={{ height: 20, width: "auto" }} />
           </Link>
 
-          {/* Right: CTA */}
-          <Link
-            href="/contacts"
-            className="ml-auto text-[13px] font-bold shrink-0 transition-colors duration-300"
-            style={{
-              color: mobileOpen ? "#fff" : fg,
-              border: `1.5px solid ${mobileOpen ? "#fff" : fg}`,
-              padding: "5px 12px",
-              borderRadius: 9999,
-              fontFamily: D,
-            }}
-            onClick={closeMobileMenu}
-          >
-            Расчёт
-          </Link>
+          {/* Right: Поиск + Корзина */}
+          <div className="ml-auto flex items-center gap-4 shrink-0" style={{ fontFamily: D, color: fg }}>
+            <button
+              aria-label="Поиск"
+              onClick={() => { setMobileOpen(false); setOpenPanel(null); setSearchOpen((s) => !s); }}
+              className="flex items-center cursor-pointer"
+              style={{ color: fg }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round">
+                <circle cx="11" cy="11" r="7" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </button>
+            <Link href="/catalog" aria-label="Корзина" className="flex items-center gap-1 cursor-pointer" style={{ color: fg }} onClick={closeMobileMenu}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 8h14l-1 12H6L5 8Z" />
+                <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+              </svg>
+              <span style={{ color: fg, fontSize: 13, fontWeight: 700 }}>(0)</span>
+            </Link>
+          </div>
         </div>
 
-        {/* ─── DESKTOP top bar (>= lg) ─── */}
-        {/* Logo */}
+        {/* ─── DESKTOP (>= lg) — items absolutely positioned to nest in the gaps of the giant logo ─── */}
+        {/* Logo (far left) — hidden over hero, giant hero logo serves there */}
         <Link
           href="/"
-          className="hidden lg:block shrink-0 transition-all duration-300"
+          className="hidden lg:flex items-center absolute top-1/2 -translate-y-1/2 transition-all duration-300"
+          style={{ left: "var(--site-margins)", opacity: overHero ? 0 : 1, pointerEvents: overHero ? "none" : "auto" }}
           onClick={closeAll}
         >
-          <img
-            src="/logo/repanel.svg"
-            alt="RePanel"
-            style={{
-              height: 20,
-              width: "auto",
-              filter: fg === "#fff" ? "invert(1)" : "none",
-              transition: "filter 0.3s",
-            }}
-          />
+          <img src="/logo/repanel.svg" alt="RePanel" style={{ height: 22, width: "auto" }} />
         </Link>
 
-        {/* Desktop nav links */}
-        <div className="hidden items-center gap-7 lg:flex ml-12" style={{ fontFamily: D }}>
-          {navItems.map((item) =>
-            item.hasPanel ? (
-              <button
-                key={item.label}
-                onClick={() => toggle(item.label)}
-                className="text-[15px] font-bold hover:opacity-70 transition-all duration-300 cursor-pointer whitespace-nowrap"
-                style={{ color: fg }}
-              >
-                {item.label} {openPanel === item.label ? "×" : "+"}
-              </button>
-            ) : (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="text-[15px] font-bold hover:opacity-70 transition-all duration-300 whitespace-nowrap"
-                style={{ color: fg }}
-                onClick={() => setOpenPanel(null)}
-              >
-                {item.label}
-              </Link>
-            ),
-          )}
-        </div>
+        {navItems.map((item) =>
+          item.hasPanel ? (
+            <button
+              key={item.label}
+              onClick={() => toggle(item.label)}
+              className="hidden lg:block absolute top-1/2 -translate-y-1/2 hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap"
+              style={{ left: item.left, translate: item.center ? "-50% -50%" : undefined, fontFamily: D, color: fg, fontWeight: 700, fontSize: 14 }}
+            >
+              {item.label} {openPanel === item.label ? "×" : "+"}
+            </button>
+          ) : (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="hidden lg:block absolute top-1/2 -translate-y-1/2 hover:opacity-60 transition-opacity whitespace-nowrap"
+              style={{ left: item.left, translate: item.center ? "-50% -50%" : undefined, fontFamily: D, color: fg, fontWeight: 700, fontSize: 14 }}
+              onClick={() => setOpenPanel(null)}
+            >
+              {item.label}
+            </Link>
+          ),
+        )}
 
-        {/* Desktop right — CTA */}
-        <div className="hidden items-center gap-5 lg:flex ml-auto" style={{ fontFamily: D }}>
-          <Link
-            href="/contacts"
-            style={{
-              fontSize: 13,
-              fontWeight: 700,
-              padding: "6px 16px",
-              border: `1.5px solid ${fg}`,
-              borderRadius: 9999,
-              color: fg,
-              transition: "color 0.3s, border-color 0.3s",
-            }}
-            onClick={closeAll}
-          >
-            Запросить расчёт
-          </Link>
-        </div>
+        {/* Поиск */}
+        <button
+          aria-label="Поиск"
+          onClick={() => { setOpenPanel(null); setSearchOpen((s) => !s); }}
+          className="hidden lg:flex items-center gap-2 absolute top-1/2 -translate-y-1/2 cursor-pointer hover:opacity-60 transition-opacity"
+          style={{ left: "85%", fontFamily: D, color: fg, fontWeight: 700, fontSize: 14 }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <span style={{ color: fg }}>Поиск</span>
+        </button>
+
+        {/* Корзина (иконка + счётчик) */}
+        <Link
+          href="/catalog"
+          aria-label="Корзина"
+          className="hidden lg:flex items-center gap-1 absolute top-1/2 -translate-y-1/2 hover:opacity-60 transition-opacity"
+          style={{ left: "92%", color: fg }}
+          onClick={closeAll}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 8h14l-1 12H6L5 8Z" />
+            <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+          </svg>
+          <span style={{ fontFamily: D, fontWeight: 700, fontSize: 13, color: fg }}>(0)</span>
+        </Link>
       </nav>
+
+      {/* ── Search drawer: drops below the header, milky + ink ── */}
+      <div
+        className="overflow-hidden transition-all duration-300 ease-in-out"
+        style={{ maxHeight: searchOpen ? "100px" : "0px", opacity: searchOpen ? 1 : 0 }}
+      >
+        <div style={{ backgroundColor: "#FFFFFF", borderBottom: "1px solid #171513" }}>
+          <div className="flex items-center" style={{ gap: 16, padding: "0 var(--site-margins)", height: 84 }}>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#171513" strokeWidth="2.7" strokeLinecap="round" className="shrink-0">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Поиск"
+              className="flex-1 min-w-0 bg-transparent border-none [&::placeholder]:opacity-40"
+              style={{ fontFamily: D, fontWeight: 700, fontSize: "clamp(22px, 2vw, 30px)", letterSpacing: "-0.02em", color: "#171513", outline: "none", boxShadow: "none" }}
+              onKeyDown={(e) => { if (e.key === "Enter") setSearchOpen(false); }}
+            />
+            <span className="shrink-0" style={{ fontFamily: D, fontSize: 14, fontWeight: 700, color: "#171513", opacity: 0.45, whiteSpace: "nowrap" }}>
+              Нажмите «enter» для поиска
+            </span>
+          </div>
+        </div>
+      </div>
 
       {/* ── Desktop fullwidth dropdown panel (RO-style) ── */}
       <div
@@ -431,7 +403,7 @@ export function Header() {
                     <Link
                       key={link.href + link.label}
                       href={link.href}
-                      className="text-[clamp(24px,2.5vw,36px)] font-bold font-[Montserrat] hover:opacity-70 transition-opacity leading-[1.25]"
+                      className="text-[clamp(24px,2.5vw,36px)] font-bold font-[Gramatika] hover:opacity-70 transition-opacity leading-[1.25]"
                       style={{ color: panelText }}
                       onClick={closeAll}
                     >
@@ -499,7 +471,7 @@ export function Header() {
       {mobileOpen && (
         <div
           className="fixed inset-0 z-[80] lg:hidden flex flex-col overflow-hidden"
-          style={{ backgroundColor: "#171513", top: 64 }}
+          style={{ backgroundColor: "#FFFFFF", top: 54 }}
         >
           {/* Sliding container — two panels side by side */}
           <div
@@ -520,27 +492,26 @@ export function Header() {
                     {item.hasSubmenu ? (
                       <button
                         className="flex items-center justify-between w-full text-left cursor-pointer group"
-                        style={{ padding: "8px 0" }}
+                        style={{ padding: "16px 0" }}
                         onClick={() => setMobileSubmenu(idx)}
                       >
                         <span
-                          className="font-bold font-[Montserrat] transition-opacity duration-200 group-hover:opacity-70"
-                          style={{ color: "#fff", fontSize: "clamp(32px, 8vw, 48px)" }}
+                          className="font-bold font-[Gramatika] transition-opacity duration-200 group-hover:opacity-70"
+                          style={{ color: "#171513", fontSize: "clamp(32px, 8vw, 48px)" }}
                         >
                           {item.label}
                         </span>
-                        <span
-                          className="font-[Montserrat] transition-opacity duration-200 group-hover:opacity-70"
-                          style={{ color: "rgba(255,255,255,0.4)", fontSize: "clamp(24px, 6vw, 36px)" }}
-                        >
-                          →
+                        <span className="transition-opacity duration-200 group-hover:opacity-70 shrink-0 flex items-center" style={{ color: "#171513" }}>
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M9 6l6 6-6 6" />
+                          </svg>
                         </span>
                       </button>
                     ) : (
                       <Link
                         href={item.href!}
-                        className="block font-bold font-[Montserrat] transition-opacity duration-200 hover:opacity-70"
-                        style={{ color: "#fff", fontSize: "clamp(32px, 8vw, 48px)", padding: "8px 0" }}
+                        className="block font-bold font-[Gramatika] transition-opacity duration-200 hover:opacity-70"
+                        style={{ color: "#171513", fontSize: "clamp(32px, 8vw, 48px)", padding: "16px 0" }}
                         onClick={closeMobileMenu}
                       >
                         {item.label}
@@ -554,18 +525,18 @@ export function Header() {
               <div className="mt-auto pt-10 flex flex-col gap-4">
                 <Link
                   href="/contacts"
-                  className="text-[17px] font-bold font-[Montserrat] transition-opacity duration-200 hover:opacity-70"
-                  style={{ color: "#fff" }}
+                  className="text-[17px] font-bold font-[Gramatika] transition-opacity duration-200 hover:opacity-70"
+                  style={{ color: "#171513" }}
                   onClick={closeMobileMenu}
                 >
                   Запросить расчёт →
                 </Link>
                 <a
-                  href="https://t.me/repanel"
+                  href="https://t.me/panelpanelre"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[17px] font-bold font-[Montserrat] transition-opacity duration-200 hover:opacity-70 text-left"
-                  style={{ color: "rgba(255,255,255,0.4)" }}
+                  className="text-[17px] font-bold font-[Gramatika] transition-opacity duration-200 hover:opacity-70 text-left"
+                  style={{ color: "rgba(23,21,19,0.4)" }}
                 >
                   Telegram →
                 </a>
@@ -581,8 +552,8 @@ export function Header() {
                 <>
                   {/* Back button */}
                   <button
-                    className="flex items-center gap-2 text-[15px] font-bold font-[Montserrat] cursor-pointer transition-opacity duration-200 hover:opacity-70 self-start mt-4 mb-8"
-                    style={{ color: "rgba(255,255,255,0.4)" }}
+                    className="flex items-center gap-2 text-[15px] font-bold font-[Gramatika] cursor-pointer transition-opacity duration-200 hover:opacity-70 self-start mt-4 mb-8"
+                    style={{ color: "rgba(23,21,19,0.4)" }}
                     onClick={() => setMobileSubmenu(null)}
                   >
                     ← Назад
@@ -590,8 +561,8 @@ export function Header() {
 
                   {/* Section title */}
                   <h2
-                    className="font-bold font-[Montserrat] mb-8"
-                    style={{ color: "#fff", fontSize: "clamp(28px, 7vw, 40px)", lineHeight: 1 }}
+                    className="font-bold font-[Gramatika] mb-8"
+                    style={{ color: "#171513", fontSize: "clamp(28px, 7vw, 40px)", lineHeight: 1 }}
                   >
                     {mobileMenuItems[mobileSubmenu].label}
                   </h2>
@@ -603,7 +574,7 @@ export function Header() {
                         {/* Group label */}
                         <span
                           className="text-[11px] font-bold uppercase tracking-widest"
-                          style={{ color: "rgba(255,255,255,0.3)" }}
+                          style={{ color: "rgba(23,21,19,0.35)" }}
                         >
                           {group.label}
                         </span>
@@ -613,8 +584,8 @@ export function Header() {
                             <Link
                               key={child.href + child.label}
                               href={child.href}
-                              className="text-[17px] font-bold font-[Montserrat] transition-opacity duration-200 hover:opacity-70 leading-[1.35]"
-                              style={{ color: "#fff" }}
+                              className="text-[17px] font-bold font-[Gramatika] transition-opacity duration-200 hover:opacity-70 leading-[1.35]"
+                              style={{ color: "#171513" }}
                               onClick={closeMobileMenu}
                             >
                               {child.label}
@@ -629,8 +600,8 @@ export function Header() {
                   <div className="mt-auto pt-10">
                     <Link
                       href="/contacts"
-                      className="text-[17px] font-bold font-[Montserrat] transition-opacity duration-200 hover:opacity-70"
-                      style={{ color: "rgba(255,255,255,0.4)" }}
+                      className="text-[17px] font-bold font-[Gramatika] transition-opacity duration-200 hover:opacity-70"
+                      style={{ color: "rgba(23,21,19,0.4)" }}
                       onClick={closeMobileMenu}
                     >
                       Запросить расчёт →

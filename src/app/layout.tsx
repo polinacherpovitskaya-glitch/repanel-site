@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-
-/* Montserrat — display/heading font (matches Recycle Object site) */
-const display = Montserrat({
-  variable: "--font-display",
-  subsets: ["latin", "latin-ext", "cyrillic"],
-  weight: ["400", "700", "900"],
-});
+import { PromoBar } from "@/components/PromoBar";
+import { CookieConsent } from "@/components/CookieConsent";
+import { PageTransition } from "@/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "RePanel — панели и изделия из переработанного пластика",
@@ -25,7 +20,7 @@ export default function RootLayout({
   return (
     <html
       lang="ru"
-      className={`${display.variable} h-full`}
+      className="h-full"
       style={{ fontFamily: "'Gramatika', system-ui, -apple-system, sans-serif" }}
     >
       <body
@@ -35,6 +30,9 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <PromoBar />
+        <CookieConsent />
+        <PageTransition />
       </body>
     </html>
   );

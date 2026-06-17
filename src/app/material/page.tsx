@@ -1,818 +1,514 @@
-import Image from "next/image";
-import { FAQ } from "@/components/FAQ";
-import { ContactForm } from "@/components/ContactForm";
 import type { Metadata } from "next";
-
-const D = "'Montserrat', var(--font-display), sans-serif";
-const I = "'Gramatika', var(--font-sans), sans-serif";
+import type { ReactNode } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { FAQ } from "@/components/FAQ";
+import { FinalCTA } from "@/components/FinalCTA";
+import { PageHero } from "@/components/PageHero";
+import { UnderlineLink } from "@/components/UnderlineLink";
 
 export const metadata: Metadata = {
-  title: "Материал RePanel — листовой материал из переработанного пластика",
+  title: "Материал — RePanel",
   description:
-    "Листовой материал из 100% переработанного пластика. Форматы 1000x1000 и 1100x2100 мм, толщина 12-30 мм, 12 цветов. Обрабатывается стандартным инструментом.",
+    "Переработанный пластик RePanel: вид терраццо и камня, влагостойкость, UV-стабильность, обработка столярным инструментом. Цвета, форматы, характеристики и сравнение с ЛДСП, HPL, камнем и фанерой.",
 };
 
-/* ── Data ── */
+/* ── Шрифты (паттерны главной) ── */
+const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
+const BODY = "'Gramatika', sans-serif";
 
-const colors = [
-  { name: "Терракота", hex: "#C4593A" },
-  { name: "Океан", hex: "#2E6B9C" },
-  { name: "Графит", hex: "#4A4A4A" },
-  { name: "Песок", hex: "#D4B97E" },
-  { name: "Олива", hex: "#6B7D3E" },
-  { name: "Кость", hex: "#E8DCC8" },
-  { name: "Индиго", hex: "#3B4876" },
-  { name: "Коралл", hex: "#E07050" },
-  { name: "Мох", hex: "#5B7355" },
-  { name: "Пепел", hex: "#9A9A9A" },
-  { name: "Карамель", hex: "#B8845C" },
-  { name: "Антрацит", hex: "#333333" },
+/* ── Данные ── */
+
+// Этапы производства — материал-ряды (Figma: Materials, ряды Walnut/Ash/Oak).
+// Факты — из базы знаний RePanel: сырьё rPS (HIPS/GPPS), закупка у сертифицированных переработчиков.
+const productionRows = [
+  {
+    name: "Проверенное вторсырьё",
+    desc: "Мы не работаем со свалочным мусором. Сырьё для панелей — готовый переработанный полистирол, который мы закупаем у проверенных компаний-переработчиков с сертификатами на вторичный материал. Это корпуса холодильников и бытовой техники, электроника, одноразовая посуда и технологические отходы производств — пластик, уже прошедший сортировку, очистку и контроль качества. На входе дополнительно проверяем каждую партию: однородность, чистоту и оттенок. Загрязнённый пластик и композиты с другими материалами в работу не берём.",
+    img: "/images/ro0151.jpg",
+  },
+  {
+    name: "Прессование",
+    desc: "Подготовленное сырьё прессуем под давлением и температурой в плотный монолитный лист — без пустот, связующих смол и формальдегидов. Рисунок рождается на этом этапе, и он не обязан быть терраццо: выкладываем художественные паттерны, собираем монохромные миксы из нескольких оттенков одного цвета, делаем контрастную крошку или полностью однотонные листы. Подберём микс по референсу или мудборду, а если нужного оттенка нет — покрасим по RAL или Pantone. Каждый лист уникален: рисунок — это структура самого материала, а не печать на поверхности.",
+    img: "/images/ro0164.jpg",
+  },
+  {
+    name: "Раскрой и финиш",
+    desc: "Готовые листы калибруем по толщине — от 12 до 40 мм, затем шлифуем до ровного заводского матового финиша. После этого режем в размер проекта: пилой, на ЧПУ или фрезером, а кромке даём прямой рез, фаску или скругление. Дальше — постобработка под задачу: отверстия под крепёж и мойки, пазы, термоформование плавных изгибов. Если заказана не панель, а готовое изделие — собираем его целиком: столешницу, стойку, мебельный фасад. Обрезки не выбрасываем: принимаем обратно по программе buy-back и снова пускаем в производство.",
+    img: "/images/ro0184.jpg",
+  },
 ];
 
-const specs = [
-  { label: "Плотность", value: "0.94-0.96 г/см\u00B3" },
-  { label: "Твёрдость по Шору", value: "D60-D65" },
-  { label: "Водопоглощение", value: "<0.01%" },
-  { label: "UV-стойкость", value: "Стабилен без покрытия" },
-  { label: "Рабочая температура", value: "от -40 до +80 \u00B0C" },
-  { label: "Горючесть", value: "Г2 (умеренно горючий)" },
-  { label: "Модуль упругости", value: "800-1200 МПа" },
-  { label: "Предел прочности", value: "20-30 МПа" },
-  { label: "Состав", value: "100% HDPE (переработанный)" },
-  { label: "Запах", value: "Без запаха" },
+// Позиции рядов (Figma 4:7762/4:7774): фото 3 кол. (455px), текст 4 кол. (имя 2 + описание 2).
+// row-start-1 обязателен: без него грид уносит текст во вторую строку (вниз), а он должен
+// быть выровнен по верху фото. Чередование: фото слева → справа → слева → справа.
+const rowLayouts = [
+  { photo: "lg:col-span-3 lg:row-start-1", text: "lg:col-start-4 lg:col-span-4 lg:row-start-1" },
+  { photo: "lg:col-start-10 lg:col-span-3 lg:row-start-1", text: "lg:col-start-6 lg:col-span-4 lg:row-start-1" },
+  { photo: "lg:col-span-3 lg:row-start-1", text: "lg:col-start-4 lg:col-span-4 lg:row-start-1" },
+  { photo: "lg:col-start-10 lg:col-span-3 lg:row-start-1", text: "lg:col-start-6 lg:col-span-4 lg:row-start-1" },
+];
+
+// 12 базовых сочетаний цветов — фото из калькулятора (палитра №01–№12), входят в стоимость листа
+const basePalette = Array.from({ length: 12 }, (_, i) => {
+  const n = String(i + 1).padStart(2, "0");
+  return { num: `№ ${n}`, img: `/images/colors/color-${n}.jpg` };
+});
+
+// Живые остатки гранул со склада — публичный API калькулятора
+const CALC_ORIGIN = "https://web-production-d2761c.up.railway.app";
+
+type Granule = { id: number; code: string; color: string; ral: string; stock_kg: number; photo_url: string };
+
+async function getGranules(): Promise<Granule[] | null> {
+  try {
+    const res = await fetch(`${CALC_ORIGIN}/api/public/granules`, { next: { revalidate: 3600 } });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { granules?: Granule[] };
+    return data.granules?.length ? data.granules : null;
+  } catch {
+    return null;
+  }
+}
+
+const properties = [
+  { t: "Не боится воды", d: "Не впитывает влагу, не разбухает и не гниёт. Грибостойкость — 0 % роста (ASTM G21-15): для ванных, кухонь и влажных зон." },
+  { t: "Стойкость к пятнам", d: "Вино, кофе, лимон, специи — без следов. По стейн-тестам rPS держит пятна лучше акрилового камня." },
+  { t: "Ремонтопригодность", d: "Царапины и потёртости снимаются шлифовкой — поверхность восстанавливается рефинишем." },
+  { t: "Обработка как дерево", d: "Пилится, фрезеруется и сверлится обычным столярным инструментом и на ЧПУ." },
+  { t: "Уникальный рисунок", d: "Рисунок — структура самого материала, не печать. Ни один лист не повторяется." },
+  { t: "100 % переработка", d: "Вторичный полистирол без формальдегидов. Обрезки и изделия принимаем обратно по программе buy-back." },
+];
+
+const formats = [
+  { t: "Форматы листа", d: "2200 × 1100 мм (2,42 м²) — основной формат; 1000 × 1000 мм — для акцентов, малых изделий и образцов. Раскрой в любой размер под проект." },
+  { t: "Толщины", d: "Складские: 12 · 16 · 18 · 20 · 30 · 40 мм. Под заказ — любая в диапазоне 12–40 мм. Толще любого импортного аналога: массивные столешницы без подложки." },
+  { t: "Кромка и финиш", d: "Прямой рез, фаска, скругление; заводской матовый финиш. Термоформование плавных изгибов." },
 ];
 
 const processing = [
-  { method: "Пиление", desc: "Циркулярная или ленточная пила. Рез чистый, без сколов." },
-  { method: "Фрезерование", desc: "ЧПУ-фрезер или ручной фрезер. Позволяет создавать сложные формы и пазы." },
-  { method: "Сверление", desc: "Стандартные свёрла по дереву или металлу. Не трескается." },
-  { method: "Шлифовка", desc: "Ленточная или орбитальная шлифмашина. Можно менять фактуру поверхности." },
-  { method: "Термогибка", desc: "Нагрев до 160-180\u00B0C. Позволяет создавать изогнутые формы и скругления." },
-  { method: "Склейка", desc: "Специализированные клеи для полиэтилена. Возможна сварка горячим воздухом." },
-];
-
-const applications = [
-  { title: "Интерьеры ресторанов и кафе", desc: "Барные стойки, стеновые панели, столешницы. Материал не боится воды, легко моется." },
-  { title: "Ритейл и шоурумы", desc: "Торговое оборудование, стойки, полки. Уникальная текстура привлекает внимание." },
-  { title: "Офисные пространства", desc: "Ресепшены, перегородки, мебельные фасады. Устойчивость к износу в зонах высокого трафика." },
-  { title: "Жилые интерьеры", desc: "Кухонные фасады, подоконники, декоративные панели. Экологичный выбор для дома." },
-  { title: "Общественные пространства", desc: "Навигационные стенды, скамейки, вывески. Устойчив к вандализму и непогоде." },
-  { title: "Бренд-объекты", desc: "POS-материалы, инсталляции, выставочные стенды. Кастомный цвет под фирменный стиль." },
-];
-
-const carbonData = [
-  { material: "RePanel", co2: "1.8 кг CO\u2082/кг", note: "Вторичная переработка" },
-  { material: "Первичный HDPE", co2: "3.4 кг CO\u2082/кг", note: "Из нефтехимии" },
-  { material: "ЛДСП", co2: "2.5 кг CO\u2082/кг", note: "Древесина + смолы" },
-  { material: "HPL", co2: "4.2 кг CO\u2082/кг", note: "Сложное производство" },
-  { material: "Натуральный камень", co2: "0.7 кг CO\u2082/кг", note: "Добыча + транспорт" },
+  { t: "Пиление", d: "Циркулярная или ленточная пила. Рез чистый, без сколов." },
+  { t: "ЧПУ и фрезерование", d: "Сложные формы, пазы, отверстия под мойки. На толстых листах — несколько проходов по 3–4 мм." },
+  { t: "Сверление", d: "Стандартные свёрла по дереву или металлу. На толщинах 30–40 мм — охлаждение воздухом." },
+  { t: "Шлифовка", d: "Ленточная или орбитальная машина. Снимает царапины и восстанавливает матовый финиш." },
+  { t: "Термоформование", d: "При нагреве лист принимает плавные изгибы и радиусы — изогнутые фасады и скругления." },
+  { t: "Склейка", d: "MMA-клеи (типа Plexus) и MS-полимеры: кромка к кромке и крепление к подложке." },
 ];
 
 const comparison = [
   { param: "Влагостойкость", repanel: "Не впитывает воду", ldsp: "Разбухает", hpl: "Устойчив", stone: "Впитывает (пористый)", plywood: "Разбухает" },
-  { param: "UV-стойкость", repanel: "Стабилен", ldsp: "Выгорает", hpl: "Стабилен", stone: "Стабилен", plywood: "Темнеет" },
+  { param: "Стойкость к пятнам", repanel: "Выше акрилового камня", ldsp: "Кромки уязвимы", hpl: "Устойчив", stone: "Нужна пропитка", plywood: "Впитывает" },
   { param: "Обработка", repanel: "Столярный инструмент", ldsp: "Столярный инструмент", hpl: "Специнструмент", stone: "Камнерезный", plywood: "Столярный инструмент" },
   { param: "Ремонтопригодность", repanel: "Шлифуется", ldsp: "Нет", hpl: "Нет", stone: "Полируется", plywood: "Шлифуется" },
-  { param: "Экологичность", repanel: "100% переработка", ldsp: "Формальдегиды", hpl: "Сложная утилизация", stone: "Добыча", plywood: "Клеи" },
+  { param: "Экологичность", repanel: "100 % переработка + buy-back", ldsp: "Формальдегиды", hpl: "Сложная утилизация", stone: "Добыча", plywood: "Клеи" },
   { param: "Уникальность рисунка", repanel: "Каждый лист уникален", ldsp: "Повтор декора", hpl: "Повтор декора", stone: "Уникален", plywood: "Похожий рисунок" },
-  { param: "Вес (при 18мм)", repanel: "Средний", ldsp: "Средний", hpl: "Лёгкий", stone: "Тяжёлый", plywood: "Лёгкий" },
+  { param: "Вес (при 18 мм)", repanel: "Средний", ldsp: "Средний", hpl: "Лёгкий", stone: "Тяжёлый", plywood: "Лёгкий" },
+];
+
+// Embodied carbon (GWP-fossil), кг CO₂e/м² — по EPD европейских производителей rPS-панелей
+// (Polygood, Smile Plastics — материал того же типа). Собственный EPD RePanel — в работе.
+const carbonRows = [
+  { t: "Массив дерева", d: "3,2 кг CO₂e/м²" },
+  { t: "МДФ с лаком", d: "3,7 кг CO₂e/м²" },
+  { t: "ДСП с лаком", d: "4,0 кг CO₂e/м²" },
+  { t: "Панели из rPS — как RePanel", d: "4,6 кг CO₂e/м²" },
+  { t: "Кварцевый агломерат", d: "28,0 кг CO₂e/м²" },
+  { t: "Акриловый камень (solid surface)", d: "61,4 кг CO₂e/м²" },
+];
+
+const specs = [
+  { label: "Состав", value: "100 % переработанный полистирол (rPS)" },
+  { label: "Форматы листа", value: "2200 × 1100 мм · 1000 × 1000 мм" },
+  { label: "Толщины", value: "12–40 мм (склад: 12 / 16 / 18 / 20 / 30 / 40)" },
+  { label: "Плотность", value: "1,0–1,1 г/см³" },
+  { label: "Вес", value: "13–42 кг/м² (по толщине)" },
+  { label: "Твёрдость по Шору", value: "D 73–74" },
+  { label: "Модуль упругости", value: "2100–2240 МПа" },
+  { label: "Прочность на разрыв", value: "22–26 МПа" },
+  { label: "Теплостойкость (HDT)", value: "72–86 °C" },
+  { label: "Огнестойкость", value: "EN 13501-1 — Class E (без покрытия)" },
+  { label: "Грибостойкость", value: "0 % роста (ASTM G21-15)" },
+  { label: "Финиш", value: "Заводской матовый" },
+];
+
+const applicationsCarousel = [
+  { title: "Кухонные фасады", img: "/images/sposoby/sp-kitchen.png" },
+  { title: "Фартуки на кухню", img: "/images/sposoby/sp-backsplash.png" },
+  { title: "Мебель для ванной", img: "/images/sposoby/sp-bathroom.png" },
+  { title: "Подоконники", img: "/images/sposoby/sp-windowsill.png" },
+  { title: "Стеновые панели", img: "/images/sposoby/sp-wall.png" },
+  { title: "Изголовья кроватей", img: "/images/sposoby/sp-headboard.png" },
+  { title: "Городская среда", img: "/images/sposoby/sp-urban.png" },
+  { title: "Офисные столешницы", img: "/images/sposoby/sp-office.png" },
 ];
 
 const materialFaq = [
-  {
-    question: "Устойчив ли материал к воде?",
-    answer:
-      "Да. Материал не впитывает воду, не разбухает и не гниёт. Подходит для ванных комнат, кухонь, уличных объектов и зон с повышенной влажностью.",
-  },
-  {
-    question: "Как материал ведёт себя на солнце?",
-    answer:
-      "Материал UV-стабилен и не выгорает при прямом солнечном воздействии. Подходит для наружного применения без дополнительной обработки.",
-  },
-  {
-    question: "Какую нагрузку выдерживает?",
-    answer:
-      "Зависит от толщины и конструкции. Листы 18-20 мм подходят для горизонтальных поверхностей, 25-30 мм — для столешниц и стоек с высокой нагрузкой.",
-  },
-  {
-    question: "Можно ли гнуть материал?",
-    answer:
-      "Материал можно гнуть термическим способом при нагреве до 160-180 градусов. Это позволяет создавать изогнутые формы, скругления и объёмные конструкции.",
-  },
-  {
-    question: "Чем обрабатывать?",
-    answer:
-      "Стандартным столярным инструментом: циркулярная пила, фрезер, сверло, шлифмашина. Не требует специального оборудования.",
-  },
-  {
-    question: "Как заказать образцы?",
-    answer:
-      "Заполните форму на странице контактов или напишите в Telegram. Для архитекторов в Москве и МО доставка образцов бесплатна.",
-  },
+  { question: "Устойчив ли материал к воде?", answer: "Да. Материал не впитывает воду, не разбухает и не гниёт, грибостойкость — 0 % роста. Подходит для ванных комнат, кухонь и зон с повышенной влажностью." },
+  { question: "Как материал ведёт себя на солнце?", answer: "Для интерьеров — без ограничений. UV-стойкость умеренная: при постоянном прямом солнце оттенки со временем могут меняться, поэтому для улицы и южных витрин поможем подобрать подходящий цвет и решение." },
+  { question: "Какую нагрузку выдерживает?", answer: "Зависит от толщины: 12 мм — панели и фасады (столешницы — с подложкой), 20 мм — лёгкие столешницы, 30 мм — барные и ресепшен-стойки, 40 мм — массивные столешницы и скамьи. Поможем рассчитать конструкцию." },
+  { question: "Можно ли гнуть материал?", answer: "Да, термоформованием: при нагреве лист принимает плавные изгибы и радиусы. Изогнутые фасады, скругления и объёмные элементы делаем на производстве." },
+  { question: "Как ухаживать за поверхностью?", answer: "Влажная губка и мягкое средство без абразива. Пятна от вина, кофе и специй материал держит лучше акрилового камня. Глубокие царапины снимаются шлифовкой — поверхность восстанавливается рефинишем." },
+  { question: "Можно ли заказать цвет под бренд?", answer: "Да: соберём микс из складских цветов по референсу или покрасим по RAL / Pantone. Перед запуском партии утверждаем физический образец 500 × 500 мм." },
+  { question: "Что делать с обрезками и старыми панелями?", answer: "Принимаем обратно по программе buy-back: чистые обрезки и панели в конце службы возвращаются в производство, а вы получаете кредит на следующий заказ." },
 ];
 
-const materialHeroDescription =
-  "Листовой материал из переработанного пластика с уникальной текстурой. Для интерьеров, мебели и бренд-объектов. Не просто переработанный пластик. Рабочий материал для сильных интерьеров — с характером, которого нет у ЛДСП, типового пластика или имитации камня.";
+/* ── Паттерны шаблона ── */
 
-/* ── Styles ── */
+// Заголовок группы — размер и стиль как у заголовков секций главной
+function GroupTitle({ children }: { children: ReactNode }) {
+  return (
+    <h2
+      className="font-bold text-[#171513] mb-5 lg:mb-7"
+      style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}
+    >
+      {children}
+    </h2>
+  );
+}
 
-const h2Style: React.CSSProperties = {
-  fontFamily: D,
-  fontSize: "clamp(34px, 9vw, 52px)",
-  fontWeight: 700,
-  letterSpacing: -1.5,
-  lineHeight: 0.92,
-};
-
-const sectionPadding: React.CSSProperties = {
-  padding: "clamp(56px, 9vw, 80px) 20px",
-};
-
-const hr: React.CSSProperties = {
-  border: "none",
-  borderTop: "1px solid #000",
-  margin: 0,
-};
-
-export default function MaterialPage() {
+// Деф-строка (Figma Sustainability / главная 4:8885): хайрлайн + ярлык + текст
+function DefRows({ rows }: { rows: { t: string; d: string }[] }) {
   return (
     <>
-      {/* ══════ HERO ══════ */}
-      <section
-        style={{
-          maxWidth: 1440,
-          margin: "0 auto",
-          background: "#fff",
-        }}
-      >
-        <div className="block px-5 pt-10 pb-8 lg:hidden">
-          <h1
-            style={{
-              fontFamily: D,
-              fontSize: "clamp(44px, 17vw, 72px)",
-              fontWeight: 700,
-              letterSpacing: "-0.05em",
-              lineHeight: 0.85,
-              margin: 0,
-            }}
-          >
-            Материал
-          </h1>
+      {rows.map((r) => (
+        <div key={r.t} className="border-t border-[#171513] grid grid-cols-1 md:grid-cols-9 gap-y-1 gap-x-5 pt-3 pb-5">
+          <h3 className="md:col-span-5 font-bold text-[#171513]" style={{ fontFamily: BODY, fontSize: "18.6px", lineHeight: "26.66px", letterSpacing: "-0.4px" }}>
+            {r.t}
+          </h3>
+          <p className="md:col-span-4 text-[#171513]" style={{ fontFamily: BODY, fontWeight: 400, fontSize: "14.6px", lineHeight: "20px" }}>
+            {r.d}
+          </p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+export default async function MaterialPage() {
+  const granules = await getGranules();
+  return (
+    <>
+      {/* ═══ HERO — единый PageHero (Figma collection-hero 4:7967) ═══ */}
+      <PageHero
+        title="Материал"
+        image="/images/RO1258.jpg"
+        imageAlt="RePanel — панели из переработанного пластика"
+        lead="Переработанный пластик с видом терраццо или камня. Не боится воды, легче камня, обрабатывается как дерево — и каждый лист уникален. Производим в России из переработанного полистирола."
+      />
+
+      {/* ═══ СТЕЙТМЕНТ (Figma p.is-h3 — сразу после героя, во всю ширину) ═══ */}
+      <section className="px-[var(--site-margins)] pt-5">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
           <p
             style={{
-              fontFamily: I,
-              fontSize: 16,
-              lineHeight: 1.6,
-              margin: "24px 0 0",
-            }}
-          >
-            {materialHeroDescription}
-          </p>
-          <div className="relative mt-8 overflow-hidden" style={{ aspectRatio: "4 / 5" }}>
-            <Image
-              src="/images/RO1258.jpg"
-              alt="Материал RePanel"
-              fill
-              sizes="(max-width: 1023px) calc(100vw - 40px), 763px"
-              className="object-cover"
-              priority
-            />
-          </div>
-          <div className="mt-8 h-px bg-black" />
-        </div>
-
-        <div className="relative hidden h-[700px] overflow-hidden lg:block">
-          {/* Title */}
-          <h1
-            style={{
-              fontFamily: D,
-              fontSize: 80,
+              fontFamily: BODY,
               fontWeight: 700,
-              letterSpacing: -4,
-              lineHeight: 0.85,
-              position: "absolute",
-              left: 40,
-              top: 40,
-              margin: 0,
+              color: "#171513",
+              fontSize: "clamp(16.8px, 4.5vw, 31.9px)",
+              lineHeight: 1.37,
+              letterSpacing: "-0.021em",
             }}
           >
-            Материал
-          </h1>
-
-          {/* Vertical divider line */}
-          <div
-            style={{
-              position: "absolute",
-              left: 640,
-              top: 20,
-              width: 1,
-              height: 660,
-              background: "#000",
-            }}
-          />
-
-          {/* Description at bottom-left */}
-          <p
-            style={{
-              fontFamily: I,
-              fontSize: 16,
-              lineHeight: 1.6,
-              position: "absolute",
-              left: 22,
-              top: 531,
-              width: 570,
-              margin: 0,
-            }}
-          >
-            {materialHeroDescription}
+            Мы перерабатываем пластиковые отходы в&nbsp;плотные листы — терраццо, художественный
+            паттерн или ровный однотон — материал для мебели, интерьеров и&nbsp;городской среды,
+            который не&nbsp;боится воды и&nbsp;времени.
           </p>
-
-          {/* Photo on the right */}
-          <div
-            style={{
-              position: "absolute",
-              left: 660,
-              top: 15.5,
-              width: 763,
-              height: 629,
-            }}
-          >
-            <Image
-              src="/images/RO1258.jpg"
-              alt="Материал RePanel"
-              fill
-              sizes="(max-width: 1439px) 53vw, 763px"
-              className="object-cover"
-              priority
-            />
-          </div>
-
-          {/* Horizontal line at bottom */}
-          <div
-            style={{
-              position: "absolute",
-              left: 20,
-              top: 661,
-              width: 1401,
-              height: 1,
-              background: "#000",
-            }}
-          />
         </div>
       </section>
 
-      {/* ══════ ЦВЕТА И КАСТОМИЗАЦИЯ ══════ */}
-      <section style={{ maxWidth: 1440, margin: "0 auto", ...sectionPadding }}>
-        <h2 style={h2Style}>Цвета и кастомизация</h2>
-
-        <p
-          style={{
-            fontFamily: I,
-            fontSize: 18,
-            lineHeight: 1.6,
-            maxWidth: 700,
-            marginTop: 24,
-            marginBottom: 40,
-          }}
-        >
-          Каждая панель уникальна. Рисунок создаётся смешением гранул
-          переработанного пластика — и не повторяется дважды.
-        </p>
-
-        <hr style={hr} />
-
-        <div
-          className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
-          style={{ gap: 24, marginTop: 40 }}
-        >
-          {colors.map((c) => (
-            <div key={c.name} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <div
-                style={{
-                  width: "100%",
-                  aspectRatio: "1 / 1",
-                  backgroundColor: c.hex,
-                }}
-              />
-              <div>
-                <p
-                  style={{
-                    fontFamily: D,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    margin: 0,
-                  }}
-                >
-                  {c.name}
-                </p>
-                <p
-                  style={{
-                    fontFamily: I,
-                    fontSize: 12,
-                    color: "#888",
-                    margin: 0,
-                    marginTop: 2,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  {c.hex}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══════ ФОРМАТЫ И ТОЛЩИНЫ ══════ */}
-      <section style={{ maxWidth: 1440, margin: "0 auto", ...sectionPadding }}>
-        <h2 style={h2Style}>Форматы и толщины</h2>
-
-        <div
-          className="grid grid-cols-1 md:grid-cols-2"
-          style={{ gap: 40, marginTop: 40 }}
-        >
-          {/* Compact */}
-          <div
-            style={{
-              border: "1px solid #000",
-              padding: 32,
-              display: "flex",
-              flexDirection: "column",
-              gap: 16,
-            }}
-          >
-            <p
-              style={{
-                fontFamily: D,
-                fontSize: 13,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                margin: 0,
-              }}
-            >
-              Компактный
-            </p>
-            <p
-              style={{
-                fontFamily: D,
-                fontSize: 36,
-                fontWeight: 700,
-                letterSpacing: -1,
-                margin: 0,
-              }}
-            >
-              1000 x 1000 мм
-            </p>
-            <hr style={hr} />
-            <p style={{ fontFamily: I, fontSize: 16, margin: 0 }}>
-              Толщина: 12, 15, 18, 20, 25, 30 мм
-            </p>
-            <p style={{ fontFamily: I, fontSize: 14, color: "#666", margin: 0 }}>
-              Удобен для мебельных фасадов, полок, декоративных элементов
-              и небольших поверхностей.
-            </p>
-          </div>
-
-          {/* Large */}
-          <div
-            style={{
-              border: "1px solid #000",
-              padding: 32,
-              display: "flex",
-              flexDirection: "column",
-              gap: 16,
-            }}
-          >
-            <p
-              style={{
-                fontFamily: D,
-                fontSize: 13,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                margin: 0,
-              }}
-            >
-              Масштабный
-            </p>
-            <p
-              style={{
-                fontFamily: D,
-                fontSize: 36,
-                fontWeight: 700,
-                letterSpacing: -1,
-                margin: 0,
-              }}
-            >
-              1100 x 2100 мм
-            </p>
-            <hr style={hr} />
-            <p style={{ fontFamily: I, fontSize: 16, margin: 0 }}>
-              Толщина: 12, 15, 18, 20, 25, 30 мм
-            </p>
-            <p style={{ fontFamily: I, fontSize: 14, color: "#666", margin: 0 }}>
-              Для стеновых панелей, столешниц, барных стоек
-              и крупноформатных поверхностей.
-            </p>
+      {/* ═══ КАК МЫ ЭТО ДЕЛАЕМ — материал-ряды (Figma: Solid Wood rows, чередование) ═══ */}
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <GroupTitle>Как мы это делаем</GroupTitle>
+          <div>
+            {productionRows.map((row, i) => {
+              const L = rowLayouts[i % rowLayouts.length];
+              return (
+                <div key={row.name} className="grid grid-cols-1 lg:grid-cols-12 gap-5 py-5">
+                  <div className={`relative aspect-square overflow-hidden order-first lg:order-none ${L.photo}`}>
+                    <Image src={row.img} alt={row.name} fill sizes="(min-width:1024px) 25vw, 100vw" className="object-cover" />
+                  </div>
+                  {/* Текстовый блок ряда «заякорен» хайрлайном (Figma: линия над name+desc) */}
+                  <div className={`border-t border-[#171513] pt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2 self-start ${L.text}`}>
+                    <h3 className="font-bold text-[#171513]" style={{ fontFamily: DISPLAY, fontSize: "clamp(24px, 2.2vw, 31.7px)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+                      {row.name}
+                    </h3>
+                    <p style={{ fontFamily: BODY, fontWeight: 400, fontSize: "14.6px", lineHeight: "20px", color: "#171513", opacity: 1 }}>
+                      {row.desc}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ══════ ТЕХНИЧЕСКИЕ ХАРАКТЕРИСТИКИ ══════ */}
-      <section style={{ maxWidth: 1440, margin: "0 auto", ...sectionPadding }}>
-        <hr style={hr} />
+      {/* ═══ ЦВЕТА — паттерн Finishes (ярлык слева + сетка образцов с подписями) ═══ */}
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <GroupTitle>Цвета</GroupTitle>
 
-        <h2 style={{ ...h2Style, marginTop: 40 }}>
-          Технические характеристики
-        </h2>
-
-        <p
-          style={{
-            fontFamily: I,
-            fontSize: 18,
-            lineHeight: 1.6,
-            maxWidth: 600,
-            marginTop: 16,
-            marginBottom: 40,
-          }}
-        >
-          Ключевые параметры материала, подтверждённые лабораторными испытаниями.
-        </p>
-
-        <div>
-          {specs.map((s) => (
-            <div
-              key={s.label}
-              className="flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between"
-              style={{
-                borderTop: "1px solid #000",
-                padding: "16px 0",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: I,
-                  fontSize: 16,
-                  color: "#666",
-                }}
-              >
-                {s.label}
-              </span>
-              <span
-                style={{
-                  fontFamily: D,
-                  fontSize: 16,
-                  fontWeight: 700,
-                  textAlign: "right",
-                }}
-              >
-                {s.value}
-              </span>
-            </div>
-          ))}
-          <div style={{ borderTop: "1px solid #000" }} />
-        </div>
-      </section>
-
-      {/* ══════ ОБРАБОТКА МАТЕРИАЛА ══════ */}
-      <section style={{ maxWidth: 1440, margin: "0 auto", padding: "24px 20px" }}>
-        <hr style={hr} />
-
-        <h2 style={{ ...h2Style, marginTop: 40 }}>
-          Обработка материала
-        </h2>
-
-        <p
-          style={{
-            fontFamily: I,
-            fontSize: 18,
-            lineHeight: 1.6,
-            maxWidth: 700,
-            marginTop: 16,
-            marginBottom: 40,
-          }}
-        >
-          Материал обрабатывается стандартным деревообрабатывающим оборудованием.
-          Ключевые способы обработки:
-        </p>
-
-        <div>
-          {processing.map((p) => (
-            <div
-              key={p.method}
-              className="flex flex-col gap-3 md:flex-row md:items-baseline"
-              style={{
-                borderTop: "1px solid #000",
-                padding: "20px 0",
-              }}
-            >
-              <span
-                className="md:min-w-[180px] md:shrink-0"
-                style={{
-                  fontFamily: D,
-                  fontSize: 18,
-                  fontWeight: 700,
-                }}
-              >
-                {p.method}
-              </span>
-              <span
-                style={{
-                  fontFamily: I,
-                  fontSize: 16,
-                  lineHeight: 1.5,
-                  color: "#444",
-                }}
-              >
-                {p.desc}
-              </span>
-            </div>
-          ))}
-          <div style={{ borderTop: "1px solid #000" }} />
-        </div>
-      </section>
-
-      {/* ══════ ГДЕ МАТЕРИАЛ РАБОТАЕТ ЛУЧШЕ ВСЕГО ══════ */}
-      <section style={{ maxWidth: 1440, margin: "0 auto", ...sectionPadding }}>
-        <hr style={hr} />
-
-        <h2 style={{ ...h2Style, marginTop: 40 }}>
-          Где материал работает лучше всего
-        </h2>
-
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-          style={{ gap: 0, marginTop: 40 }}
-        >
-          {applications.map((a, i) => (
-            <div
-              key={a.title}
-              style={{
-                borderTop: "1px solid #000",
-                padding: "24px 20px 24px 0",
-              }}
-            >
-              <div style={{ display: "flex", gap: 12, alignItems: "baseline", marginBottom: 8 }}>
-                <span
-                  style={{
-                    fontFamily: D,
-                    fontSize: 12,
-                    color: "#999",
-                  }}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span
-                  style={{
-                    fontFamily: D,
-                    fontSize: 18,
-                    fontWeight: 700,
-                  }}
-                >
-                  {a.title}
-                </span>
-              </div>
-              <p
-                style={{
-                  fontFamily: I,
-                  fontSize: 14,
-                  lineHeight: 1.6,
-                  color: "#555",
-                  margin: 0,
-                  paddingLeft: 32,
-                }}
-              >
-                {a.desc}
+          {/* ── Вариант 1. Базовые сочетания — 12 фото, в стоимости листа ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 pt-3">
+            <div className="lg:col-span-3 border-t border-[#171513] pt-2.5 self-start">
+              <h3 className="font-bold text-[#171513]" style={{ fontFamily: BODY, fontSize: "clamp(22px, 2.2vw, 31.7px)", lineHeight: 1.34, letterSpacing: "-0.5px" }}>
+                Базовые сочетания
+              </h3>
+              <p className="text-[#171513] mt-1" style={{ fontFamily: BODY, fontSize: "13.5px", lineHeight: "19px", opacity: 0.6 }}>
+                12 вариантов · в стоимости листа
               </p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══════ УГЛЕРОДНЫЙ СЛЕД ══════ */}
-      <section style={{ maxWidth: 1440, margin: "0 auto", ...sectionPadding }}>
-        <hr style={hr} />
-
-        <h2 style={{ ...h2Style, marginTop: 40 }}>Углеродный след</h2>
-
-        <p
-          style={{
-            fontFamily: I,
-            fontSize: 18,
-            lineHeight: 1.6,
-            maxWidth: 700,
-            marginTop: 16,
-            marginBottom: 40,
-          }}
-        >
-          Производство RePanel из вторичного сырья снижает углеродный след
-          по сравнению с первичными материалами.
-        </p>
-
-        <div>
-          {carbonData.map((c) => (
-            <div
-              key={c.material}
-              className="grid grid-cols-1 gap-2 md:grid-cols-[200px_1fr_1fr] md:gap-5"
-              style={{
-                borderTop: "1px solid #000",
-                padding: "16px 0",
-                alignItems: "baseline",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: D,
-                  fontSize: 16,
-                  fontWeight: c.material === "RePanel" ? 700 : 400,
-                }}
-              >
-                {c.material}
-              </span>
-              <span
-                style={{
-                  fontFamily: D,
-                  fontSize: 16,
-                  fontWeight: 700,
-                }}
-              >
-                {c.co2}
-              </span>
-              <span
-                style={{
-                  fontFamily: I,
-                  fontSize: 14,
-                  color: "#666",
-                }}
-              >
-                {c.note}
-              </span>
-            </div>
-          ))}
-          <div style={{ borderTop: "1px solid #000" }} />
-        </div>
-      </section>
-
-      {/* ══════ СРАВНЕНИЕ С АНАЛОГАМИ ══════ */}
-      <section style={{ maxWidth: 1440, margin: "0 auto", ...sectionPadding }}>
-        <hr style={hr} />
-
-        <h2 style={{ ...h2Style, marginTop: 40 }}>Сравнение с аналогами</h2>
-
-        <div style={{ marginTop: 40, overflowX: "auto", paddingBottom: 8 }}>
-          <table
-            style={{
-              width: "100%",
-              minWidth: 720,
-              borderCollapse: "collapse",
-              fontFamily: I,
-              fontSize: 14,
-            }}
-          >
-            <thead>
-              <tr style={{ borderBottom: "1px solid #000" }}>
-                <th
-                  style={{
-                    fontFamily: D,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    textAlign: "left",
-                    padding: "12px 12px 12px 0",
-                  }}
-                >
-                  Параметр
-                </th>
-                <th
-                  style={{
-                    fontFamily: D,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    textAlign: "left",
-                    padding: 12,
-                    background: "#f5f5f5",
-                  }}
-                >
-                  RePanel
-                </th>
-                <th
-                  style={{
-                    fontFamily: D,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    textAlign: "left",
-                    padding: 12,
-                  }}
-                >
-                  ЛДСП
-                </th>
-                <th
-                  style={{
-                    fontFamily: D,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    textAlign: "left",
-                    padding: 12,
-                  }}
-                >
-                  HPL
-                </th>
-                <th
-                  style={{
-                    fontFamily: D,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    textAlign: "left",
-                    padding: 12,
-                  }}
-                >
-                  Камень
-                </th>
-                <th
-                  style={{
-                    fontFamily: D,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    textAlign: "left",
-                    padding: 12,
-                  }}
-                >
-                  Фанера
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {comparison.map((row) => (
-                <tr
-                  key={row.param}
-                  style={{ borderBottom: "1px solid #000" }}
-                >
-                  <td
-                    style={{
-                      fontFamily: I,
-                      fontSize: 14,
-                      color: "#666",
-                      padding: "14px 12px 14px 0",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {row.param}
-                  </td>
-                  <td
-                    style={{
-                      fontFamily: D,
-                      fontSize: 14,
-                      fontWeight: 700,
-                      padding: 14,
-                      background: "#f5f5f5",
-                    }}
-                  >
-                    {row.repanel}
-                  </td>
-                  <td style={{ padding: 14 }}>{row.ldsp}</td>
-                  <td style={{ padding: 14 }}>{row.hpl}</td>
-                  <td style={{ padding: 14 }}>{row.stone}</td>
-                  <td style={{ padding: 14 }}>{row.plywood}</td>
-                </tr>
+            <div className="lg:col-start-4 lg:col-span-9 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+              {basePalette.map((c) => (
+                <div key={c.num}>
+                  <div className="relative w-full aspect-square overflow-hidden">
+                    <Image src={c.img} alt={`Базовое сочетание ${c.num}`} fill sizes="(min-width:1024px) 20vw, 45vw" className="object-cover" />
+                  </div>
+                  <p className="font-bold text-[#171513] pt-2.5" style={{ fontFamily: BODY, fontSize: "13px", lineHeight: "20px" }}>{c.num}</p>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </div>
+
+          {/* ── Вариант 2. Подбор из гранул на складе (+18 000 ₽) + живые остатки ── */}
+          <div className="border-t border-[#171513] pt-2.5 grid grid-cols-1 lg:grid-cols-12 gap-5 mt-12 lg:mt-16">
+            <div className="lg:col-span-3 self-start">
+              <h3 className="font-bold text-[#171513]" style={{ fontFamily: BODY, fontSize: "clamp(22px, 2.2vw, 31.7px)", lineHeight: 1.34, letterSpacing: "-0.5px" }}>
+                Подбор из гранул на складе
+              </h3>
+              <p className="text-[#171513] mt-1" style={{ fontFamily: BODY, fontSize: "13.5px", lineHeight: "19px", opacity: 0.6 }}>
+                +18 000 ₽ за подбор с образцами
+              </p>
+            </div>
+            <div className="lg:col-start-4 lg:col-span-5">
+              <p className="text-[#171513]" style={{ fontFamily: BODY, fontWeight: 400, fontSize: "14.6px", lineHeight: "20px" }}>
+                <strong>Бесплатно:</strong> если нравится одно из 12 базовых сочетаний, но хочется заменить
+                один цвет на другой при той же пропорции — запускаем заказ без образцов. Риск: разные цвета
+                ведут себя по-разному, результат может отличаться от ожидания.
+              </p>
+              <p className="text-[#171513] mt-4" style={{ fontFamily: BODY, fontWeight: 400, fontSize: "14.6px", lineHeight: "20px" }}>
+                <strong>+18 000 ₽ — подбор с образцами:</strong> в стоимость входят 3 образца 50 × 50 см.
+                Делаем по одному: смотрим → корректируем пропорцию → следующий. Когда пропорция найдена —
+                фиксируем и запускаем лист. Ориентиры пропорций: 50/50 · 70/30 · 90/10 · 95/5 · 97/3.
+              </p>
+            </div>
+          </div>
+
+          {/* Живые остатки гранул — публичный API калькулятора (обновляется раз в час) */}
+          {granules && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-8">
+              <p className="lg:col-span-3 font-bold text-[#171513]" style={{ fontFamily: BODY, fontSize: "14.6px", lineHeight: "20px" }}>
+                Гранулы на складе сейчас
+              </p>
+              <div className="lg:col-start-4 lg:col-span-9 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+                {granules.map((g) => (
+                  <div key={g.id}>
+                    <div className="relative w-full aspect-square overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`${CALC_ORIGIN}${g.photo_url}`} alt={`${g.code} — ${g.color}`} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+                    </div>
+                    <p className="font-bold text-[#171513] pt-1.5" style={{ fontFamily: BODY, fontSize: "12.5px", lineHeight: "17px" }}>
+                      {g.code} · {g.color}
+                    </p>
+                    <p className="text-[#171513]" style={{ fontFamily: BODY, fontSize: "12px", lineHeight: "17px", opacity: 0.55 }}>
+                      {g.ral ? `RAL ${g.ral} · ` : ""}{Math.round(g.stock_kg)} кг
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── Вариант 3. Покраска по RAL / Pantone (+144 000 ₽ · от 500 кг) ── */}
+          <div className="border-t border-[#171513] pt-2.5 grid grid-cols-1 lg:grid-cols-12 gap-5 mt-12 lg:mt-16">
+            <div className="lg:col-span-3 self-start">
+              <h3 className="font-bold text-[#171513]" style={{ fontFamily: BODY, fontSize: "clamp(22px, 2.2vw, 31.7px)", lineHeight: 1.34, letterSpacing: "-0.5px" }}>
+                Покраска по RAL / Pantone
+              </h3>
+              <p className="text-[#171513] mt-1" style={{ fontFamily: BODY, fontSize: "13.5px", lineHeight: "19px", opacity: 0.6 }}>
+                +144 000 ₽ · от 500 кг
+              </p>
+            </div>
+            <div className="lg:col-start-4 lg:col-span-5 flex flex-col items-start gap-4">
+              <p className="text-[#171513]" style={{ fontFamily: BODY, fontWeight: 400, fontSize: "14.6px", lineHeight: "20px" }}>
+                Если нужен точный фирменный оттенок — красим сырьё под выбранный RAL или Pantone.
+                Минимальный заказ — 500 кг на один цвет: в стоимость входят доставка сырья к покрасчику,
+                закупка красителя, работа и доставка обратно. Частичной покраски не делаем — крашеное
+                сырьё идёт ровно на весь лист. В стоимость включены 3 образца 50 × 50 см — утверждаем
+                цвет до запуска в производство.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
+                <UnderlineLink href="/contacts" fontSize={16}>Запросить расчёт с цветом →</UnderlineLink>
+                <UnderlineLink href="/contacts" fontSize={16}>Обсудить с менеджером →</UnderlineLink>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ══════ ВОПРОСЫ ПО МАТЕРИАЛУ ══════ */}
-      <section style={{ maxWidth: 1440, margin: "0 auto", ...sectionPadding }}>
-        <FAQ items={materialFaq} title="Вопросы по материалу" />
-      </section>
-
-      {/* ══════ CTA ══════ */}
-      <section style={{ maxWidth: 1440, margin: "0 auto", padding: "40px 20px" }}>
-        <div
-          className="grid grid-cols-1 md:grid-cols-2"
-          style={{ gap: 60 }}
-        >
-          <div>
-            <h2 style={h2Style}>Хотите попробовать материал?</h2>
-            <p
-              style={{
-                fontFamily: I,
-                fontSize: 18,
-                lineHeight: 1.6,
-                marginTop: 20,
-                maxWidth: 500,
-              }}
-            >
-              Закажите образцы, задайте вопрос или обсудите проект.
-              Для архитекторов в Москве и МО доставка образцов бесплатна.
-            </p>
-          </div>
-
-          <div>
-            <ContactForm />
+      {/* ═══ СВОЙСТВА — квадратное фото + деф-строки (Figma Sustainability) ═══ */}
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <GroupTitle>Свойства</GroupTitle>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+            <div className="md:col-span-2 relative aspect-square overflow-hidden self-start">
+              <Image src="/images/04_texture.png" alt="Фактура RePanel крупным планом" fill sizes="(min-width:768px) 17vw, 100vw" className="object-cover" />
+            </div>
+            <div className="md:col-start-4 md:col-span-9">
+              <DefRows rows={properties} />
+            </div>
           </div>
         </div>
       </section>
+
+      {/* ═══ ФОРМАТЫ И ОБРАБОТКА — деф-строки ═══ */}
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <GroupTitle>Форматы и обработка</GroupTitle>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+            <div className="md:col-start-4 md:col-span-9">
+              <DefRows rows={formats} />
+              <div className="pt-10" />
+              <DefRows rows={processing} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ СРАВНЕНИЕ — таблица в хайрлайнах ═══ */}
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <GroupTitle>Сравнение с другими материалами</GroupTitle>
+          <div className="overflow-x-auto scrollbar-hide -mr-[var(--site-margins)] pr-[var(--site-margins)]">
+            <table className="w-full border-collapse" style={{ fontFamily: BODY, minWidth: 720 }}>
+              <thead>
+                <tr style={{ fontSize: "13px" }}>
+                  <th className="text-left font-bold text-[#171513] pb-3 pr-4 align-bottom">Параметр</th>
+                  <th className="text-left font-bold text-[#171513] pb-3 pr-4 align-bottom">RePanel</th>
+                  <th className="text-left font-bold text-[#171513] pb-3 pr-4 align-bottom" style={{ opacity: 0.55 }}>ЛДСП</th>
+                  <th className="text-left font-bold text-[#171513] pb-3 pr-4 align-bottom" style={{ opacity: 0.55 }}>HPL</th>
+                  <th className="text-left font-bold text-[#171513] pb-3 pr-4 align-bottom" style={{ opacity: 0.55 }}>Камень</th>
+                  <th className="text-left font-bold text-[#171513] pb-3 align-bottom" style={{ opacity: 0.55 }}>Фанера</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparison.map((row) => (
+                  <tr key={row.param} style={{ borderTop: "1px solid #171513", fontSize: "13.5px" }}>
+                    <td className="font-bold text-[#171513] py-3.5 pr-4 align-top">{row.param}</td>
+                    <td className="font-bold text-[#171513] py-3.5 pr-4 align-top">{row.repanel}</td>
+                    <td className="text-[#171513] py-3.5 pr-4 align-top" style={{ opacity: 0.7 }}>{row.ldsp}</td>
+                    <td className="text-[#171513] py-3.5 pr-4 align-top" style={{ opacity: 0.7 }}>{row.hpl}</td>
+                    <td className="text-[#171513] py-3.5 pr-4 align-top" style={{ opacity: 0.7 }}>{row.stone}</td>
+                    <td className="text-[#171513] py-3.5 align-top" style={{ opacity: 0.7 }}>{row.plywood}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ УГЛЕРОДНЫЙ СЛЕД — деф-строки ═══ */}
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <GroupTitle>Углеродный след</GroupTitle>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+            <div className="md:col-start-4 md:col-span-9">
+              <DefRows rows={carbonRows} />
+              <p className="pt-5 text-[#171513] max-w-[610px]" style={{ fontFamily: BODY, fontSize: "14.6px", lineHeight: "20px", opacity: 0.7 }}>
+                Данные — из опубликованных EPD европейских производителей панелей из переработанного
+                полистирола (Polygood, Smile Plastics): это материал того же типа, что RePanel.
+                Панели rPS живут в одном диапазоне с деревом и МДФ — и в разы ниже кварца и акрилового
+                камня. Собственная экологическая декларация (EPD) RePanel — в работе.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ ТЕХ-ХАРАКТЕРИСТИКИ — деф-строки «ярлык + значение» ═══ */}
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36 pb-20 lg:pb-32">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <GroupTitle>Технические характеристики</GroupTitle>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+            <div className="md:col-start-4 md:col-span-9">
+              {specs.map((s) => (
+                <div key={s.label} className="border-t border-[#171513] grid grid-cols-1 md:grid-cols-9 gap-y-0.5 gap-x-5 pt-3 pb-4">
+                  <h3 className="md:col-span-5 font-bold text-[#171513]" style={{ fontFamily: BODY, fontSize: "18.6px", lineHeight: "26.66px", letterSpacing: "-0.4px" }}>
+                    {s.label}
+                  </h3>
+                  <p className="md:col-span-4 text-[#171513]" style={{ fontFamily: BODY, fontWeight: 400, fontSize: "14.6px", lineHeight: "20px" }}>
+                    {s.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ ПРИМЕЧАНИЕ — центрированная строка со ссылкой (Figma care-note) ═══ */}
+      <section className="px-[var(--site-margins)] border-t border-[#171513] py-16 lg:py-24">
+        <div className="mx-auto text-center" style={{ maxWidth: 980 }}>
+          <p
+            className="text-[#171513]"
+            style={{ fontFamily: BODY, fontWeight: 700, fontSize: "clamp(20px, 2.4vw, 31.7px)", lineHeight: 1.37, letterSpacing: "-0.021em" }}
+          >
+            Поможем выбрать цвет, толщину и формат под вашу задачу.
+          </p>
+          <div className="mt-5 flex justify-center">
+            <UnderlineLink href="/contacts">Запросить бесплатные образцы →</UnderlineLink>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ ГДЕ ПРИМЕНЯЮТ — свайп-карусель (паттерн главной) ═══ */}
+      <section className="px-[var(--site-margins)] border-t border-[#171513] pt-8 lg:pt-12 pb-10 lg:pb-16">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <h2
+            className="font-bold text-[#171513] mb-4 lg:mb-5"
+            style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}
+          >
+            Где применяют
+          </h2>
+          <div className="flex gap-3 lg:gap-5 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 -mr-[var(--site-margins)] pr-[var(--site-margins)]">
+            {applicationsCarousel.map((d) => (
+              <Link key={d.title} href="/solutions" className="group/card block shrink-0 w-[clamp(240px,42vw,330px)] snap-start">
+                <div className="relative overflow-hidden" style={{ aspectRatio: "455 / 606" }}>
+                  <Image src={d.img} alt={d.title} fill sizes="(min-width:1024px) 25vw, 50vw" className="object-cover" />
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{ background: "rgba(255, 255, 255,0.82)" }}
+                  />
+                </div>
+                <div className="pt-1.5">
+                  <h3
+                    className="font-bold text-[#171513] inline-block relative"
+                    style={{ fontFamily: BODY, fontSize: "clamp(15px, 1.5vw, 18px)", letterSpacing: "-0.3px", lineHeight: 1.2 }}
+                  >
+                    {d.title}
+                    <span className="absolute left-0 -bottom-1 h-[1.5px] bg-[#171513] w-0 group-hover/card:w-full transition-[width] duration-[450ms] ease-out" />
+                  </h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ FAQ ═══ */}
+      <section className="px-[var(--site-margins)] border-t border-[#171513] pt-8 lg:pt-12 pb-8 lg:pb-12">
+        <div className="mx-auto" style={{ maxWidth: 1440 }}>
+          <FAQ items={materialFaq} title="Вопросы о материале" />
+        </div>
+      </section>
+
+      {/* ═══ CTA ═══ */}
+      <FinalCTA
+        heading="Нужны образцы?"
+        text="Пришлём бесплатные образцы цветов и фактур, поможем выбрать толщину и формат под вашу задачу."
+      />
     </>
   );
 }

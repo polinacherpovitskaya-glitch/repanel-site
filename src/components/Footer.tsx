@@ -23,7 +23,7 @@ const socialLinks: { label: string; href: string; ext?: boolean }[] = [
   { label: "политика конфиденциальности", href: "/privacy" },
 ];
 
-const linkClass = "font-[Montserrat] font-bold hover:opacity-60 transition-opacity text-[13px] leading-[2] text-[#171513]";
+const linkClass = "font-[Gramatika] font-bold hover:opacity-60 transition-opacity text-[13px] leading-[18.66px] text-[#171513]";
 
 export function Footer() {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -32,44 +32,26 @@ export function Footer() {
     <footer className="bg-[#FFFFFF] text-[#171513]">
 
       {/* ══════ MOBILE FOOTER (< lg) ══════ */}
-      <div className="lg:hidden px-5 pt-6 pb-5">
+      <div className="lg:hidden px-5 pt-6 pb-10">
         {/* Newsletter */}
-        <form className="flex items-baseline gap-3 mb-2" onSubmit={(e) => e.preventDefault()}>
-          <button
-            type="button"
-            onClick={() => emailRef.current?.focus()}
-            className="font-[Montserrat] font-bold shrink-0 hover:opacity-60 transition-opacity cursor-pointer text-left text-[#171513]"
-            style={{ fontSize: "clamp(20px, 5.5vw, 28px)" }}
-          >
-            Подпишитесь на рассылку
-          </button>
-          <input
-            ref={emailRef}
-            type="email"
-            placeholder="email"
-            className="bg-transparent border-none outline-none font-[Montserrat] font-bold opacity-30 flex-1 min-w-0 text-[#171513] placeholder:text-[#171513] placeholder:opacity-30"
-            style={{ fontSize: "clamp(20px, 5.5vw, 28px)" }}
-            onFocus={(e) => {
-              const btn = e.currentTarget.previousElementSibling as HTMLElement;
-              if (btn) btn.style.display = "none";
-            }}
-            onBlur={(e) => {
-              if (!e.currentTarget.value) {
-                const btn = e.currentTarget.previousElementSibling as HTMLElement;
-                if (btn) btn.style.display = "";
-              }
-            }}
-          />
+        <form className="mb-8" onSubmit={(e) => e.preventDefault()}>
+          <div className="border-b border-[#171513] pb-[21px]">
+            <input
+              ref={emailRef}
+              type="email"
+              placeholder="Подпишитесь на рассылку"
+              className="bg-transparent border-none w-full font-[Gramatika] font-bold text-[#171513] placeholder:text-[#171513] placeholder:opacity-50"
+              style={{ fontSize: "22px", lineHeight: "29.33px", outline: "none" }}
+            />
+          </div>
           <button
             type="submit"
-            className="hover:opacity-60 transition-opacity cursor-pointer shrink-0 font-[Montserrat] font-bold text-[#171513]"
-            style={{ fontSize: "clamp(20px, 5.5vw, 28px)" }}
+            className="mt-2 font-[Gramatika] font-bold text-[#171513] hover:opacity-60 transition-opacity cursor-pointer"
+            style={{ fontSize: "22px", lineHeight: "29.33px" }}
           >
-            →
+            Отправить
           </button>
         </form>
-
-        <div className="w-full h-px mt-2 mb-4 bg-[#171513]" />
 
         <ul className="flex flex-col gap-0 mb-6">
           {[...navLinks, ...moreLinks].map((item) => (
@@ -91,54 +73,33 @@ export function Footer() {
 
         <div className="mb-6">
           <Link href="/" className="block hover:opacity-60 transition-opacity">
-            <img src="/logo/repanel.svg" alt="RePanel" className="h-[48px] w-auto" style={{ filter: "brightness(0)" }} />
+            <img src="/logo/repanel-mark.svg" alt="RePanel" className="w-auto" style={{ height: "115px" }} />
           </Link>
         </div>
 
-        <p className="font-[Montserrat] font-bold text-[13px] text-[#171513]">
+        <p className="font-[Gramatika] font-bold text-[13px] text-[#171513]">
           &copy; {new Date().getFullYear()} RePanel.
         </p>
       </div>
 
       {/* ══════ DESKTOP FOOTER (>= lg) ══════ */}
-      <div className="hidden lg:block px-5 pt-6 pb-5">
+      <div className="hidden lg:block px-5 pt-5 pb-14">
         {/* Newsletter */}
-        <form className="flex items-baseline gap-4" onSubmit={(e) => e.preventDefault()}>
-          <button
-            type="button"
-            onClick={() => emailRef.current?.focus()}
-            className="font-[Montserrat] font-bold shrink-0 hover:opacity-60 transition-opacity cursor-pointer text-[#171513]"
-            style={{ fontSize: "clamp(18px, 2.2vw, 28px)" }}
-          >
-            Подпишитесь на рассылку
-          </button>
+        <form className="flex items-center gap-4 border-b border-[#171513] pb-3 mb-5" onSubmit={(e) => e.preventDefault()}>
           <input
-            ref={emailRef}
             type="email"
-            placeholder="email"
-            className="bg-transparent border-none outline-none font-[Montserrat] font-bold opacity-30 flex-1 min-w-0 text-[#171513] placeholder:text-[#171513] placeholder:opacity-30"
-            style={{ fontSize: "clamp(18px, 2.2vw, 28px)" }}
-            onFocus={(e) => {
-              const btn = e.currentTarget.previousElementSibling as HTMLElement;
-              if (btn) btn.style.display = "none";
-            }}
-            onBlur={(e) => {
-              if (!e.currentTarget.value) {
-                const btn = e.currentTarget.previousElementSibling as HTMLElement;
-                if (btn) btn.style.display = "";
-              }
-            }}
+            placeholder="Подпишитесь на рассылку"
+            className="bg-transparent border-none flex-1 min-w-0 font-[Gramatika] font-bold text-[#171513] placeholder:text-[#171513] placeholder:opacity-50"
+            style={{ fontSize: "clamp(28px, 2.5vw, 32px)", lineHeight: "1.2", outline: "none" }}
           />
           <button
             type="submit"
-            className="hover:opacity-60 transition-opacity cursor-pointer shrink-0 font-[Montserrat] font-bold text-[#171513]"
-            style={{ fontSize: "clamp(18px, 2.2vw, 28px)" }}
+            className="shrink-0 font-[Gramatika] font-bold text-[#171513] hover:opacity-60 transition-opacity cursor-pointer"
+            style={{ fontSize: "clamp(28px, 2.5vw, 32px)", lineHeight: "1.2" }}
           >
             Отправить
           </button>
         </form>
-
-        <div className="w-full h-px mt-2 mb-3 bg-[#171513]" />
 
         {/* Grid: Logo | nav | more | social */}
         <div className="grid grid-cols-12 gap-4 items-stretch">
@@ -146,10 +107,10 @@ export function Footer() {
           <div className="col-span-4 flex items-start">
             <Link href="/" className="block hover:opacity-60 transition-opacity h-full">
               <img
-                src="/logo/repanel.svg"
+                src="/logo/repanel-mark.svg"
                 alt="RePanel"
-                className="h-full w-auto"
-                style={{ filter: "brightness(0)" }}
+                className="w-auto"
+                style={{ height: "142px" }}
               />
             </Link>
           </div>
@@ -190,9 +151,8 @@ export function Footer() {
 
         {/* Copyright */}
         <div className="grid grid-cols-12 gap-4 mt-3">
-          <div className="col-span-6 col-start-7 flex items-center gap-2">
-            <div className="w-5 h-[2px] rounded-full flex-shrink-0 bg-[#171513]" />
-            <p className="font-[Montserrat] font-bold text-[13px] text-[#171513]">
+          <div className="col-span-6 col-start-7">
+            <p className="font-[Gramatika] font-bold text-[13px] leading-[18.66px] text-[#171513]">
               &copy; {new Date().getFullYear()} RePanel.
             </p>
           </div>

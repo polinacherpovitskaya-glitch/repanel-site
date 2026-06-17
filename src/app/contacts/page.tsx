@@ -1,15 +1,22 @@
-import Link from "next/link";
-import { ContactForm } from "@/components/ContactForm";
 import type { Metadata } from "next";
+import { ContactForm } from "@/components/ContactForm";
+import { PageHero } from "@/components/PageHero";
+import { Group } from "@/components/blocks";
+import { UnderlineLink } from "@/components/UnderlineLink";
 
-const D = "'Montserrat', var(--font-display), sans-serif";
-const I = "'Gramatika', var(--font-sans), sans-serif";
+const BODY = "'Gramatika', sans-serif";
 
 export const metadata: Metadata = {
-  title: "Контакты RePanel — связаться с нами",
-  description:
-    "Расскажите о вашем проекте — мы предложим лучший формат работы.",
+  title: "Контакты — RePanel",
+  description: "Расскажите о вашем проекте — предложим лучший формат работы. Телефон, email, Telegram, адрес производства.",
 };
+
+const details = [
+  { label: "Телефон", value: "+7 (966) 153-45-97", href: "tel:+79661534597" },
+  { label: "Email", value: "info@repanel.ru", href: "mailto:info@repanel.ru" },
+  { label: "Telegram", value: "@panelpanelre", href: "https://t.me/panelpanelre", ext: true },
+  { label: "Адрес", value: "Дмитров, ул. Промышленная, 10" },
+];
 
 const quickLinks = [
   { label: "Каталог изделий", href: "/catalog" },
@@ -17,251 +24,47 @@ const quickLinks = [
   { label: "Кейсы", href: "/projects" },
 ];
 
-const contactAddressLines = ["Дмитров, ул. Промышленная, 10"];
-
 export default function ContactsPage() {
   return (
-    <div style={{ maxWidth: 1440, margin: "0 auto" }}>
-      {/* ===== HERO ===== */}
-      <section style={{ padding: "80px 20px" }}>
-        <h1
-          style={{
-            fontFamily: D,
-            fontSize: "clamp(42px, 13vw, 52px)",
-            fontWeight: 700,
-            letterSpacing: -1.5,
-            lineHeight: 0.92,
-            color: "#171513",
-            marginBottom: 20,
-          }}
-        >
-          {"Обсудим\nваш проект".split("\n").map((line, i) => (
-            <span key={i}>
-              {i > 0 && <br />}
-              {line}
-            </span>
-          ))}
-        </h1>
-        <p
-          style={{
-            fontFamily: I,
-            fontSize: 18,
-            lineHeight: 1.5,
-            color: "#171513",
-          }}
-        >
-          Пришлите задачу, размеры, сроки и референсы
-        </p>
-      </section>
+    <>
+      <PageHero
+        title="Контакты"
+        image="/images/DSC02232.jpg"
+        imageAlt="Производство RePanel"
+        lead="Пришлите задачу, размеры, сроки и референсы — предложим лучший формат работы и посчитаем смету."
+      />
 
-      {/* ===== Form + Contact Info ===== */}
-      <section style={{ padding: "0 20px 60px 20px" }}>
-        <div
-          style={{
-            display: "flex",
-            gap: 60,
-            flexWrap: "wrap",
-          }}
-        >
-          {/* Left: Form */}
-          <div style={{ flex: "1 1 360px", minWidth: 0 }}>
+      <Group title="Напишите нам">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+          <div className="lg:col-span-7">
             <ContactForm />
           </div>
-
-          {/* Right: Contact info */}
-          <div
-            className="w-full md:w-[400px] md:shrink-0"
-            style={{ maxWidth: "100%" }}
-          >
-            <div className="md:sticky md:top-[100px]">
-              {/* Phone */}
-              <div style={{ marginBottom: 28 }}>
-                <p
-                  style={{
-                    fontFamily: I,
-                    fontSize: 13,
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                    color: "#171513",
-                    marginBottom: 8,
-                  }}
-                >
-                  Телефон
-                </p>
-                <a
-                  href="tel:+79661534597"
-                  style={{
-                    fontFamily: I,
-                    fontSize: 16,
-                    color: "#171513",
-                    textDecoration: "none",
-                  }}
-                >
-                  +7 (966) 153-45-97
-                </a>
+          <div className="lg:col-start-9 lg:col-span-4">
+            {details.map((d) => (
+              <div key={d.label} className="border-t border-[#171513] pt-3 pb-4">
+                <p className="text-[#171513]" style={{ fontFamily: BODY, fontSize: "12px", letterSpacing: "1px", textTransform: "uppercase", opacity: 0.5 }}>{d.label}</p>
+                {d.href ? (
+                  <a href={d.href} {...(d.ext ? { target: "_blank", rel: "noopener noreferrer" } : {})} className="text-[#171513] hover:opacity-60 transition-opacity" style={{ fontFamily: BODY, fontWeight: 700, fontSize: "18px" }}>{d.value}</a>
+                ) : (
+                  <p className="text-[#171513]" style={{ fontFamily: BODY, fontWeight: 700, fontSize: "18px" }}>{d.value}</p>
+                )}
               </div>
-
-              {/* Email */}
-              <div style={{ marginBottom: 28 }}>
-                <p
-                  style={{
-                    fontFamily: I,
-                    fontSize: 13,
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                    color: "#171513",
-                    marginBottom: 8,
-                  }}
-                >
-                  Email
-                </p>
-                <a
-                  href="mailto:info@repanel.ru"
-                  style={{
-                    fontFamily: I,
-                    fontSize: 16,
-                    color: "#171513",
-                    textDecoration: "none",
-                  }}
-                >
-                  info@repanel.ru
-                </a>
-              </div>
-
-              {/* Telegram */}
-              <div style={{ marginBottom: 28 }}>
-                <p
-                  style={{
-                    fontFamily: I,
-                    fontSize: 13,
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                    color: "#171513",
-                    marginBottom: 8,
-                  }}
-                >
-                  Telegram
-                </p>
-                <a
-                  href="https://t.me/repanel"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    fontFamily: I,
-                    fontSize: 16,
-                    color: "#171513",
-                    textDecoration: "none",
-                  }}
-                >
-                  @repanel
-                </a>
-              </div>
-
-              {/* Address */}
-              <div>
-                <p
-                  style={{
-                    fontFamily: I,
-                    fontSize: 13,
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                    color: "#171513",
-                    marginBottom: 8,
-                  }}
-                >
-                  Адрес
-                </p>
-                <p
-                  style={{
-                    fontFamily: I,
-                    fontSize: 16,
-                    lineHeight: 1.5,
-                    color: "#171513",
-                  }}
-                >
-                  {contactAddressLines.map((line, index) => (
-                    <span key={line}>
-                      {index > 0 && <br />}
-                      {line}
-                    </span>
-                  ))}
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
-      </section>
+      </Group>
 
-      {/* ===== Как нас найти ===== */}
-      <section style={{ padding: "60px 20px" }}>
-        <div style={{ borderTop: "1px solid #000", paddingTop: 40 }}>
-          <h3
-            style={{
-              fontFamily: D,
-              fontSize: 36,
-              fontWeight: 700,
-              color: "#171513",
-              marginBottom: 24,
-            }}
-          >
-            Как нас найти
-          </h3>
-
-          {/* Map placeholder */}
-          <div
-            style={{
-              width: "100%",
-              height: 300,
-              background: "#E8E8E8",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: 20,
-            }}
-          >
-            <p style={{ fontFamily: I, fontSize: 14, color: "#999" }}>
-              Карта
-            </p>
-          </div>
-
-          <p
-            style={{
-              fontFamily: I,
-              fontSize: 16,
-              color: "#171513",
-            }}
-          >
-            {contactAddressLines.join(", ")}
-          </p>
-        </div>
-      </section>
-
-      {/* ===== Быстрые ссылки ===== */}
-      <section style={{ padding: "40px 20px" }}>
+      <Group title="Смотрите также">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {quickLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "20px 24px",
-                border: "1px solid #000",
-                textDecoration: "none",
-                color: "#171513",
-                fontFamily: D,
-                fontSize: 16,
-                fontWeight: 600,
-              }}
-            >
-              {link.label}
-              <span style={{ fontSize: 20 }}>&rarr;</span>
-            </Link>
+          {quickLinks.map((l) => (
+            <div key={l.href} className="border-t border-[#171513] pt-4">
+              <UnderlineLink href={l.href} fontSize={18}>{l.label} →</UnderlineLink>
+            </div>
           ))}
         </div>
-      </section>
-    </div>
+      </Group>
+
+      <div className="pb-20 lg:pb-32" />
+    </>
   );
 }

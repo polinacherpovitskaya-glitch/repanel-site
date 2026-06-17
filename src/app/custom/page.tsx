@@ -1,277 +1,75 @@
-import Link from "next/link";
-import { SectionHeading } from "@/components/SectionHeading";
 import type { Metadata } from "next";
+import { PageHero } from "@/components/PageHero";
+import { FinalCTA } from "@/components/FinalCTA";
+import { Group, Statement, DefRows } from "@/components/blocks";
 
-const D = "'Montserrat', var(--font-display), sans-serif";
+const BODY = "'Gramatika', sans-serif";
+const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
 
 export const metadata: Metadata = {
   title: "Объекты на заказ — RePanel",
   description:
-    "Производим изделия из переработанного пластика по вашим чертежам и спецификациям. Минимальный заказ — от 5 штук.",
+    "Производим изделия из переработанного полистирола по вашим чертежам и спецификациям. Тираж — от 5 до 40 000+ штук.",
 };
 
 const steps = [
-  {
-    num: "01",
-    title: "Бриф",
-    text: "Вы описываете задачу, размеры, тираж и сроки.",
-  },
-  {
-    num: "02",
-    title: "Подбор",
-    text: "Мы предлагаем формат материала и конструктивное решение.",
-  },
-  {
-    num: "03",
-    title: "Образец",
-    text: "Делаем тестовый образец для согласования.",
-  },
-  {
-    num: "04",
-    title: "Производство",
-    text: "Запускаем серийное производство.",
-  },
+  { t: "Бриф", d: "Вы описываете задачу, размеры, тираж и сроки." },
+  { t: "Подбор", d: "Предлагаем формат материала и конструктивное решение." },
+  { t: "Образец", d: "Делаем тестовый образец для согласования перед запуском." },
+  { t: "Производство", d: "Запускаем серийное производство и отгружаем." },
 ];
 
 const customizations = [
-  {
-    title: "Цвет",
-    text: "Базовая палитра из 12 цветов или кастомный цвет под проект.",
-  },
-  {
-    title: "Размер",
-    text: "Адаптируем габариты и конфигурацию под вашу задачу.",
-  },
-  {
-    title: "Брендирование",
-    text: "Логотип, гравировка, фирменный цвет — для мерча и подарков.",
-  },
-  {
-    title: "Тираж",
-    text: "От 5 до 40 000+ штук. Повторяемость качества гарантирована.",
-  },
-  {
-    title: "Конструкция",
-    text: "Изменим крепёж, фурнитуру, способ сборки — под условия эксплуатации.",
-  },
-  {
-    title: "Упаковка",
-    text: "Индивидуальная или подарочная упаковка для партий.",
-  },
+  { t: "Цвет", d: "Базовая палитра из 12 сочетаний, микс из складских цветов или покраска по RAL / Pantone." },
+  { t: "Размер", d: "Адаптируем габариты и конфигурацию под вашу задачу — в пределах форматов листа." },
+  { t: "Брендирование", d: "Логотип, гравировка, фирменный цвет — для мерча и корпоративных подарков." },
+  { t: "Тираж", d: "От 5 до 40 000+ штук. Повторяемость качества между партиями." },
+  { t: "Конструкция", d: "Изменим крепёж, фурнитуру и способ сборки под условия эксплуатации." },
+  { t: "Упаковка", d: "Индивидуальная или подарочная упаковка для партий." },
 ];
 
 const cases = [
-  {
-    title: "САМОЛЕТ",
-    text: "40 000 органайзеров с логотипом в корпоративном цвете.",
-    metric: "40 000 шт",
-  },
-  {
-    title: "Сеть кофеен",
-    text: "Серия из 50 барных стоек и 200 полок для 12 локаций.",
-    metric: "12 локаций",
-  },
-  {
-    title: "Корпоративный мерч",
-    text: "Набор настольных объектов для Welcome Pack из 500 штук.",
-    metric: "500 шт",
-  },
+  { metric: "40 000 шт", title: "САМОЛЕТ", text: "Органайзеры с логотипом в корпоративном цвете." },
+  { metric: "12 локаций", title: "Сеть кофеен", text: "Серия из 50 барных стоек и 200 полок." },
+  { metric: "500 шт", title: "Корпоративный мерч", text: "Набор настольных объектов для Welcome Pack." },
 ];
 
 export default function CustomPage() {
   return (
     <>
-      {/* Hero */}
-      <section style={{ padding: "60px 20px 80px" }}>
-        <div className="wrap">
-          <div className="max-w-3xl pt-10">
-            <h1
-              className="font-bold mb-6"
-              style={{
-                fontFamily: D,
-                fontSize: "clamp(34px, 4.5vw, 56px)",
-                letterSpacing: "-2px",
-                lineHeight: 0.95,
-              }}
-            >
-              Объекты на заказ
-            </h1>
-            <p
-              className="text-[17px] md:text-[20px] leading-[1.55] max-w-[640px] mb-8"
-              style={{ opacity: 0.55 }}
-            >
-              Производим изделия из переработанного пластика по вашим чертежам и
-              спецификациям. Минимальный заказ — от 5 штук.
-            </p>
-            <Link
-              href="/contacts"
-              className="rounded-pill inline-block text-[15px] font-bold px-8 py-3"
-              style={{
-                background: "#171513",
-                color: "#fff",
-                fontFamily: D,
-              }}
-            >
-              Обсудить проект
-            </Link>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        title="Объекты на заказ"
+        image="/images/DSC02233.jpg"
+        imageAlt="Изделие RePanel на заказ"
+        lead="Производим изделия из переработанного полистирола по вашим чертежам и спецификациям. Тираж — от 5 до 40 000+ штук."
+      />
 
-      {/* How it works */}
-      <section
-        className="section"
-        style={{ borderTop: "1px solid #171513" }}
-      >
-        <div className="wrap">
-          <SectionHeading title="Как это работает" />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {steps.map((s) => (
-              <div
-                key={s.num}
-                className="pt-5"
-                style={{ borderTop: "1px solid rgba(23,21,19,0.15)" }}
-              >
-                <span
-                  className="text-[28px] font-bold"
-                  style={{ fontFamily: D, opacity: 0.15 }}
-                >
-                  {s.num}
-                </span>
-                <h3
-                  className="text-[17px] font-bold mt-2 mb-2"
-                  style={{ fontFamily: D }}
-                >
-                  {s.title}
-                </h3>
-                <p
-                  className="text-[14px] leading-[1.6]"
-                  style={{ opacity: 0.55 }}
-                >
-                  {s.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Statement>
+        От штучного объекта до&nbsp;серийного тиража — берём задачу, предлагаем материал
+        и&nbsp;конструкцию, делаем образец и&nbsp;запускаем производство.
+      </Statement>
 
-      {/* What can be customized */}
-      <section className="section" style={{ background: "#F5F5F5" }}>
-        <div className="wrap">
-          <SectionHeading title="Что можно кастомизировать" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {customizations.map((c) => (
-              <div
-                key={c.title}
-                className="p-5 md:p-6"
-                style={{
-                  background: "#fff",
-                  border: "1px solid rgba(23,21,19,0.1)",
-                }}
-              >
-                <h3
-                  className="text-[16px] font-bold mb-2"
-                  style={{ fontFamily: D }}
-                >
-                  {c.title}
-                </h3>
-                <p
-                  className="text-[14px] leading-[1.6]"
-                  style={{ opacity: 0.55 }}
-                >
-                  {c.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Group title="Как это работает">
+        <DefRows rows={steps} />
+      </Group>
 
-      {/* Cases */}
-      <section className="section">
-        <div className="wrap">
-          <SectionHeading title="Примеры заказов" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {cases.map((c) => (
-              <div
-                key={c.title}
-                className="p-6"
-                style={{
-                  border: "1px solid rgba(23,21,19,0.15)",
-                  background: "#F5F5F5",
-                }}
-              >
-                <span
-                  className="text-[24px] font-bold"
-                  style={{ fontFamily: D, opacity: 0.2 }}
-                >
-                  {c.metric}
-                </span>
-                <h3
-                  className="text-[17px] font-bold mt-3 mb-2"
-                  style={{ fontFamily: D }}
-                >
-                  {c.title}
-                </h3>
-                <p
-                  className="text-[14px] leading-[1.6]"
-                  style={{ opacity: 0.55 }}
-                >
-                  {c.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Group title="Что можно кастомизировать">
+        <DefRows rows={customizations} />
+      </Group>
 
-      {/* CTA */}
-      <section style={{ padding: "80px 20px", background: "#171513" }}>
-        <div className="wrap text-center">
-          <h2
-            className="font-bold mb-4"
-            style={{
-              fontFamily: D,
-              fontSize: "clamp(28px, 3.5vw, 40px)",
-              letterSpacing: "-1px",
-              color: "#fff",
-            }}
-          >
-            Расскажите о проекте
-          </h2>
-          <p
-            className="text-[16px] mb-8 max-w-lg mx-auto"
-            style={{ opacity: 0.5, color: "#fff" }}
-          >
-            Опишите задачу — подберём решение или разработаем с нуля.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/contacts"
-              className="rounded-pill inline-block text-[15px] font-bold px-8 py-3"
-              style={{
-                background: "#fff",
-                color: "#171513",
-                fontFamily: D,
-              }}
-            >
-              Обсудить проект
-            </Link>
-            <Link
-              href="/catalog"
-              className="rounded-pill inline-block text-[15px] font-bold px-8 py-3"
-              style={{
-                border: "1.5px solid rgba(255,255,255,0.3)",
-                color: "#fff",
-                fontFamily: D,
-              }}
-            >
-              Смотреть каталог
-            </Link>
-          </div>
+      <Group title="Примеры заказов">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {cases.map((c) => (
+            <div key={c.title} className="border-t border-[#171513] pt-4">
+              <span className="block font-bold text-[#171513]" style={{ fontFamily: DISPLAY, fontSize: "clamp(28px, 2.6vw, 40px)", letterSpacing: "-1px", lineHeight: 1 }}>{c.metric}</span>
+              <h3 className="font-bold text-[#171513] mt-3" style={{ fontFamily: BODY, fontSize: "18px", letterSpacing: "-0.2px" }}>{c.title}</h3>
+              <p className="text-[#171513] mt-1.5" style={{ fontFamily: BODY, fontSize: "14.6px", lineHeight: "20px", opacity: 0.7 }}>{c.text}</p>
+            </div>
+          ))}
         </div>
-      </section>
+      </Group>
+
+      <FinalCTA heading="Расскажите о проекте" text="Опишите задачу — подберём решение из портфолио или разработаем с нуля." />
     </>
   );
 }

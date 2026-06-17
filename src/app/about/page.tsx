@@ -1,421 +1,96 @@
-import Image from "next/image";
-import Link from "next/link";
 import type { Metadata } from "next";
+import { PageHero } from "@/components/PageHero";
+import { FinalCTA } from "@/components/FinalCTA";
+import { Group, Statement, DefRows } from "@/components/blocks";
 
-const D = "'Montserrat', var(--font-display), sans-serif";
-const I = "'Gramatika', var(--font-sans), sans-serif";
+const BODY = "'Gramatika', sans-serif";
+const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
 
 export const metadata: Metadata = {
-  title: "О RePanel — бренд, подход, команда",
+  title: "О нас — RePanel",
   description:
-    "RePanel — производство панелей и объектов из переработанного пластика для коммерческих, интерьерных и бренд-проектов.",
+    "RePanel — производство панелей и изделий из переработанного полистирола для коммерческих, интерьерных и бренд-проектов. Бренд, подход, команда.",
 };
 
 const stats = [
   { value: "2021", label: "Год основания" },
-  { value: "80+", label: "Б2Б клиентов" },
+  { value: "80+", label: "B2B-клиентов" },
   { value: "40 000+", label: "Произведённых объектов" },
   { value: "8", label: "Человек в команде" },
 ];
 
 const formats = [
-  {
-    title: "Поставка материала",
-    text: "Листовой материал для вашего производства или подрядчика. Два формата, диапазон толщин, базовая палитра и кастомизация.",
-  },
-  {
-    title: "Адаптация решений",
-    text: "Берём готовые решения из нашего портфолио и адаптируем под цвет, размер, конструкцию и тираж вашего проекта.",
-  },
-  {
-    title: "Полный цикл",
-    text: "От идеи до готового изделия: проектирование, производство, контроль и доставка на объект.",
-  },
+  { t: "Поставка материала", d: "Листы для вашего производства или подрядчика: два формата, толщины 12–40 мм, базовая палитра и кастомизация." },
+  { t: "Адаптация решений", d: "Берём готовое решение из портфолио и адаптируем под цвет, размер, конструкцию и тираж вашего проекта." },
+  { t: "Полный цикл", d: "От идеи до готового изделия: проектирование, производство, контроль и доставка на объект." },
 ];
 
-const audiences = [
-  "Архитекторы",
-  "Интерьерные студии",
-  "Ритейл",
-  "Рестораны",
-  "Девелоперы",
-  "Мебельные производства",
-  "Подрядчики",
-  "Франчайзи",
-];
+const audiences = ["Архитекторы", "Интерьерные студии", "Ритейл", "Рестораны", "Девелоперы", "Мебельные производства", "Подрядчики", "Франчайзи"];
 
 const values = [
-  {
-    title: "Материал с характером",
-    text: "Каждая панель уникальна. Мы не пытаемся имитировать натуральные материалы — мы даём переработанному пластику собственную эстетику.",
-  },
-  {
-    title: "Прозрачность",
-    text: "Мы говорим прямо: что можем, чего не можем, какие есть ограничения. Это экономит время и строит доверие.",
-  },
-  {
-    title: "Функциональность",
-    text: "Красивый материал бесполезен, если он не работает в реальном пространстве. Мы думаем о конструкции, нагрузке, сроке и обслуживании.",
-  },
+  { t: "Материал с характером", d: "Каждая панель уникальна. Мы не имитируем натуральные материалы — даём переработанному пластику собственную эстетику." },
+  { t: "Прозрачность", d: "Говорим прямо: что можем, чего не можем, какие есть ограничения. Это экономит время и строит доверие." },
+  { t: "Функциональность", d: "Красивый материал бесполезен, если не работает в реальном пространстве. Думаем о конструкции, нагрузке, сроке и обслуживании." },
 ];
 
 export default function AboutPage() {
   return (
     <>
-      {/* ═══ HERO — padding:[80,20] ═══ */}
-      <section style={{ padding: "80px 20px" }}>
-        <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <h1
-            className="font-bold"
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
-            }}
-          >
-            О RePanel
-          </h1>
-          <p
-            className="mt-6"
-            style={{
-              fontFamily: I,
-              fontSize: 18,
-              lineHeight: 1.5,
-              color: "#000",
-              maxWidth: 680,
-            }}
-          >
-            Это материал, родившийся в городе. Из переработанного пластика делаем
-            то, что работает в реальных интерьерах.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        title="О нас"
+        image="/images/Screenshot 2026-03-20 at 22.39.54.png"
+        imageAlt="Производство RePanel"
+        lead="Материал, родившийся в городе. Из переработанного пластика делаем то, что работает в реальных интерьерах — от листа до изделия под ключ."
+      />
 
-      {/* ═══ PHOTO — full-width ═══ */}
-      <section>
-        <div className="mx-auto" style={{ maxWidth: 1440, padding: "0 20px" }}>
-          <div className="relative w-full overflow-hidden" style={{ height: 400 }}>
-            <Image
-              src="/images/Screenshot 2026-03-20 at 22.39.54.png"
-              alt="RePanel производство"
-              fill
-              sizes="(max-width: 1440px) calc(100vw - 40px), 1400px"
-              className="object-cover"
-              priority
-            />
-          </div>
-        </div>
-      </section>
+      <Statement>
+        RePanel — производство материала и изделий из&nbsp;переработанного полистирола. Превращаем
+        вторичный пластик в&nbsp;рабочий материал для серьёзных проектов: интерьерных, коммерческих,
+        бренд-объектов и&nbsp;серийных решений.
+      </Statement>
 
-      {/* ═══ КТО МЫ — padding:[80,20] ═══ */}
-      <section style={{ padding: "80px 20px" }}>
-        <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <h2
-            className="font-bold"
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
-            }}
-          >
-            Кто мы
-          </h2>
-          <p
-            className="mt-6"
-            style={{
-              fontFamily: I,
-              fontSize: 18,
-              lineHeight: 1.5,
-              color: "#000",
-              maxWidth: 680,
-            }}
-          >
-            RePanel — это производство материала и объектов из переработанного
-            пластика. Мы работаем для архитекторов, интерьерных студий, ритейла,
-            ресторанов, девелоперов и производителей мебели. Наша задача —
-            превращать вторичный пластик в рабочий материал для серьёзных
-            проектов: интерьерных, коммерческих, бренд-объектов и серийных
-            решений.
-          </p>
-        </div>
-      </section>
-
-      {/* ═══ STATS ROW — 4 numbers, border-top ═══ */}
-      <section style={{ padding: "0 20px" }}>
-        <div
-          className="mx-auto"
-          style={{
-            maxWidth: 1440,
-            borderTop: "1px solid #000",
-            paddingTop: 32,
-            paddingBottom: 32,
-          }}
-        >
-          <div
-            className="grid grid-cols-2 md:grid-cols-4"
-            style={{ gap: 32 }}
-          >
+      {/* Цифры */}
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
+        <div className="mx-auto border-t border-[#171513] pt-8" style={{ maxWidth: 1440 }}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((s) => (
               <div key={s.label}>
-                <span
-                  className="block font-bold"
-                  style={{
-                    fontFamily: D,
-                    fontSize: 42,
-                    letterSpacing: -1,
-                    lineHeight: 1,
-                    color: "#000",
-                  }}
-                >
-                  {s.value}
-                </span>
-                <span
-                  className="block mt-2"
-                  style={{
-                    fontFamily: I,
-                    fontSize: 16,
-                    lineHeight: 1.4,
-                    color: "#000",
-                  }}
-                >
-                  {s.label}
-                </span>
+                <span className="block font-bold text-[#171513]" style={{ fontFamily: DISPLAY, fontSize: "clamp(40px, 4vw, 56px)", letterSpacing: "-1px", lineHeight: 1 }}>{s.value}</span>
+                <span className="block mt-2 text-[#171513]" style={{ fontFamily: BODY, fontSize: "14.6px", lineHeight: 1.4, opacity: 0.7 }}>{s.label}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══ КАК МЫ РАБОТАЕМ — padding:[60,20] ═══ */}
-      <section style={{ padding: "60px 20px" }}>
-        <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <h2
-            className="font-bold mb-8"
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
-            }}
-          >
-            Как мы работаем
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 32 }}>
-            {formats.map((item) => (
-              <div
-                key={item.title}
-                style={{ borderTop: "1px solid #000", paddingTop: 20 }}
-              >
-                <h3
-                  className="font-bold mb-3"
-                  style={{
-                    fontFamily: D,
-                    fontSize: 24,
-                    letterSpacing: -0.5,
-                    color: "#000",
-                  }}
-                >
-                  {item.title}
-                </h3>
-                <p
-                  style={{
-                    fontFamily: I,
-                    fontSize: 16,
-                    lineHeight: 1.5,
-                    color: "#000",
-                  }}
-                >
-                  {item.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Group title="Как мы работаем">
+        <DefRows rows={formats} />
+      </Group>
 
-      {/* ═══ НАША ИСТОРИЯ — padding:[60,20] ═══ */}
-      <section style={{ padding: "60px 20px" }}>
-        <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <h2
-            className="font-bold mb-6"
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
-            }}
-          >
-            Наша история
-          </h2>
-          <p
-            style={{
-              fontFamily: I,
-              fontSize: 18,
-              lineHeight: 1.5,
-              color: "#000",
-              maxWidth: 680,
-            }}
-          >
-            RePanel начался в 2021 году как эксперимент: можно ли сделать из
-            городского пластика материал, который будет работать в реальных
-            интерьерах? Мы нашли технологию, отладили процесс и начали
-            производить первые листы. Сегодня мы работаем с десятками
-            архитектурных бюро и брендов по всей России — от штучных объектов до
-            серийного производства.
-          </p>
-        </div>
-      </section>
+      <Group title="Наша история">
+        <p className="text-[#171513] max-w-[680px]" style={{ fontFamily: BODY, fontSize: "clamp(16px, 1.5vw, 21px)", lineHeight: 1.45 }}>
+          RePanel начался в 2021 году как эксперимент: можно ли сделать из городского пластика материал,
+          который работает в реальных интерьерах? Мы нашли технологию, отладили процесс и выпустили первые
+          листы. Сегодня работаем с десятками архитектурных бюро и брендов по всей России — от штучных
+          объектов до серийного производства.
+        </p>
+      </Group>
 
-      {/* ═══ С КЕМ МЫ РАБОТАЕМ — padding:[60,20] ═══ */}
-      <section style={{ padding: "60px 20px" }}>
-        <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <h2
-            className="font-bold mb-8"
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
-            }}
-          >
-            С кем мы работаем
-          </h2>
-          <div className="flex flex-wrap" style={{ gap: 12 }}>
-            {audiences.map((a) => (
-              <span
-                key={a}
-                className="rounded-pill"
-                style={{
-                  fontFamily: D,
-                  fontSize: 14,
-                  fontWeight: 700,
-                  border: "1px solid #000",
-                  padding: "10px 20px",
-                  color: "#000",
-                }}
-              >
-                {a}
-              </span>
-            ))}
-          </div>
+      <Group title="С кем мы работаем">
+        <div className="flex flex-wrap gap-3">
+          {audiences.map((a) => (
+            <span key={a} className="text-[#171513]" style={{ fontFamily: BODY, fontWeight: 700, fontSize: "14px", border: "1px solid #171513", padding: "10px 20px" }}>
+              {a}
+            </span>
+          ))}
         </div>
-      </section>
+      </Group>
 
-      {/* ═══ ЧТО ДЛЯ НАС ВАЖНО — border-top ═══ */}
-      <section style={{ padding: "60px 20px" }}>
-        <div
-          className="mx-auto"
-          style={{ maxWidth: 1440, borderTop: "1px solid #000", paddingTop: 40 }}
-        >
-          <h2
-            className="font-bold mb-8"
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
-            }}
-          >
-            Что для нас важно
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 32 }}>
-            {values.map((v) => (
-              <div
-                key={v.title}
-                style={{ borderTop: "1px solid #000", paddingTop: 20 }}
-              >
-                <h3
-                  className="font-bold mb-3"
-                  style={{
-                    fontFamily: D,
-                    fontSize: 24,
-                    letterSpacing: -0.5,
-                    color: "#000",
-                  }}
-                >
-                  {v.title}
-                </h3>
-                <p
-                  style={{
-                    fontFamily: I,
-                    fontSize: 16,
-                    lineHeight: 1.5,
-                    color: "#000",
-                  }}
-                >
-                  {v.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Group title="Что для нас важно">
+        <DefRows rows={values} />
+      </Group>
 
-      {/* ═══ CTA — padding:[80,20] ═══ */}
-      <section style={{ padding: "80px 20px" }}>
-        <div
-          className="mx-auto"
-          style={{
-            maxWidth: 1440,
-            borderTop: "1px solid #000",
-            paddingTop: 40,
-            textAlign: "center",
-          }}
-        >
-          <h2
-            className="font-bold mb-4"
-            style={{
-              fontFamily: D,
-              fontSize: 52,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 0.92,
-              color: "#000",
-            }}
-          >
-            Хотите узнать больше?
-          </h2>
-          <p
-            className="mx-auto mb-8"
-            style={{
-              fontFamily: I,
-              fontSize: 18,
-              lineHeight: 1.5,
-              color: "#000",
-              maxWidth: 520,
-            }}
-          >
-            Расскажите о своём проекте — найдём подходящий формат работы.
-          </p>
-          <Link
-            href="/contacts"
-            className="inline-block rounded-pill font-bold"
-            style={{
-              fontFamily: D,
-              fontSize: 15,
-              padding: "14px 32px",
-              background: "#000",
-              color: "#fff",
-              border: "2px solid #000",
-            }}
-          >
-            Связаться
-          </Link>
-        </div>
-      </section>
+      <FinalCTA heading="Поговорим о проекте?" text="Расскажите о задаче — найдём подходящий формат работы: материал, адаптация решения или полный цикл." />
     </>
   );
 }

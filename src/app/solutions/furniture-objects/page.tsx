@@ -2,7 +2,7 @@ import { IndustryPageLayout } from "@/components/IndustryPageLayout";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Мебель и объекты из RePanel — от листа до готового предмета",
+  title: "Готовая мебель из RePanel — от листа до готового предмета",
   description:
     "Фасады, тумбы, storage, детская мебель и bespoke-предметы из переработанного пластика.",
 };
@@ -10,7 +10,8 @@ export const metadata: Metadata = {
 export default function FurnitureObjectsPage() {
   return (
     <IndustryPageLayout
-      title="Мебель и объекты из RePanel"
+      title="Готовая мебель"
+      image="/images/DSC02233.jpg"
       subtitle="От листа для вашего производства до готового предмета под бренд, пространство или коллекцию."
       problem="Эта история работает одновременно для мебельщиков, архитекторов и клиентов, которым нужен готовый объект. RePanel — это и материал для вашего цеха, и готовое изделие, которое мы сделаем сами."
       whatWeDo={[
