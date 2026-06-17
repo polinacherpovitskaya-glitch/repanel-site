@@ -337,7 +337,21 @@ export default async function MaterialPage() {
         </div>
       </section>
 
-      {/* ═══ СВОЙСТВА — квадратное фото + деф-строки (Figma Sustainability) ═══ */}
+      {/* ═══ ПОМОЖЕМ ВЫБРАТЬ — центрированный CTA после цветов ═══ */}
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
+        <div className="mx-auto border-t border-[#171513] pt-12 lg:pt-16" style={{ maxWidth: 1440 }}>
+          <div className="mx-auto text-center" style={{ maxWidth: 980 }}>
+            <p className="text-[#171513]" style={{ fontFamily: BODY, fontWeight: 700, fontSize: "clamp(20px, 2.4vw, 31.7px)", lineHeight: 1.37, letterSpacing: "-0.021em" }}>
+              Поможем выбрать цвет, толщину и формат под вашу задачу.
+            </p>
+            <div className="mt-5 flex justify-center">
+              <UnderlineLink href="/contacts">Запросить бесплатные образцы →</UnderlineLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ СВОЙСТВА — деф-строки (Figma Sustainability) ═══ */}
       <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
           <GroupTitle>Свойства</GroupTitle>
@@ -364,7 +378,7 @@ export default async function MaterialPage() {
       </section>
 
       {/* ═══ ТЕХ-ХАРАКТЕРИСТИКИ — деф-строки «ярлык + значение» ═══ */}
-      <section className="px-[var(--site-margins)] pt-20 lg:pt-36 pb-20 lg:pb-32">
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
           <GroupTitle>Технические характеристики</GroupTitle>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
@@ -385,7 +399,7 @@ export default async function MaterialPage() {
       </section>
 
       {/* ═══ УГЛЕРОДНЫЙ СЛЕД — после тех-характеристик ═══ */}
-      <section className="px-[var(--site-margins)] pt-20 lg:pt-36">
+      <section className="px-[var(--site-margins)] pt-20 lg:pt-36 pb-20 lg:pb-32">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
           <GroupTitle>Углеродный след</GroupTitle>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
@@ -398,21 +412,6 @@ export default async function MaterialPage() {
                 камня. Собственная экологическая декларация (EPD) RePanel — в работе.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ ПРИМЕЧАНИЕ — центрированная строка со ссылкой (Figma care-note) ═══ */}
-      <section className="px-[var(--site-margins)] border-t border-[#171513] py-16 lg:py-24">
-        <div className="mx-auto text-center" style={{ maxWidth: 980 }}>
-          <p
-            className="text-[#171513]"
-            style={{ fontFamily: BODY, fontWeight: 700, fontSize: "clamp(20px, 2.4vw, 31.7px)", lineHeight: 1.37, letterSpacing: "-0.021em" }}
-          >
-            Поможем выбрать цвет, толщину и формат под вашу задачу.
-          </p>
-          <div className="mt-5 flex justify-center">
-            <UnderlineLink href="/contacts">Запросить бесплатные образцы →</UnderlineLink>
           </div>
         </div>
       </section>
