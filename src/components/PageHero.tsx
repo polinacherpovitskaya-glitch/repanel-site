@@ -21,7 +21,7 @@ export function PageHero({
   cta?: ReactNode;
 }) {
   return (
-    <section className="px-[var(--site-margins)] border-b border-[#171513] pt-7 lg:pt-12">
+    <section className="px-[var(--site-margins)] border-b border-[#171513] pt-1 lg:pt-2">
       <div className="mx-auto" style={{ maxWidth: 1440 }}>
         <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-5">
           {/* Текст: заголовок сверху, лид снизу */}

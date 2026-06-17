@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { FinalCTA } from "@/components/FinalCTA";
 import { Group } from "@/components/blocks";
-import { UnderlineLink } from "@/components/UnderlineLink";
 
 const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
 const BODY = "'Gramatika', sans-serif";
@@ -39,7 +38,8 @@ function getProduct(slug: string) {
   if (detailed) return detailed;
   const preview = catalogFallbacks[slug];
   if (!preview) return defaultProduct;
-  return { ...defaultProduct, name: preview.name, price: preview.price, use: preview.use, description: `${preview.name} из переработанного полистирола. Доступна кастомизация цвета, размера и тиража под проект.` };
+  const price = preview.price.startsWith("от") || preview.price.startsWith("по") ? preview.price : `от ${preview.price}`;
+  return { ...defaultProduct, name: preview.name, price, use: preview.use, description: `${preview.name} из переработанного полистирола. Доступна кастомизация цвета, размера и тиража под проект.` };
 }
 
 export async function generateStaticParams() {
@@ -109,9 +109,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 ))}
               </div>
 
-              <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-5">
-                <UnderlineLink href="/contacts" fontSize={16}>Запросить стоимость →</UnderlineLink>
-                <UnderlineLink href="/contacts" fontSize={16}>Заказать партию →</UnderlineLink>
+              <div className="mt-8 flex flex-col sm:flex-row gap-3">
+                <Link href="/contacts" className="px-7 py-3.5 text-center transition-opacity hover:opacity-90" style={{ fontFamily: BODY, fontWeight: 700, fontSize: "15px", background: "#66704D", color: "#FFFFFF" }}>Запросить стоимость →</Link>
+                <Link href="/contacts" className="px-7 py-3.5 text-center transition-colors hover:bg-[#171513]/[0.04]" style={{ fontFamily: BODY, fontWeight: 700, fontSize: "15px", border: "1px solid rgba(23,21,19,0.25)", color: "#171513" }}>Заказать партию →</Link>
               </div>
             </div>
           </div>
@@ -121,15 +121,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <Group title="Смотрите также">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-5">
           {Object.entries(productsData).filter(([s]) => s !== slug).slice(0, 4).map(([s, item]) => (
-            <Link key={s} href={`/catalog/${s}`} className="group/card flex flex-col bg-[#EAEAE7]" style={{ border: "1px solid rgba(23,21,19,0.1)" }}>
-              <div className="w-full px-5 pt-7 pb-[38px]">
-                <div className="relative w-full aspect-square flex items-center justify-center transition-transform duration-300 ease-out group-hover/card:-translate-y-2" style={{ background: "#EAEAE7" }}>
-                  <span style={{ fontFamily: BODY, fontSize: "12px", opacity: 0.3 }}>Фото</span>
-                </div>
+            <Link key={s} href={`/catalog/${s}`} className="group/card flex flex-col bg-white" style={{ border: "1px solid rgba(23,21,19,0.1)" }}>
+              <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ aspectRatio: "4 / 3", background: "#EAEAE7" }}>
+                <span style={{ fontFamily: BODY, fontSize: "12px", opacity: 0.3 }}>Фото</span>
               </div>
-              <div className="w-full px-2.5 pb-2.5 pt-1">
-                <p className="text-[#171513]" style={{ fontFamily: BODY, fontWeight: 700, fontSize: "14.4px", lineHeight: 1.25 }}>{item.name}</p>
-                <p className="text-[#171513] mt-0.5" style={{ fontFamily: BODY, fontSize: "13.8px" }}>{item.price}</p>
+              <div className="p-4">
+                <h3 className="relative inline-block" style={{ color: "#171513", fontFamily: BODY, fontWeight: 700, fontSize: "14.5px", lineHeight: 1.25 }}>
+                  {item.name}
+                  <span className="absolute left-0 -bottom-0.5 h-[1.5px] w-0 group-hover/card:w-full transition-[width] duration-300 ease-out" style={{ background: "#66704D" }} />
+                </h3>
+                <p style={{ color: "#171513", fontFamily: BODY, fontWeight: 700, fontSize: "14px", marginTop: 6 }}>{item.price}</p>
               </div>
             </Link>
           ))}

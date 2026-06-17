@@ -28,7 +28,7 @@ const panels: Record<string, PanelConfig> = {
     right: { heading: "", links: [] },
     footer: {
       hint: "Хотите увидеть материал вживую?",
-      cta: { label: "Заказать образцы →", href: "/contacts" },
+      cta: { label: "Заказать образцы →", href: "/samples" },
     },
   },
   "Решения": {
