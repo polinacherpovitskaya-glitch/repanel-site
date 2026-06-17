@@ -31,13 +31,14 @@ const panels: Record<string, PanelConfig> = {
       cta: { label: "Заказать образцы →", href: "/samples" },
     },
   },
-  "Решения": {
+  "Применение": {
     left: {
       heading: "",
       links: [
-        { label: "HoReCa", href: "/solutions/horeca" },
-        { label: "Торговое оборудование", href: "/solutions/retail" },
-        { label: "Готовая мебель", href: "/solutions/furniture-objects" },
+        { label: "Интерьеры", href: "/applications#interiors" },
+        { label: "HoReCa", href: "/applications#horeca" },
+        { label: "Ритейл", href: "/applications#retail" },
+        { label: "Офис", href: "/applications#office" },
       ],
     },
     right: { heading: "", links: [] },
@@ -51,7 +52,7 @@ const panels: Record<string, PanelConfig> = {
 /* ── Nav items for top bar ── */
 const navItems: { label: string; href: string; hasPanel: boolean; left: string; center?: boolean }[] = [
   { label: "Материал", href: "/material", hasPanel: true, left: "22%", center: true },
-  { label: "Решения", href: "/solutions", hasPanel: true, left: "54%" },
+  { label: "Применение", href: "/applications", hasPanel: true, left: "52%" },
   { label: "Магазин", href: "/catalog", hasPanel: false, left: "62%" },
   { label: "Проекты", href: "/projects", hasPanel: false, left: "70%" },
   { label: "Контакты", href: "/contacts", hasPanel: false, left: "78%" },
@@ -82,15 +83,16 @@ const mobileMenuItems: MobileMenuItem[] = [
     ],
   },
   {
-    label: "Решения",
+    label: "Применение",
     hasSubmenu: true,
     submenu: [
       {
         label: "",
         children: [
-          { label: "HoReCa", href: "/solutions/horeca" },
-          { label: "Торговое оборудование", href: "/solutions/retail" },
-          { label: "Готовая мебель", href: "/solutions/furniture-objects" },
+          { label: "Интерьеры", href: "/applications#interiors" },
+          { label: "HoReCa", href: "/applications#horeca" },
+          { label: "Ритейл", href: "/applications#retail" },
+          { label: "Офис", href: "/applications#office" },
         ],
       },
     ],

@@ -427,7 +427,7 @@ export default async function MaterialPage() {
           </h2>
           <div className="flex gap-3 lg:gap-5 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 -mr-[var(--site-margins)] pr-[var(--site-margins)]">
             {applicationsCarousel.map((d) => (
-              <Link key={d.title} href="/solutions" className="group/card block shrink-0 w-[clamp(240px,42vw,330px)] snap-start">
+              <Link key={d.title} href="/applications" className="group/card block shrink-0 w-[clamp(240px,42vw,330px)] snap-start">
                 <div className="relative overflow-hidden" style={{ aspectRatio: "455 / 606" }}>
                   <Image src={d.img} alt={d.title} fill sizes="(min-width:1024px) 25vw, 50vw" className="object-cover" />
                   <div

@@ -9,20 +9,18 @@ import { cases, homeCases } from "@/data/cases";
 
 const directions = [
   { title: "Панели", caption: "Листы из переработанного пластика, палитра и образцы.", href: "/material", img: "/images/ill-panely.jpg" },
-  { title: "Готовые решения", caption: "HoReCa, торговое оборудование, готовая мебель.", href: "/solutions", img: "/images/ill-resheniya.jpg" },
+  { title: "Где применяют", caption: "Интерьеры, HoReCa, ритейл, офисы — десятки сценариев.", href: "/applications", img: "/images/ill-resheniya.jpg" },
   { title: "Магазин", caption: "Готовые предметы из переработанного пластика.", href: "/catalog", img: "/images/ill-magazin.jpg" },
   { title: "Проект под ключ", caption: "Интерьеры под ключ — от замера до монтажа.", href: "/contacts", img: "/images/ill-proekt.jpg" },
 ];
 
-const applications = [
-  { title: "Кухонные фасады", href: "/material", img: "/images/sposoby/sp-kitchen.png" },
-  { title: "Фартуки на кухню", href: "/material", img: "/images/sposoby/sp-backsplash.png" },
-  { title: "Мебель для ванной", href: "/material", img: "/images/sposoby/sp-bathroom.png" },
-  { title: "Подоконники", href: "/material", img: "/images/sposoby/sp-windowsill.png" },
-  { title: "Стеновые панели", href: "/material", img: "/images/sposoby/sp-wall.png" },
-  { title: "Изголовья кроватей", href: "/material", img: "/images/sposoby/sp-headboard.png" },
-  { title: "Городская среда", href: "/material", img: "/images/sposoby/sp-urban.png" },
-  { title: "Офисные столешницы", href: "/material", img: "/images/sposoby/sp-office.png" },
+const appTiles: { title: string; count: number; cover: string; href: string; soon?: boolean }[] = [
+  { title: "Интерьеры", count: 22, cover: "/images/applications/commercial-kitchen-island.png", href: "/applications#interiors" },
+  { title: "HoReCa", count: 10, cover: "/images/applications/hospitality-entrance-bar-tops.png", href: "/applications#horeca" },
+  { title: "Ритейл", count: 17, cover: "/images/applications/retail-shopfloor-wall-panelling.png", href: "/applications#retail" },
+  { title: "Офис", count: 19, cover: "/images/applications/work-meeting-boardroom-table.png", href: "/applications#office" },
+  { title: "Городская среда", count: 0, cover: "", href: "/applications", soon: true },
+  { title: "Формы и объекты", count: 0, cover: "", href: "/applications", soon: true },
 ];
 
 const shopProducts = [
@@ -36,23 +34,30 @@ const shopProducts = [
 
 const productColors = ["#E8A33D", "#F3EFE6", "#171513", "#C9B79A", "#5A6647", "#3C4657", "#16233D"];
 
-// h — индивидуальная высота (эмблемы выше, чтобы читались; широкие вордмарки ниже)
-const trustLogos = [
-  { src: "/images/logos/stone.svg", alt: "Stone", h: 26 },
-  { src: "/images/logos/chaika.svg", alt: "Чайка", h: 34 },
-  { src: "/images/logos/pims.svg", alt: "PIMS", h: 24 },
-  { src: "/images/logos/shagal.svg", alt: "ЖК Шагал", h: 30 },
-  { src: "/images/logos/saga.svg", alt: "Бюро Saga", h: 26 },
-  { src: "/images/logos/leto.svg", alt: "Лето в Москве", h: 40 },
-  { src: "/images/logos/museum.svg", alt: "Музей Транспорта Москвы", h: 38 },
-  { src: "/images/logos/pridex.svg", alt: "Pridex", h: 23 },
-  { src: "/images/logos/meltzer.svg", alt: "Meltzer", h: 24 },
-  { src: "/images/logos/vesna.svg", alt: "ВеснаFlowers", h: 32 },
-  { src: "/images/logos/gnezdo.png", alt: "Гнездо", h: 40 },
-  { src: "/images/logos/laolee.png", alt: "Lao Lee", h: 30 },
-  { src: "/images/logos/pac.png", alt: "PAC Group", h: 26 },
-  { src: "/images/logos/energycraft.png", alt: "Energy Craft", h: 28 },
-  { src: "/images/logos/spaceoffice.png", alt: "Space Office", h: 42 },
+// h — высота; filter — переопределение (для заливных эмблем — grayscale, иначе серое «пятно»)
+const trustLogos: { src: string; alt: string; h: number; filter?: string }[] = [
+  { src: "/images/logos/yandex.png", alt: "Яндекс", h: 42 },
+  { src: "/images/logos/vkusvill.png", alt: "ВкусВилл", h: 38 },
+  { src: "/images/logos/pik.png", alt: "ПИК", h: 44 },
+  { src: "/images/logos/samolet.png", alt: "Самолет", h: 38 },
+  { src: "/images/logos/drinkit2.png", alt: "дринкит", h: 42 },
+  { src: "/images/logos/skolkovo.png", alt: "Сколково", h: 44, filter: "grayscale(1)" },
+  { src: "/images/logos/kofemania.png", alt: "Кофемания", h: 56, filter: "grayscale(1)" },
+  { src: "/images/logos/stone.svg", alt: "Stone", h: 42 },
+  { src: "/images/logos/chaika.svg", alt: "Чайка", h: 46 },
+  { src: "/images/logos/pims.svg", alt: "PIMS", h: 40 },
+  { src: "/images/logos/shagal.svg", alt: "ЖК Шагал", h: 44 },
+  { src: "/images/logos/saga.svg", alt: "Бюро Saga", h: 42 },
+  { src: "/images/logos/leto.svg", alt: "Лето в Москве", h: 50 },
+  { src: "/images/logos/museum.svg", alt: "Музей Транспорта Москвы", h: 48 },
+  { src: "/images/logos/pridex.svg", alt: "Pridex", h: 38 },
+  { src: "/images/logos/meltzer.svg", alt: "Meltzer", h: 40 },
+  { src: "/images/logos/vesna.svg", alt: "ВеснаFlowers", h: 44 },
+  { src: "/images/logos/gnezdo.png", alt: "Гнездо", h: 50 },
+  { src: "/images/logos/laolee.png", alt: "Lao Lee", h: 44 },
+  { src: "/images/logos/pac.png", alt: "PAC Group", h: 42 },
+  { src: "/images/logos/energycraft.png", alt: "Energy Craft", h: 42 },
+  { src: "/images/logos/spaceoffice.png", alt: "Space Office", h: 52 },
 ];
 
 const marqueeCSS = `
@@ -125,7 +130,7 @@ export default function Home() {
                 fill
                 sizes="(max-width: 767px) 100vw, 50vw"
                 priority={i === 0}
-                quality={90}
+                quality={95}
                 className="object-cover transition-opacity duration-200 ease-out"
                 style={{ objectPosition: "center 50%", opacity: i === matIdx ? 1 : 0 }}
               />
@@ -152,7 +157,7 @@ export default function Home() {
                 fill
                 sizes="(max-width: 767px) 100vw, 50vw"
                 priority={i === 0}
-                quality={90}
+                quality={95}
                 className="object-cover transition-opacity duration-200 ease-out"
                 style={{ objectPosition: "center 50%", opacity: i === magIdx ? 1 : 0 }}
               />
@@ -310,40 +315,46 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 5. СПОСОБЫ ПРИМЕНЕНИЯ (по Figma 7:3371) ═══ */}
+      {/* ═══ 5. СПОСОБЫ ПРИМЕНЕНИЯ — плитки-категории → /applications ═══ */}
       <section className="px-[var(--site-margins)] pt-6 lg:pt-8 pb-10 lg:pb-16">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <h2 className="font-bold text-[#171513] mb-4 lg:mb-5"
+          <h2 className="font-bold text-[#171513] mb-5 lg:mb-7"
             style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
             Способы применения
           </h2>
-          <div className="flex gap-3 lg:gap-5 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 -mr-[var(--site-margins)] pr-[var(--site-margins)]">
-            {applications.map((d) => (
-              <Link key={d.title} href={d.href} className="group/card block shrink-0 w-[clamp(240px,42vw,330px)] snap-start">
-                <div className="relative overflow-hidden" style={{ aspectRatio: "455 / 606" }}>
-                  <Image
-                    src={d.img}
-                    alt={d.title}
-                    fill
-                    sizes="(min-width:1024px) 25vw, 50vw"
-                    className="object-cover"
-                  />
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{ background: "rgba(255, 255, 255,0.82)" }}
-                  />
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-7 lg:gap-x-5 lg:gap-y-9">
+            {appTiles.map((t) =>
+              t.soon ? (
+                <div key={t.title} className="block">
+                  <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ aspectRatio: "4 / 3", background: "#EAEAE7" }}>
+                    <span style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "12px", letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(23,21,19,0.35)" }}>Скоро</span>
+                  </div>
+                  <div className="pt-2.5">
+                    <h3 className="font-bold" style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(18px, 2vw, 26px)", letterSpacing: "-0.02em", lineHeight: 1.1, color: "rgba(23,21,19,0.45)" }}>{t.title}</h3>
+                  </div>
                 </div>
-                <div className="pt-1.5">
-                  <h3
-                    className="font-bold text-[#171513] inline-block relative"
-                    style={{ fontFamily: "'Gramatika', sans-serif", fontSize: "clamp(15px, 1.5vw, 18px)", letterSpacing: "-0.3px", lineHeight: 1.2 }}
-                  >
-                    {d.title}
-                    <span className="absolute left-0 -bottom-1 h-[1.5px] bg-[#171513] w-0 group-hover/card:w-full transition-[width] duration-[450ms] ease-out" />
-                  </h3>
-                </div>
-              </Link>
-            ))}
+              ) : (
+                <Link key={t.title} href={t.href} className="group/tile block">
+                  <div className="relative w-full overflow-hidden" style={{ aspectRatio: "4 / 3" }}>
+                    <Image src={t.cover} alt={t.title} fill sizes="(min-width:1024px) 33vw, 50vw" quality={95} className="object-cover transition-transform duration-500 ease-out group-hover/tile:scale-[1.04]" />
+                  </div>
+                  <div className="pt-2.5">
+                    <h3 className="font-bold text-[#171513] inline-block relative" style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(18px, 2vw, 26px)", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                      {t.title}
+                      <span style={{ fontFamily: "'Gramatika', sans-serif", fontWeight: 400, fontSize: "0.55em", opacity: 0.4, marginLeft: "0.4em" }}>{t.count}</span>
+                      <span className="absolute left-0 -bottom-1 h-[2px] bg-[#171513] w-0 group-hover/tile:w-full transition-[width] duration-[450ms] ease-out" />
+                    </h3>
+                  </div>
+                </Link>
+              )
+            )}
+          </div>
+          <div className="mt-8 lg:mt-12">
+            <Link href="/applications" className="group/all inline-block relative font-bold text-[#171513]"
+              style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(24px, 3.4vw, 46px)", lineHeight: 1.05, letterSpacing: "-0.02em" }}>
+              Где применяют →
+              <span className="absolute left-0 -bottom-1 h-[2.5px] bg-[#171513] w-0 group-hover/all:w-full transition-[width] duration-[450ms] ease-out" />
+            </Link>
           </div>
         </div>
       </section>
@@ -394,11 +405,11 @@ export default function Home() {
           </div>
 
           {/* Смотреть все проекты — близко к последнему кейсу */}
-          <div className="mt-5 lg:mt-6">
+          <div className="mt-8 lg:mt-12">
             <Link href="/projects" className="group/all inline-block relative font-bold text-[#171513]"
-              style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
+              style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontSize: "clamp(24px, 3.4vw, 46px)", lineHeight: 1.05, letterSpacing: "-0.02em" }}>
               Смотреть все проекты →
-              <span className="absolute left-0 -bottom-1 h-[3px] bg-[#171513] w-0 group-hover/all:w-full transition-[width] duration-[450ms] ease-out" />
+              <span className="absolute left-0 -bottom-1 h-[2.5px] bg-[#171513] w-0 group-hover/all:w-full transition-[width] duration-[450ms] ease-out" />
             </Link>
           </div>
         </div>
@@ -417,7 +428,7 @@ export default function Home() {
               src={l.src}
               alt={l.alt}
               className="shrink-0 select-none"
-              style={{ height: `${l.h}px`, width: "auto", filter: "brightness(0) invert(0.62)", opacity: 0.85 }}
+              style={{ height: `${l.h}px`, width: "auto", filter: l.filter || "brightness(0) invert(0.62)", opacity: 0.85 }}
               draggable={false}
             />
           ))}
