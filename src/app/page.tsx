@@ -52,8 +52,8 @@ const marqueeCSS = `
 `;
 
 /* Наборы кадров для героя — листаются за курсором (влево-вправо) */
-const MAT_HERO = Array.from({ length: 7 }, (_, i) => `/images/hero/mat-${i + 1}.jpg`);
-const MAG_HERO = Array.from({ length: 7 }, (_, i) => `/images/hero/mag-${i + 1}.jpg`);
+const MAT_HERO = Array.from({ length: 6 }, (_, i) => `/images/hero/mat-${i + 1}.jpg`);
+const MAG_HERO = Array.from({ length: 6 }, (_, i) => `/images/hero/mag-${i + 1}.jpg`);
 
 export default function Home() {
   const heroLogoRef = useRef<HTMLDivElement>(null);
