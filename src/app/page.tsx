@@ -208,8 +208,8 @@ export default function Home() {
           {/* Интро — снизу героя, белым; уезжает вниз на скролле */}
           <div
             ref={heroIntroRef}
-            className="absolute left-0 right-0 bottom-0 z-10 pointer-events-none"
-            style={{ paddingLeft: "var(--site-margins)", paddingRight: "var(--site-margins)", paddingBottom: "calc(clamp(24px, 5vh, 58px) + 52px)", willChange: "transform" }}
+            className="hero-intro absolute left-0 right-0 bottom-0 z-10 pointer-events-none"
+            style={{ paddingLeft: "var(--site-margins)", paddingRight: "var(--site-margins)", willChange: "transform" }}
           >
             <div className="mx-auto" style={{ maxWidth: 1440 }}>
               <h2

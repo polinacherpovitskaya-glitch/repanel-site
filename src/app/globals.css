@@ -234,3 +234,7 @@ img {
 .cart-drawer-animate {
   animation: cart-slide-from-right 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
+
+/* Hero: подпись внизу. Мобилка — как было; десктоп — впритык к бегущей строке (PromoBar 40px). */
+.hero-intro { padding-bottom: calc(clamp(24px, 5vh, 58px) + 52px); }
+@media (min-width: 1024px) { .hero-intro { padding-bottom: 48px; } }
