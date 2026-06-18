@@ -67,7 +67,7 @@ export const appCats: AppCat[] = [
       { cap: "Ценникодержатели", img: "/images/applications/hospitality-small-price-tag-stands.png" },
     ] },
   ] },
-  { key: "retail", title: "Ритейл", cover: "/images/applications/retail-shopfloor-tabletops.png", count: 17, spaces: [
+  { key: "retail", title: "Ритейл", cover: "/images/applications/retail-shopfloor-tabletops.png", count: 18, spaces: [
     { space: "Торговый зал", items: [
       { cap: "Столешницы", img: "/images/applications/retail-shopfloor-tabletops.png" },
       { cap: "Стеллажи", img: "/images/applications/retail-shopfloor-shelving.png" },
@@ -75,6 +75,7 @@ export const appCats: AppCat[] = [
       { cap: "Основания витрин", img: "/images/applications/retail-shopfloor-fixture-bases.png" },
       { cap: "POS-дисплей", img: "/images/applications/retail-shopfloor-pos-display.png" },
       { cap: "Кассовая стойка", img: "/images/applications/retail-shopfloor-cash-desk.png" },
+      { cap: "Ящики для выкладки", img: "/images/applications/retail-shopfloor-produce-crates.png" },
     ] },
     { space: "Витрина", items: [
       { cap: "Стеновые панели", img: "/images/applications/retail-window-wall-panelling.png" },
@@ -125,12 +126,16 @@ export const appCats: AppCat[] = [
       { cap: "Панели", img: "/images/applications/work-washrooms-panelling.png" },
     ] },
   ] },
-  { key: "urban", title: "Городская среда", cover: "/images/applications/public-outdoor-large-planters.png", count: 4, spaces: [
+  { key: "urban", title: "Городская среда", cover: "/images/applications/public-outdoor-large-planters.png", count: 8, spaces: [
     { space: "Уличная зона", items: [
       { cap: "Скамьи", img: "/images/applications/public-outdoor-benches.png" },
       { cap: "Кашпо", img: "/images/applications/public-outdoor-large-planters.png" },
       { cap: "Мозаичная поверхность", img: "/images/applications/public-outdoor-mosaic-surface.png" },
       { cap: "Дверные ручки", img: "/images/applications/public-outdoor-entrance-handles.png" },
+      { cap: "Игровые элементы", img: "/images/applications/public-outdoor-playground-elements.png" },
+      { cap: "Навигация", img: "/images/applications/public-outdoor-navigation.png" },
+      { cap: "Светильники", img: "/images/applications/public-outdoor-luminaires.png" },
+      { cap: "Уличная мебель", img: "/images/applications/public-outdoor-street-furniture.png" },
     ] },
   ] },
 ];

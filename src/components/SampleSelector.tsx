@@ -1,18 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useCart } from "@/lib/cart";
 import Image from "next/image";
+import { SAMPLE_TIERS as TIERS } from "@/lib/sample-kits";
 
 const BODY = "'Gramatika', sans-serif";
 const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
 const OLIVE = "#66704D";
 const TG = "https://t.me/panelpanelre";
-
-const TIERS = [
-  { n: 6, price: 3500 },
-  { n: 9, price: 4500 },
-  { n: 12, price: 5500 },
-];
 
 const COLORS = Array.from({ length: 12 }, (_, i) => ({ id: i + 1, label: `№ ${i + 1}`, img: `/images/colors/color-${String(i + 1).padStart(2, "0")}.jpg` }));
 
@@ -22,6 +18,7 @@ export function SampleSelector() {
   const [tierN, setTierN] = useState(6);
   const [selected, setSelected] = useState<number[]>([]);
   const [copied, setCopied] = useState(false);
+  const { addItem, openCart } = useCart();
 
   const tier = TIERS.find((t) => t.n === tierN)!;
   const full = selected.length >= tier.n;
@@ -46,6 +43,18 @@ export function SampleSelector() {
       setTimeout(() => setCopied(false), 2500);
     } catch {}
     window.open(TG, "_blank", "noopener,noreferrer");
+  };
+
+  const buy = () => {
+    addItem({
+      id: `obraztsy-${tierN}`,
+      title: `Набор образцов — ${tierN} цветов`,
+      price: tier.price,
+      image_url: "/images/obraztsy-card.png",
+      color: selected.length ? `Цвета: ${selected.map((id) => `№${id}`).join(", ")}` : "Цвета на ваш выбор",
+      sample_kit_payload: { count: tierN as 6 | 9 | 12, color_ids: selected.map(String), colors: selected.map((id) => `№${id}`) },
+    });
+    openCart();
   };
 
   return (
@@ -89,14 +98,21 @@ export function SampleSelector() {
             <span className="font-bold text-[#171513]" style={{ fontFamily: DISPLAY, fontSize: "clamp(24px, 2.4vw, 34px)", letterSpacing: "-0.5px" }}>{fmt(tier.price)}</span>
           </div>
           <button
-            onClick={order}
+            onClick={buy}
             className="mt-4 w-full px-6 py-3.5 transition-opacity cursor-pointer hover:opacity-90"
-            style={{ fontFamily: BODY, fontWeight: 700, fontSize: "15px", background: "#171513", color: "#FFFFFF" }}
+            style={{ fontFamily: BODY, fontWeight: 700, fontSize: "15px", background: OLIVE, color: "#FFFFFF" }}
           >
-            {copied ? "Заявка скопирована — вставьте в чат" : "Заказать в Telegram →"}
+            Оплатить онлайн — {fmt(tier.price)} →
+          </button>
+          <button
+            onClick={order}
+            className="mt-2.5 w-full px-6 py-3 transition-colors cursor-pointer hover:bg-[#171513]/5"
+            style={{ fontFamily: BODY, fontWeight: 700, fontSize: "14px", background: "transparent", border: "1px solid rgba(23,21,19,0.2)", color: "#171513" }}
+          >
+            {copied ? "Заявка скопирована — вставьте в чат" : "Или заказать в Telegram →"}
           </button>
           <p className="mt-2.5" style={{ fontFamily: BODY, fontSize: "12px", color: "rgba(23,21,19,0.45)", lineHeight: 1.45 }}>
-            Откроется чат RePanel, текст заявки скопируется — останется вставить и отправить.
+            Онлайн-оплата — картой или СБП через Точку. Или оформите заявку в Telegram.
           </p>
         </div>
       </div>

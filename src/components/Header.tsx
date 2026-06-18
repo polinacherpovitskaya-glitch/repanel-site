@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
+import { useCart } from "@/lib/cart";
 
 const D = "'Gramatika', system-ui, sans-serif";
 
@@ -125,6 +126,7 @@ export function Header() {
   const [mobileSubmenu, setMobileSubmenu] = useState<number | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const { count, openCart } = useCart();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const hoverLeaveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const headerRef = useRef<HTMLElement>(null);
@@ -269,13 +271,13 @@ export function Header() {
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </button>
-            <Link href="/catalog" aria-label="Корзина" className="flex items-center gap-1 cursor-pointer" style={{ color: fg }} onClick={closeMobileMenu}>
+            <button type="button" aria-label="Корзина" className="flex items-center gap-1 cursor-pointer" style={{ color: fg }} onClick={() => { closeMobileMenu(); openCart(); }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 8h14l-1 12H6L5 8Z" />
                 <path d="M9 8V6a3 3 0 0 1 6 0v2" />
               </svg>
-              <span style={{ color: fg, fontSize: 13, fontWeight: 700 }}>(0)</span>
-            </Link>
+              <span style={{ color: fg, fontSize: 13, fontWeight: 700 }}>({count})</span>
+            </button>
           </div>
         </div>
 
@@ -328,19 +330,19 @@ export function Header() {
         </button>
 
         {/* Корзина (иконка + счётчик) */}
-        <Link
-          href="/catalog"
+        <button
+          type="button"
           aria-label="Корзина"
-          className="hidden lg:flex items-center gap-1 absolute top-1/2 -translate-y-1/2 hover:opacity-60 transition-opacity"
+          className="hidden lg:flex items-center gap-1 absolute top-1/2 -translate-y-1/2 hover:opacity-60 transition-opacity cursor-pointer"
           style={{ left: "92%", color: fg }}
-          onClick={closeAll}
+          onClick={() => { closeAll(); openCart(); }}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 8h14l-1 12H6L5 8Z" />
             <path d="M9 8V6a3 3 0 0 1 6 0v2" />
           </svg>
-          <span style={{ fontFamily: D, fontWeight: 700, fontSize: 13, color: fg }}>(0)</span>
-        </Link>
+          <span style={{ fontFamily: D, fontWeight: 700, fontSize: 13, color: fg }}>({count})</span>
+        </button>
       </nav>
 
       {/* ── Search drawer: drops below the header, milky + ink ── */}

@@ -70,7 +70,7 @@ const marqueeCSS = `
 
 /* Наборы кадров для героя — листаются за курсором (влево-вправо) */
 const MAT_HERO = Array.from({ length: 6 }, (_, i) => `/images/hero/mat-${i + 1}.jpg`);
-const MAG_HERO = Array.from({ length: 6 }, (_, i) => `/images/hero/mag-${i + 1}.jpg`);
+const MAG_HERO = [2, 3, 4, 5, 6].map((n) => `/images/hero/mag-${n}.jpg`); // mag-1 (подсвечники) убран из героя
 
 export default function Home() {
   const heroLogoRef = useRef<HTMLDivElement>(null);
