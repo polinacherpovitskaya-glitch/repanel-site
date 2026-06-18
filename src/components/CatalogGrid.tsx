@@ -49,6 +49,21 @@ export function CatalogGrid({ products }: { products: Product[] }) {
 
       {/* Сетка карточек */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-5">
+        {active === "Все" && (
+          <Link href="/certificate" className="group/card relative flex flex-col bg-[#171513] text-white" style={{ border: "1px solid #171513" }}>
+            <div className="w-full px-5 pt-9 pb-[34px]">
+              <div className="relative w-full aspect-square flex items-center justify-center text-center">
+                <span style={{ fontFamily: BODY, fontWeight: 700, fontSize: 20, lineHeight: 1.15 }}>
+                  Подарочный<br />сертификат
+                </span>
+              </div>
+            </div>
+            <div className="px-2.5 pb-2.5 pt-1">
+              <p style={{ fontFamily: BODY, fontSize: "14.4px", lineHeight: "20px", fontWeight: 700 }}>Подарочный сертификат</p>
+              <p style={{ fontFamily: BODY, fontSize: "13.8px", lineHeight: "20px", opacity: 0.75 }}>от 1 000 ₽</p>
+            </div>
+          </Link>
+        )}
         {filtered.map((p) => {
           const sample = isSample(p);
           return (

@@ -4,6 +4,7 @@
 // confirmAndMarkPaid → защита от поддельного "APPROVED".
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getTochkaPaymentStatus, extractTochkaPaymentOperation } from "@/lib/tochka";
+import { issueCertificatesForOrder } from "@/lib/certificates";
 
 /** Минимально нужная форма заказа из shop_orders для платёжной логики. */
 export type ShopOrder = {
@@ -116,6 +117,13 @@ export async function confirmAndMarkPaid(db: SupabaseClient, order: ShopOrder): 
   await notifyTelegram(
     `✅ <b>Оплачено! Заказ #${displayOrderNumber(order.id)}</b>\nСумма: <b>${expected.toLocaleString("ru-RU")} ₽</b>`,
   );
+
+  // Подарочные сертификаты: выпустить для позиций с certificate_payload (best-effort).
+  try {
+    await issueCertificatesForOrder(db, order);
+  } catch (e) {
+    console.error("[shop] cert issuance failed:", e);
+  }
 
   return { paid: true, status: "paid" };
 }

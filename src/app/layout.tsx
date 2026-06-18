@@ -7,6 +7,7 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { PageTransition } from "@/components/PageTransition";
 import { CartProvider } from "@/lib/cart";
 import { CartDrawer } from "@/components/CartDrawer";
+import { HideOnAdmin } from "@/components/HideOnAdmin";
 
 export const metadata: Metadata = {
   title: "RePanel — панели и изделия из переработанного пластика",
@@ -30,11 +31,15 @@ export default function RootLayout({
         style={{ background: "#FFFFFF", color: "#171513" }}
       >
         <CartProvider>
-          <Header />
+          <HideOnAdmin>
+            <Header />
+          </HideOnAdmin>
           <main className="flex-1">{children}</main>
-          <Footer />
-          <PromoBar />
-          <CookieConsent />
+          <HideOnAdmin>
+            <Footer />
+            <PromoBar />
+            <CookieConsent />
+          </HideOnAdmin>
           <PageTransition />
           <CartDrawer />
         </CartProvider>
