@@ -87,8 +87,8 @@ export default function Home() {
       const y = window.scrollY;
       if (logo) logo.style.transform = `translateY(${-y * 0.9}px)`;
       if (intro) intro.style.transform = `translateY(${y * 0.9}px)`;
-      // подписи «Материал»/«Магазин» проступают по мере раскрытия
-      const o = Math.min(1, Math.max(0, (y - 20) / 240));
+      // подписи «Материал»/«Магазин» быстро проступают до чистого белого по мере раскрытия
+      const o = Math.min(1, Math.max(0, (y - 20) / 100));
       labels.forEach((l) => { l.style.opacity = String(o); });
     };
     onScroll();
@@ -137,7 +137,7 @@ export default function Home() {
             ))}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 2px 10px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.75)" }}>
+              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF" }}>
                 Материал
                 <span className="absolute left-0 bottom-0.5 h-[4px] bg-[#FFFFFF] w-0 group-hover:w-full transition-[width] duration-[450ms] ease-out" />
               </span>
@@ -164,7 +164,7 @@ export default function Home() {
             ))}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 2px 10px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.75)" }}>
+              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF" }}>
                 Магазин
                 <span className="absolute left-0 bottom-0.5 h-[4px] bg-[#FFFFFF] w-0 group-hover:w-full transition-[width] duration-[450ms] ease-out" />
               </span>
