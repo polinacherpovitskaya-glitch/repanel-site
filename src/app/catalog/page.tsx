@@ -43,7 +43,7 @@ export default async function CatalogPage() {
             </p>
           )}
 
-          {SHOP_COMING_SOON ? <ShopComingSoon /> : <CatalogGrid products={products} />}
+          {SHOP_COMING_SOON ? <ShopComingSoon fill /> : <CatalogGrid products={products} />}
         </div>
       </section>
 
