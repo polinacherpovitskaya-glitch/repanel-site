@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { FinalCTA } from "@/components/FinalCTA";
 import { CatalogGrid } from "@/components/CatalogGrid";
+import { ShopComingSoon } from "@/components/ShopComingSoon";
+import { SHOP_COMING_SOON } from "@/lib/shop-config";
 import { supabase, type Product } from "@/lib/supabase";
 
 const BODY = "'Gramatika', sans-serif";
@@ -24,26 +26,30 @@ export default async function CatalogPage() {
 
   return (
     <>
-      <section className="px-[var(--site-margins)] pt-8 lg:pt-12 pb-16 lg:pb-28">
+      <section className="px-[var(--site-margins)] py-6 lg:py-10">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
           <h1
-            className="font-bold text-[#171513]"
+            className="font-bold text-[#171513] mb-6 lg:mb-8"
             style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.5px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}
           >
             Магазин
           </h1>
-          <p
-            className="mt-3 lg:mt-4 text-[#171513] max-w-[640px]"
-            style={{ fontFamily: BODY, fontSize: "clamp(14px, 1.4vw, 17px)", lineHeight: 1.45, opacity: 0.6 }}
-          >
-            Готовые предметы из переработанного полистирола. Любой адаптируем под цвет, размер и тираж.
-          </p>
+          {!SHOP_COMING_SOON && (
+            <p
+              className="mt-3 lg:mt-4 text-[#171513] max-w-[640px]"
+              style={{ fontFamily: BODY, fontSize: "clamp(14px, 1.4vw, 17px)", lineHeight: 1.45, opacity: 0.6 }}
+            >
+              Готовые предметы из переработанного полистирола. Любой адаптируем под цвет, размер и тираж.
+            </p>
+          )}
 
-          <CatalogGrid products={products} />
+          {SHOP_COMING_SOON ? <ShopComingSoon /> : <CatalogGrid products={products} />}
         </div>
       </section>
 
-      <FinalCTA heading="Нужно что-то особенное?" text="Разработаем предмет с нуля или адаптируем существующий под ваши задачи и тираж." />
+      {!SHOP_COMING_SOON && (
+        <FinalCTA heading="Нужно что-то особенное?" text="Разработаем предмет с нуля или адаптируем существующий под ваши задачи и тираж." />
+      )}
     </>
   );
 }

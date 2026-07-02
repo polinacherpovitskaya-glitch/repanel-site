@@ -138,4 +138,19 @@ export const appCats: AppCat[] = [
       { cap: "Уличная мебель", img: "/images/applications/public-outdoor-street-furniture.png" },
     ] },
   ] },
+  { key: "objects", title: "Формы и объекты", cover: "/images/applications/objects-tray.png", count: 9, spaces: [
+    { space: "Настольные изделия", items: [
+      { cap: "Лоток", img: "/images/applications/objects-tray.png" },
+      { cap: "Подставка с секциями", img: "/images/applications/objects-grooved-holder.png" },
+      { cap: "Лоток-органайзер", img: "/images/applications/objects-grooved-tray.png" },
+      { cap: "Планшет-зажим", img: "/images/applications/objects-clipboard.png" },
+      { cap: "Планшет для записей", img: "/images/applications/objects-clipboard-note.png" },
+      { cap: "Шкатулка", img: "/images/applications/objects-round-box.png" },
+    ] },
+    { space: "Предметы интерьера", items: [
+      { cap: "Вешалка-плечики", img: "/images/applications/objects-hanger.png" },
+      { cap: "Часы настенные", img: "/images/applications/objects-wall-clock.png" },
+      { cap: "Часы настольные", img: "/images/applications/objects-desk-clock.png" },
+    ] },
+  ] },
 ];

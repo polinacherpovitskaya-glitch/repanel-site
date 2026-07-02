@@ -48,6 +48,7 @@ const panels: Record<string, PanelConfig> = {
         { label: "Ритейл", href: "/applications#retail" },
         { label: "Офис", href: "/applications#office" },
         { label: "Городская среда", href: "/applications#urban" },
+        { label: "Формы и объекты", href: "/applications#objects" },
       ],
     },
     right: { heading: "", links: [] },
@@ -111,6 +112,7 @@ const mobileMenuItems: MobileMenuItem[] = [
           { label: "Ритейл", href: "/applications#retail" },
           { label: "Офис", href: "/applications#office" },
           { label: "Городская среда", href: "/applications#urban" },
+          { label: "Формы и объекты", href: "/applications#objects" },
         ],
       },
     ],
@@ -297,7 +299,7 @@ export function Header() {
             <button
               key={item.label}
               onClick={() => toggle(item.label)}
-              className="hidden lg:block absolute top-1/2 -translate-y-1/2 hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap"
+              className="hidden lg:block absolute top-1/2 -translate-y-1/2 cursor-pointer whitespace-nowrap"
               style={{ left: item.left, translate: item.center ? "-50% -50%" : undefined, fontFamily: D, color: fg, fontWeight: 700, fontSize: 14 }}
             >
               {item.label} {openPanel === item.label ? "×" : "+"}
@@ -306,7 +308,7 @@ export function Header() {
             <Link
               key={item.label}
               href={item.href}
-              className="hidden lg:block absolute top-1/2 -translate-y-1/2 hover:opacity-60 transition-opacity whitespace-nowrap"
+              className="hidden lg:block absolute top-1/2 -translate-y-1/2 whitespace-nowrap"
               style={{ left: item.left, translate: item.center ? "-50% -50%" : undefined, fontFamily: D, color: fg, fontWeight: 700, fontSize: 14 }}
               onClick={() => setOpenPanel(null)}
             >

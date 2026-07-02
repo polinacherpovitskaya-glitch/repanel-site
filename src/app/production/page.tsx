@@ -43,7 +43,7 @@ export default function ProductionPage() {
     <>
       <PageHero
         title="Производство"
-        image="/images/DSC02276.jpg"
+        image="/images/production-hero.jpg"
         imageAlt="Производство RePanel"
         lead="Полный цикл — от проверенного вторсырья до готового изделия. Производим в России, под Москвой, в Дмитрове."
       />

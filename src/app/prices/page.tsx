@@ -58,7 +58,7 @@ export default function PricesPage() {
     <>
       <PageHero
         title="Прайс-лист"
-        image="/images/colors/color-2.jpg"
+        image="/images/colors/color-02.jpg"
         imageAlt="Палитра RePanel"
         lead="Ориентиры, чтобы прикинуть бюджет. Точную стоимость под проект — по площади, толщине и тиражу — считаем по запросу."
       />

@@ -23,6 +23,8 @@ export function supabaseAdmin() {
 }
 
 /* ── Типы ── */
+export type ProductColor = { name: string; hex: string; image: string | null };
+
 export type Product = {
   id: string;
   slug: string | null;
@@ -30,7 +32,9 @@ export type Product = {
   price: number; // целые рубли
   description: string | null;
   category: string;
-  image_url: string | null;
+  image_url: string | null; // главное фото (в сетке каталога)
+  gallery_urls: string[] | null; // доп. фото внутри карточки
+  colors: ProductColor[] | null; // варианты цвета: {name, hex, image}
   is_published: boolean;
   weight_grams: number | null;
   length_cm: number | null;

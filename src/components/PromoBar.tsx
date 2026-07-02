@@ -55,8 +55,11 @@ export function PromoBar() {
 
   useEffect(() => {
     document.body.style.paddingBottom = hidden ? "" : `${BAR_H}px`;
+    // Экспонируем высоту бегущей строки для героя (50/50 разбивка экрана)
+    document.documentElement.style.setProperty("--ticker-h", hidden ? "0px" : `${BAR_H}px`);
     return () => {
       document.body.style.paddingBottom = "";
+      document.documentElement.style.removeProperty("--ticker-h");
     };
   }, [hidden]);
 

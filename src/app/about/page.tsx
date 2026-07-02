@@ -38,8 +38,8 @@ export default function AboutPage() {
     <>
       <PageHero
         title="О нас"
-        image="/images/Screenshot 2026-03-20 at 22.39.54.png"
-        imageAlt="Производство RePanel"
+        image="/images/about-granules.jpg"
+        imageAlt="Гранулы переработанного пластика — склад сырья RePanel"
         lead="Материал, родившийся в городе. Из переработанного пластика делаем то, что работает в реальных интерьерах — от листа до изделия под ключ."
       />
 

@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 import { cases, homeCases } from "@/data/cases";
+import { ShopComingSoon } from "@/components/ShopComingSoon";
+import { SHOP_COMING_SOON } from "@/lib/shop-config";
 
 /* ── Data ── */
 
@@ -17,10 +19,10 @@ const directions = [
 const appTiles: { title: string; count: number; cover: string; href: string; soon?: boolean }[] = [
   { title: "Интерьеры", count: 22, cover: "/images/applications/overview-commercial-developments.png", href: "/applications#interiors" },
   { title: "HoReCa", count: 19, cover: "/images/applications/overview-hospitality.png", href: "/applications#horeca" },
-  { title: "Ритейл", count: 17, cover: "/images/applications/overview-retail-spaces.png", href: "/applications#retail" },
+  { title: "Ритейл", count: 18, cover: "/images/applications/overview-retail-spaces.png", href: "/applications#retail" },
   { title: "Офис", count: 19, cover: "/images/applications/overview-work-spaces.png", href: "/applications#office" },
-  { title: "Городская среда", count: 4, cover: "/images/applications/overview-public-outdoor-maf.png", href: "/applications#urban" },
-  { title: "Формы и объекты", count: 0, cover: "/images/applications/overview-small-objects-gifts.png", href: "/applications", soon: true },
+  { title: "Городская среда", count: 8, cover: "/images/applications/overview-public-outdoor-maf.png", href: "/applications#urban" },
+  { title: "Формы и объекты", count: 9, cover: "/images/applications/overview-small-objects-gifts.png", href: "/applications#objects" },
 ];
 
 const shopProducts = [
@@ -66,6 +68,16 @@ const marqueeCSS = `
   100% { transform: translateX(-50%); }
 }
 .marquee-row:hover { animation-play-state: paused; }
+
+/* Герой: на мобилке — ровно 50/50 между шапкой и бегущей строкой.
+   --ticker-h выставляет PromoBar (40px видима / 0px закрыта). */
+.hero-sticky { height: 100dvh; }
+@media (max-width: 767px) {
+  .hero-sticky {
+    height: calc(100dvh - var(--ticker-h, 40px));
+    padding-top: 56px;
+  }
+}
 `;
 
 /* Наборы кадров для героя — листаются за курсором (влево-вправо) */
@@ -113,14 +125,14 @@ export default function Home() {
       <style dangerouslySetInnerHTML={{ __html: marqueeCSS }} />
 
       {/* ═══ 1. HERO — Figma: 2 фото + гигантский белый логотип поверх ═══ */}
-      <section className="relative" style={{ backgroundColor: "#171513" }}>
+      <section className="relative" style={{ backgroundColor: "#E9E7E2" }}>
         {/* Sticky hero: две половины — Материал (слева) и Магазин (справа) */}
-        <div className="sticky top-0 h-screen w-full flex flex-col md:flex-row overflow-hidden">
+        <div className="hero-sticky sticky top-0 w-full flex flex-col md:flex-row overflow-hidden">
           {/* МАТЕРИАЛ */}
           <Link
             href="/material"
             onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); setMatIdx(Math.min(MAT_HERO.length - 1, Math.max(0, Math.floor(((e.clientX - r.left) / r.width) * MAT_HERO.length)))); }}
-            className="group relative flex-1 overflow-hidden block"
+            className="group relative isolate flex-1 overflow-hidden block"
           >
             {MAT_HERO.map((src, i) => (
               <Image
@@ -131,23 +143,28 @@ export default function Home() {
                 sizes="(max-width: 767px) 100vw, 50vw"
                 priority={i === 0}
                 quality={95}
-                className="object-cover transition-opacity duration-200 ease-out"
-                style={{ objectPosition: "center 50%", opacity: i === matIdx ? 1 : 0 }}
+                className="object-cover"
+                style={{
+                  objectPosition: "center 50%",
+                  opacity: i === matIdx ? 1 : 0,
+                  zIndex: i === matIdx ? 2 : 1,
+                  // Кроссфейд без чёрного мигания: входящий кадр проявляется сверху за 700ms,
+                  // уходящий держится непрозрачным снизу и снимается мгновенно только после.
+                  transition: i === matIdx ? "opacity 700ms ease-in-out" : "opacity 0s ease-in-out 700ms",
+                }}
               />
             ))}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="absolute inset-0 z-[3] bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
+            <div className="absolute inset-0 z-[4] flex items-center justify-center pointer-events-none">
               <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF" }}>
-                Материал
-                <span className="absolute left-0 bottom-0.5 h-[4px] bg-[#FFFFFF] w-0 group-hover:w-full transition-[width] duration-[450ms] ease-out" />
-              </span>
+                Материал              </span>
             </div>
           </Link>
           {/* МАГАЗИН */}
           <Link
             href="/catalog"
             onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); setMagIdx(Math.min(MAG_HERO.length - 1, Math.max(0, Math.floor(((e.clientX - r.left) / r.width) * MAG_HERO.length)))); }}
-            className="group relative flex-1 overflow-hidden block"
+            className="group relative isolate flex-1 overflow-hidden block"
           >
             {MAG_HERO.map((src, i) => (
               <Image
@@ -158,16 +175,19 @@ export default function Home() {
                 sizes="(max-width: 767px) 100vw, 50vw"
                 priority={i === 0}
                 quality={95}
-                className="object-cover transition-opacity duration-200 ease-out"
-                style={{ objectPosition: "center 80%", opacity: i === magIdx ? 1 : 0 }}
+                className="object-cover"
+                style={{
+                  objectPosition: "center 80%",
+                  opacity: i === magIdx ? 1 : 0,
+                  zIndex: i === magIdx ? 2 : 1,
+                  transition: i === magIdx ? "opacity 700ms ease-in-out" : "opacity 0s ease-in-out 700ms",
+                }}
               />
             ))}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="absolute inset-0 z-[3] bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
+            <div className="absolute inset-0 z-[4] flex items-center justify-center pointer-events-none">
               <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF" }}>
-                Магазин
-                <span className="absolute left-0 bottom-0.5 h-[4px] bg-[#FFFFFF] w-0 group-hover:w-full transition-[width] duration-[450ms] ease-out" />
-              </span>
+                Магазин              </span>
             </div>
           </Link>
 
@@ -436,14 +456,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 8. МАГАЗИН — сетка товаров (по Figma 4:9554) ═══ */}
-      <section className="px-[var(--site-margins)] pt-6 lg:pt-8 pb-12 lg:pb-20">
+      {/* ═══ 8. МАГАЗИН ═══ */}
+      <section className="px-[var(--site-margins)] py-6 lg:py-10">
         <div className="mx-auto" style={{ maxWidth: 1440 }}>
-          <div className="pt-5 lg:pt-6">
+          <div>
             <h2 className="font-bold text-[#171513] mb-6 lg:mb-8"
               style={{ fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 5.3vw, 75.8px)", lineHeight: 1.05, letterSpacing: "-0.021em" }}>
               Магазин
             </h2>
+            {SHOP_COMING_SOON ? (
+              <ShopComingSoon />
+            ) : (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-5">
               {shopProducts.map((p) => (
                 <Link key={p.name} href="/catalog" className="group/card relative flex flex-col bg-[#EAEAE7]" style={{ border: "1px solid rgba(23,21,19,0.1)" }}>
@@ -473,6 +496,7 @@ export default function Home() {
                 </Link>
               ))}
             </div>
+            )}
           </div>
         </div>
       </section>

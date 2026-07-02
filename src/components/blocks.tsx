@@ -55,8 +55,8 @@ export function DefRows({ rows }: { rows: { t: string; d: string }[] }) {
     <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
       <div className="md:col-start-4 md:col-span-9">
         {rows.map((r) => (
-          <div key={r.t} className="border-t border-[#171513] grid grid-cols-1 md:grid-cols-9 gap-y-1 gap-x-5 pt-3 pb-5">
-            <h3 className="md:col-span-5 font-bold text-[#171513]" style={{ fontFamily: BODY, fontSize: "18.6px", lineHeight: "26.66px", letterSpacing: "-0.4px" }}>{r.t}</h3>
+          <div key={r.t} className="border-t border-[#171513] grid grid-cols-1 md:grid-cols-9 gap-y-4 md:gap-y-1 gap-x-5 pt-5 md:pt-3 pb-6 md:pb-5">
+            <h3 className="md:col-span-5 font-bold text-[#171513]" style={{ fontFamily: BODY, fontSize: "18.6px", lineHeight: "22.77px", letterSpacing: "-0.36px" }}>{r.t}</h3>
             <p className="md:col-span-4 text-[#171513]" style={{ fontFamily: BODY, fontWeight: 400, fontSize: "14.6px", lineHeight: "20px" }}>{r.d}</p>
           </div>
         ))}

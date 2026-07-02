@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
+import { commonProductFields } from "@/lib/product-fields";
 
 export const runtime = "nodejs";
 
@@ -22,17 +23,6 @@ function slugify(input: string): string {
   return base || `tovar-${Date.now()}`;
 }
 
-function toInt(value: unknown, fallback = 0): number {
-  const n = parseInt(String(value ?? ""), 10);
-  return Number.isFinite(n) ? n : fallback;
-}
-
-function toIntOrNull(value: unknown): number | null {
-  if (value === "" || value === null || value === undefined) return null;
-  const n = parseInt(String(value), 10);
-  return Number.isFinite(n) ? n : null;
-}
-
 /** Создание товара. */
 export async function POST(req: NextRequest) {
   try {
@@ -46,24 +36,10 @@ export async function POST(req: NextRequest) {
     const slugInput = String(body.slug ?? "").trim();
     const slug = slugInput ? slugify(slugInput) : slugify(title);
 
-    const payload = {
-      title,
-      slug,
-      price: toInt(body.price, 0),
-      description: String(body.description ?? "").trim() || null,
-      category: String(body.category ?? "").trim(),
-      image_url: String(body.image_url ?? "").trim() || null,
-      is_published: body.is_published !== false,
-      weight_grams: toIntOrNull(body.weight_grams),
-      sort_order: toInt(body.sort_order, 0),
-    };
+    const payload = { title, slug, ...commonProductFields(body) };
 
     const db = supabaseAdmin();
-    const { data, error } = await db
-      .from("products")
-      .insert(payload)
-      .select("id")
-      .single();
+    const { data, error } = await db.from("products").insert(payload).select("id").single();
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

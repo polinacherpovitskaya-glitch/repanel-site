@@ -21,11 +21,11 @@ export function PageHero({
   cta?: ReactNode;
 }) {
   return (
-    <section className="px-[var(--site-margins)] border-b border-[#171513] pt-1 lg:pt-2">
+    <section className="px-[var(--site-margins)] border-b border-[#171513]">
       <div className="mx-auto" style={{ maxWidth: 1440 }}>
-        <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[45fr_55fr] lg:gap-x-5">
           {/* Текст: заголовок сверху, лид снизу */}
-          <div className="lg:col-span-5 lg:border-r border-[#171513] flex flex-col pt-5 pb-5 lg:pr-5">
+          <div className="lg:border-r border-[#171513] flex flex-col pt-5 pb-5 lg:pr-5">
             <h1
               className="font-bold text-[#171513]"
               style={{
@@ -54,7 +54,7 @@ export function PageHero({
           </div>
 
           {/* Фото */}
-          <div className="lg:col-span-7 pt-0 lg:pt-5 pb-5">
+          <div className="pt-0 lg:pt-5 pb-5">
             <div className="relative w-full overflow-hidden h-[300px] sm:h-[420px] lg:h-[72vh] lg:max-h-[640px] lg:min-h-[440px]">
               <Image src={image} alt={imageAlt} fill sizes="(min-width:1024px) 58vw, 100vw" className="object-cover" priority />
             </div>

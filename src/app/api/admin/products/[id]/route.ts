@@ -1,18 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
+import { commonProductFields } from "@/lib/product-fields";
 
 export const runtime = "nodejs";
-
-function toInt(value: unknown, fallback = 0): number {
-  const n = parseInt(String(value ?? ""), 10);
-  return Number.isFinite(n) ? n : fallback;
-}
-
-function toIntOrNull(value: unknown): number | null {
-  if (value === "" || value === null || value === undefined) return null;
-  const n = parseInt(String(value), 10);
-  return Number.isFinite(n) ? n : null;
-}
 
 /** Обновление товара. */
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -28,13 +18,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const payload = {
       title,
       slug: String(body.slug ?? "").trim() || null,
-      price: toInt(body.price, 0),
-      description: String(body.description ?? "").trim() || null,
-      category: String(body.category ?? "").trim(),
-      image_url: String(body.image_url ?? "").trim() || null,
-      is_published: body.is_published !== false,
-      weight_grams: toIntOrNull(body.weight_grams),
-      sort_order: toInt(body.sort_order, 0),
+      ...commonProductFields(body),
     };
 
     const db = supabaseAdmin();

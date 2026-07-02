@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 };
 
 const details = [
-  { label: "Телефон", value: "+7 (966) 153-45-97", href: "tel:+79661534597" },
-  { label: "Email", value: "info@repanel.ru", href: "mailto:info@repanel.ru" },
+  { label: "Телефон", value: "+7 903 210 1199", href: "tel:+79032101199" },
+  { label: "Email", value: "panels@recycleobject.com", href: "mailto:panels@recycleobject.com" },
   { label: "Telegram", value: "@panelpanelre", href: "https://t.me/panelpanelre", ext: true },
   { label: "Адрес", value: "Дмитров, ул. Промышленная, 10" },
 ];
