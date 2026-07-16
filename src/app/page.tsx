@@ -94,10 +94,14 @@ export default function Home() {
   useEffect(() => {
     const logo = heroLogoRef.current;
     const intro = heroIntroRef.current;
+    const labels = Array.from(document.querySelectorAll<HTMLElement>("[data-hero-label]"));
     const onScroll = () => {
       const y = window.scrollY;
       if (logo) logo.style.transform = `translateY(${-y * 0.9}px)`;
       if (intro) intro.style.transform = `translateY(${y * 0.9}px)`;
+      // подписи «Материал»/«Магазин» быстро проступают до чистого белого по мере раскрытия
+      const o = Math.min(1, Math.max(0, (y - 20) / 100));
+      labels.forEach((l) => { l.style.opacity = String(o); });
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -152,7 +156,7 @@ export default function Home() {
             ))}
             <div className="absolute inset-0 z-[3] bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
             <div className="absolute inset-0 z-[4] flex items-center justify-center pointer-events-none">
-              <span data-hero-label className="relative" style={{ opacity: 1, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 1px 3px rgba(0,0,0,0.85), 0 3px 18px rgba(0,0,0,0.55)" }}>
+              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF" }}>
                 Материал              </span>
             </div>
           </Link>
@@ -182,7 +186,7 @@ export default function Home() {
             ))}
             <div className="absolute inset-0 z-[3] bg-black/0 group-hover:bg-black/15 transition-colors duration-500 pointer-events-none" />
             <div className="absolute inset-0 z-[4] flex items-center justify-center pointer-events-none">
-              <span data-hero-label className="relative" style={{ opacity: 1, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF", textShadow: "0 1px 3px rgba(0,0,0,0.85), 0 3px 18px rgba(0,0,0,0.55)" }}>
+              <span data-hero-label className="relative" style={{ opacity: 0, fontFamily: "'Chalet', 'Gramatika', sans-serif", fontWeight: 700, fontSize: "clamp(32px, 4.6vw, 68px)", letterSpacing: "-0.02em", color: "#FFFFFF" }}>
                 Магазин              </span>
             </div>
           </Link>
@@ -241,7 +245,7 @@ export default function Home() {
                   textShadow: "0 2px 30px rgba(0,0,0,0.5)",
                 }}
               >
-                Панели из переработанного пластика...
+                Панели из переработанного пластика
               </h2>
             </div>
           </div>

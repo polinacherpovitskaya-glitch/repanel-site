@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getObject, objectsByCategory } from "@/data/solutionObjects";
+import { getBlanksCatalog, findBlankBySlug } from "@/lib/calc";
 import { ProductConfigurator } from "@/components/ProductConfigurator";
 
 export function generateStaticParams() {
@@ -18,5 +19,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const { slug } = await params;
   const object = getObject(slug);
   if (!object || object.category !== "horeca") notFound();
-  return <ProductConfigurator object={object} />;
+  // Реальные тиражи/цены из калькулятора (null, если товар ещё не опубликован или API недоступен).
+  const catalog = await getBlanksCatalog();
+  const calcProduct = findBlankBySlug(catalog, object.calcSlug);
+  return <ProductConfigurator object={object} calcProduct={calcProduct} />;
 }

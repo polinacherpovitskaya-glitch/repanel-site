@@ -1,29 +1,28 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   PALETTE_12,
-  QTY_TIERS,
   CUSTOM_MIX_SURCHARGE,
   RAL_SURCHARGE,
-  unitPriceForQty,
-  activeTier,
-  computeOrder,
+  computeTierOrder,
   formatRub,
   type ColorMode,
   type SolutionObject,
 } from "@/data/solutionObjects";
+import type { BlankProduct } from "@/lib/calc";
 
 const BODY = "'Gramatika', sans-serif";
 const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
 const INK = "#171513";
 const MUTE = "#8a8783"; // солид, без прозрачности
-const LINE = "#cdcac5"; // солид тонкая линия
+const LINE = "#cdcac5"; // солид тонкая линия (мелкие контролы: таблица, свотчи, чекбоксы)
+const RULE = "#000000"; // структурные линии страницы — 100% чёрный, без «прозрачности»
 const GREY_BG = "#EAEAE7"; // серый фон превью
 
 // Telegram-логин менеджера. Кнопка открывает его личку напрямую, а текст заявки кладёт в буфер.
-// TODO: заменить на личный @username Глеба (сейчас — общий контакт RePanel как запасной).
+// @panelpanelre — ПОДТВЕРЖДЁННЫЙ рабочий контакт менеджера (Полина, 2026-07), не заглушка. Не менять.
 const MANAGER_TG = "panelpanelre";
 
 const Model3D = dynamic(() => import("./Model3D"), {
@@ -57,21 +56,46 @@ function Check({ active }: { active: boolean }) {
 
 const PAD = "pl-[var(--site-margins)] lg:pl-9 pr-[var(--site-margins)]";
 
-export function ProductConfigurator({ object }: { object: SolutionObject }) {
-  const [qty, setQty] = useState(3);
+export function ProductConfigurator({ object, calcProduct }: { object: SolutionObject; calcProduct: BlankProduct | null }) {
+  const tiers = calcProduct?.tiers ?? [];
+  const vatRate = calcProduct?.vat_rate ?? 0.05;
+  const policy = calcProduct?.sales_policy;
+
+  const [qty, setQty] = useState(tiers[0]?.qty ?? 1);
   const [mode, setMode] = useState<ColorMode>("standard");
   const [idx, setIdx] = useState(0);
   const [ral, setRal] = useState<string[]>([""]);
-  const [copied, setCopied] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const resetViewRef = useRef<(() => void) | null>(null);
+  const [showHint, setShowHint] = useState(false);
 
-  // Меняешь параметры — подтверждение «скопировано» гаснет (текст в буфере уже неактуален).
+  // Подсказку-жест показываем, когда модель загрузилась, и гасим через пару секунд.
+  function onModelReady() {
+    setShowHint(true);
+    window.setTimeout(() => setShowHint(false), 3500);
+  }
+
+  // Поп-ап «скопировано»: Esc закрывает, фон под ним не скроллится.
   useEffect(() => {
-    setCopied(false);
-  }, [qty, mode, idx, ral]);
+    if (!showModal) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowModal(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [showModal]);
 
-  const tier = activeTier(qty);
-  const order = computeOrder(object.basePrice, qty, mode, ral.length);
+  const selectedTier = tiers.find((t) => t.qty === qty) ?? null;
+  const order = computeTierOrder(selectedTier?.unit_price_no_vat ?? 0, qty, mode, ral.length, vatRate);
   const perUnitVat = Math.round(order.total / Math.max(1, qty));
+  const vatPct = Math.round(vatRate * 100);
+  const priceLine = selectedTier
+    ? `Итого: ${formatRub(order.total)} — включая НДС ${vatPct}% (${perUnitVat.toLocaleString("ru-RU")} ₽/шт)`
+    : "Прошу рассчитать этот тираж под выбранный цвет.";
   const colorIndex = mode === "standard" ? idx : -1;
   const nn = (n: number) => String(n).padStart(2, "0");
 
@@ -90,36 +114,74 @@ export function ProductConfigurator({ object }: { object: SolutionObject }) {
       ? "Своё сочетание (+18 000 ₽)"
       : `Покраска RAL / Pantone: ${ral.map((c) => c.trim()).filter(Boolean).join(", ") || "уточнить"} (${ral.length} × 144 000 ₽)`;
   const specsLine = [object.dims, object.thickness && `лист ${object.thickness}`].filter(Boolean).join(" · ");
-  const summary = `Здравствуйте! Расчёт с сайта RePanel:\n${object.name}${specsLine ? ` (${specsLine})` : ""}\nТираж: ${Math.max(1, qty)} шт\nЦвет: ${colorLine}\nИтого: ${formatRub(order.total)} — включая НДС 5% (${perUnitVat.toLocaleString("ru-RU")} ₽/шт)`;
+  const summary = `Здравствуйте! Расчёт с сайта RePanel:\n${object.name}${specsLine ? ` (${specsLine})` : ""}\nТираж: ${Math.max(1, qty)} шт\nЦвет: ${colorLine}\n${priceLine}`;
   const managerChatUrl = `https://t.me/${MANAGER_TG.replace(/^@/, "")}`;
 
-  function contactManager() {
-    // Кладём готовый текст в буфер (secure context: https / localhost); чат откроет сам <a href>.
+  function openManagerFlow() {
+    // Копируем расчёт в буфер (secure context: https / localhost) и показываем поп-ап с инструкцией.
     navigator.clipboard?.writeText(summary).catch(() => {});
-    setCopied(true);
+    setShowModal(true);
   }
 
   return (
-    <div className="lg:grid lg:grid-cols-2">
+    <>
+    <div className="lg:grid lg:grid-cols-2 border-b" style={{ borderColor: RULE }}>
       {/* ── Слева: аккуратный серый блок (равные отступы), превью-текст сверху, 3D ниже ── */}
       <div className="lg:sticky lg:self-start lg:top-[54px] lg:h-[calc(100dvh-54px)] p-[var(--site-margins)]">
-        <div className="w-full h-full flex flex-col overflow-hidden" style={{ background: GREY_BG }}>
-          <p className="px-5 pt-5 pb-1" style={{ fontFamily: BODY, fontSize: 12.5, lineHeight: 1.45, color: MUTE, maxWidth: 480 }}>
-            <b style={{ color: INK }}>Превью.</b> Реальный цвет переработанного пластика может немного отличаться — стараемся попасть в палитру.
-          </p>
-          <div className="relative flex-1 min-h-[320px]">
-            <Model3D url={object.glb} colorIndex={colorIndex} customHex="#b7b4b0" interactive autoRotate scale={object.viewScale ?? 1} />
-            <span className="absolute left-4 bottom-3 select-none" style={{ fontFamily: BODY, fontSize: 12, color: MUTE }}>
-              Потяните, чтобы повернуть
-            </span>
+        <div className="relative w-full h-full min-h-[380px] overflow-hidden" style={{ background: GREY_BG }}>
+          {/* 3D — на весь блок, модель ровно по центру */}
+          <div className="absolute inset-0">
+            <Model3D url={object.glb} colorIndex={colorIndex} customHex="#b7b4b0" interactive autoRotate scale={object.viewScale ?? 1} resetRef={resetViewRef} onInteract={() => setShowHint(false)} onReady={onModelReady} />
+          </div>
+
+          {/* Подсказка-жест: только ручка, без фона, поверх модели */}
+          <style>{`@keyframes rpSwipe{0%,100%{transform:translateX(-14px)}50%{transform:translateX(14px)}}`}</style>
+          <div
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 transition-opacity duration-700"
+            style={{ opacity: showHint ? 1 : 0 }}
+          >
+            <svg
+              width="44" height="44" viewBox="0 0 24 24" fill="none"
+              stroke="#171513" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+              style={{ animation: "rpSwipe 1.5s ease-in-out infinite", filter: "drop-shadow(0 0 4px rgba(255,255,255,0.95)) drop-shadow(0 2px 3px rgba(0,0,0,0.22))" }}
+            >
+              <path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2" />
+              <path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" />
+              <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8" />
+              <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+            </svg>
+          </div>
+
+          {/* Снизу по центру: «Превью» (2 строки) + кнопка-ресет, одной высоты */}
+          <div className="absolute inset-x-0 bottom-4 z-10 flex justify-center px-4">
+            <div className="flex items-stretch gap-2" style={{ maxWidth: "100%" }}>
+              <div className="flex items-center px-3.5 py-2 bg-white" style={{ width: 320, minWidth: 0, boxShadow: "0 1px 6px rgba(0,0,0,0.09)" }}>
+                <p style={{ fontFamily: BODY, fontSize: 11.5, lineHeight: 1.35, color: MUTE }}>
+                  <b style={{ color: INK }}>Превью.</b> Реальный цвет переработанного пластика может немного отличаться — стараемся попасть в палитру.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => resetViewRef.current?.()}
+                title="Вернуть в центр"
+                aria-label="Вернуть модель в центр экрана"
+                className="shrink-0 w-11 grid place-items-center cursor-pointer bg-white hover:bg-[#f4f3f1] transition-colors"
+                style={{ color: INK, boxShadow: "0 1px 6px rgba(0,0,0,0.09)" }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4" />
+                  <circle cx="12" cy="12" r="2.5" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* ── Справа: параметры (скроллятся), линии до края экрана ── */}
-      <div className="lg:border-l" style={{ borderColor: LINE }}>
+      <div className="lg:border-l" style={{ borderColor: RULE }}>
         {/* Заголовок + характеристики */}
-        <div className={`${PAD} pt-6 lg:pt-8 pb-7 border-b`} style={{ borderColor: LINE }}>
+        <div className={`${PAD} pt-6 lg:pt-8 pb-7 border-b`} style={{ borderColor: RULE }}>
           <h1 className="font-bold" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(30px, 4vw, 52px)", lineHeight: 1.03, letterSpacing: "-0.02em", color: INK }}>
             {object.name}
           </h1>
@@ -142,51 +204,57 @@ export function ProductConfigurator({ object }: { object: SolutionObject }) {
         </div>
 
         {/* ТИРАЖ */}
-        <div className={`${PAD} py-7 border-b`} style={{ borderColor: LINE }}>
+        <div className={`${PAD} py-7 border-b`} style={{ borderColor: RULE }}>
           <Label>Тираж</Label>
-          <div className="mt-4 flex items-center gap-4">
-            <input
-              type="text"
-              inputMode="numeric"
-              value={qty || ""}
-              onChange={(e) => setQty(Math.max(0, parseInt(e.target.value.replace(/\D/g, ""), 10) || 0))}
-              onBlur={() => setQty((q) => Math.max(1, q || 1))}
-              className="w-[110px] h-14 text-center bg-transparent"
-              style={{ fontFamily: DISPLAY, fontSize: 24, fontWeight: 700, color: INK, border: `1px solid ${INK}`, outline: "none" }}
-            />
-            <span style={{ fontFamily: BODY, fontSize: 13, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: MUTE }}>шт</span>
-          </div>
-
-          <div className="mt-4" style={{ border: `1px solid ${LINE}` }}>
-            {(["Шт", "₽/шт"] as const).map((rowLabel, r) => (
-              <div key={rowLabel} className="grid" style={{ gridTemplateColumns: `56px repeat(${QTY_TIERS.length}, 1fr)` }}>
-                <div className="grid place-items-center py-2.5" style={{ fontFamily: BODY, fontSize: 11.5, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", color: MUTE, borderBottom: r === 0 ? `1px solid ${LINE}` : undefined }}>
-                  {rowLabel}
-                </div>
-                {QTY_TIERS.map((t) => {
-                  const on = t === tier;
-                  return (
-                    <button
-                      key={t}
-                      type="button"
-                      onClick={() => setQty(t)}
-                      className="grid place-items-center py-2.5 cursor-pointer transition-colors"
-                      style={{ fontFamily: BODY, fontSize: 13.5, fontWeight: 700, color: on ? "#fff" : INK, background: on ? INK : "transparent", borderLeft: `1px solid ${LINE}`, borderBottom: r === 0 ? `1px solid ${LINE}` : undefined }}
-                    >
-                      {r === 0 ? t : unitPriceForQty(object.basePrice, t).toLocaleString("ru-RU")}
-                    </button>
-                  );
-                })}
+          {selectedTier ? (
+            <>
+              <div className="mt-4" style={{ border: `1px solid ${LINE}` }}>
+                {(["Шт", "₽/шт"] as const).map((rowLabel, r) => (
+                  <div key={rowLabel} className="grid" style={{ gridTemplateColumns: `56px repeat(${tiers.length}, 1fr)` }}>
+                    <div className="grid place-items-center py-2.5" style={{ fontFamily: BODY, fontSize: 11.5, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", color: MUTE, borderBottom: r === 0 ? `1px solid ${LINE}` : undefined }}>
+                      {rowLabel}
+                    </div>
+                    {tiers.map((t) => {
+                      const on = t.qty === qty;
+                      return (
+                        <button
+                          key={t.qty}
+                          type="button"
+                          onClick={() => setQty(t.qty)}
+                          className="grid place-items-center py-2.5 cursor-pointer transition-colors"
+                          style={{ fontFamily: BODY, fontSize: 13, fontWeight: 700, color: on ? "#fff" : INK, background: on ? INK : "transparent", borderLeft: `1px solid ${LINE}`, borderBottom: r === 0 ? `1px solid ${LINE}` : undefined }}
+                        >
+                          {r === 0 ? t.qty : Math.round(t.unit_price_with_vat).toLocaleString("ru-RU")}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <p className="mt-2.5" style={{ fontFamily: BODY, fontSize: 12, color: MUTE }}>
-            Цены в таблице — без НДС. + НДС 5% добавляется в итог ниже.
-          </p>
+              <p className="mt-2.5" style={{ fontFamily: BODY, fontSize: 12, color: MUTE }}>
+                Цена за штуку — с НДС {vatPct}%. Чем больше тираж — тем выгоднее.
+              </p>
+            </>
+          ) : (
+            <p className="mt-3" style={{ fontFamily: BODY, fontSize: 13.5, lineHeight: 1.5, color: MUTE }}>
+              Точные тиражи и цены для этого предмета ещё готовим. Напишите менеджеру нужное количество — рассчитаем под ваш тираж.
+            </p>
+          )}
+
+          {policy?.custom_quantity_allowed && (
+            <div className="mt-4 px-4 py-3.5" style={{ border: `1px solid ${LINE}`, background: "#f6f5f3" }}>
+              <div style={{ fontFamily: BODY, fontSize: 13.5, fontWeight: 700, color: INK }}>
+                {policy.custom_quantity_title || "Можно изготовить любой тираж"}
+              </div>
+              <p className="mt-1" style={{ fontFamily: BODY, fontSize: 12.5, lineHeight: 1.5, color: MUTE }}>
+                {policy.custom_quantity_note || "Мы можем сделать любое количество — цена может быть выше из-за раскладки деталей на листы. Для нестандартного тиража свяжитесь с менеджером."}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* ЦВЕТ */}
-        <div className={`${PAD} py-7 border-b`} style={{ borderColor: LINE }}>
+        <div className={`${PAD} py-7 border-b`} style={{ borderColor: RULE }}>
           <div className="flex items-baseline justify-between gap-3">
             <Label>Цвет</Label>
             <span style={{ fontFamily: BODY, fontSize: 12.5, color: MUTE, textAlign: "right" }}>{colorHeader}</span>
@@ -256,68 +324,114 @@ export function ProductConfigurator({ object }: { object: SolutionObject }) {
         {/* ИТОГО + CTA */}
         <div className={`${PAD} py-7 pb-10`}>
           <Label>Итого</Label>
-          <div className="mt-3 font-bold" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(36px, 5vw, 60px)", letterSpacing: "-0.02em", lineHeight: 1, color: INK }}>
-            {formatRub(order.total)}
-          </div>
-          <div className="mt-2" style={{ fontFamily: BODY, fontSize: 13.5, color: MUTE }}>
-            {perUnitVat.toLocaleString("ru-RU")} ₽/шт · включая НДС 5%
+          {selectedTier ? (
+            <>
+              <div className="mt-3 font-bold" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(36px, 5vw, 60px)", letterSpacing: "-0.02em", lineHeight: 1, color: INK }}>
+                {formatRub(order.total)}
+              </div>
+              <div className="mt-2" style={{ fontFamily: BODY, fontSize: 13.5, color: MUTE }}>
+                {perUnitVat.toLocaleString("ru-RU")} ₽/шт · включая НДС {vatPct}%
+              </div>
+
+              <div className="mt-5 flex flex-col gap-2" style={{ fontFamily: BODY, fontSize: 13.5 }}>
+                <div className="flex justify-between" style={{ color: INK }}>
+                  <span>Изделие × {Math.max(1, qty)} шт</span>
+                  <span>{formatRub(order.goods)}</span>
+                </div>
+                {order.mixAdd > 0 && (
+                  <div className="flex justify-between" style={{ color: INK }}>
+                    <span>Своё сочетание</span>
+                    <span>{formatRub(order.mixAdd)}</span>
+                  </div>
+                )}
+                {order.ralAdd > 0 && (
+                  <div className="flex justify-between" style={{ color: INK }}>
+                    <span>Покраска RAL / Pantone × {ral.length}</span>
+                    <span>{formatRub(order.ralAdd)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between" style={{ color: MUTE }}>
+                  <span>НДС {vatPct}%</span>
+                  <span>{formatRub(order.vat)}</span>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="mt-3 font-bold" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(26px, 3.2vw, 38px)", letterSpacing: "-0.01em", lineHeight: 1.05, color: INK }}>
+              Цена по запросу
+            </div>
+          )}
+          <p className="mt-4" style={{ fontFamily: BODY, fontSize: 12.5, color: MUTE }}>
+            Срок изготовления — 10–15 рабочих дней. {selectedTier ? "Цена ориентировочная, финальную подтверждаем по проекту." : "Пришлите нужный тираж — рассчитаем и подтвердим."}
+          </p>
+
+          <button
+            type="button"
+            onClick={openManagerFlow}
+            className="mt-6 inline-flex items-center justify-center w-full sm:w-auto px-8 h-13 py-3.5 cursor-pointer transition-colors hover:bg-[#2c2a28]"
+            style={{ fontFamily: BODY, fontSize: 15, fontWeight: 700, color: "#FFFFFF", background: INK }}
+          >
+            Связаться с менеджером →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {showModal && (
+      <div
+        role="dialog"
+        aria-modal="true"
+        onClick={() => setShowModal(false)}
+        className="fixed inset-0 z-[100] flex items-center justify-center p-5"
+        style={{ background: "rgba(23,21,19,0.55)" }}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="relative w-full max-w-[440px] bg-white p-7 sm:p-8"
+          style={{ border: `1px solid ${RULE}` }}
+        >
+          <button
+            type="button"
+            onClick={() => setShowModal(false)}
+            aria-label="Закрыть"
+            className="absolute right-3 top-3 w-8 h-8 grid place-items-center cursor-pointer"
+            style={{ color: MUTE }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+
+          <div className="flex items-center gap-3">
+            <span className="w-8 h-8 shrink-0 grid place-items-center rounded-full" style={{ background: INK }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 6" /></svg>
+            </span>
+            <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 22, letterSpacing: "-0.01em", color: INK }}>Расчёт скопирован</span>
           </div>
 
-          <div className="mt-5 flex flex-col gap-2" style={{ fontFamily: BODY, fontSize: 13.5 }}>
-            <div className="flex justify-between" style={{ color: INK }}>
-              <span>Изделие × {Math.max(1, qty)} шт</span>
-              <span>{formatRub(order.goods)}</span>
-            </div>
-            {order.mixAdd > 0 && (
-              <div className="flex justify-between" style={{ color: INK }}>
-                <span>Своё сочетание</span>
-                <span>{formatRub(order.mixAdd)}</span>
-              </div>
-            )}
-            {order.ralAdd > 0 && (
-              <div className="flex justify-between" style={{ color: INK }}>
-                <span>Покраска RAL / Pantone × {ral.length}</span>
-                <span>{formatRub(order.ralAdd)}</span>
-              </div>
-            )}
-            <div className="flex justify-between" style={{ color: MUTE }}>
-              <span>НДС 5%</span>
-              <span>{formatRub(order.vat)}</span>
-            </div>
-          </div>
-          <p className="mt-4" style={{ fontFamily: BODY, fontSize: 12.5, color: MUTE }}>
-            Срок изготовления — 10–15 рабочих дней. Цена ориентировочная, финальную подтверждаем по проекту.
+          <p className="mt-4" style={{ fontFamily: BODY, fontSize: 14.5, lineHeight: 1.55, color: INK }}>
+            Всё уже готово — <b>менеджеру ничего писать и объяснять не нужно</b>. Откройте чат, вставьте расчёт (<b>⌘V</b> на Mac или <b>Ctrl&nbsp;+&nbsp;V</b> на Windows) и отправьте сообщение.
           </p>
 
           <a
             href={managerChatUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={contactManager}
-            className="mt-6 inline-flex items-center justify-center w-full sm:w-auto px-8 h-13 py-3.5 cursor-pointer transition-colors hover:bg-[#2c2a28]"
+            onClick={() => setShowModal(false)}
+            className="mt-6 inline-flex items-center justify-center w-full px-6 h-12 cursor-pointer transition-colors hover:bg-[#2c2a28]"
             style={{ fontFamily: BODY, fontSize: 15, fontWeight: 700, color: "#FFFFFF", background: INK }}
           >
-            Связаться с менеджером →
+            Открыть чат менеджера →
           </a>
-          {copied ? (
-            <div className="mt-4 flex items-start gap-3 px-4 py-4" style={{ border: `1px solid ${INK}`, background: "#f4f3f1" }}>
-              <span className="w-[22px] h-[22px] mt-0.5 shrink-0 grid place-items-center rounded-full" style={{ background: INK }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 6" /></svg>
-              </span>
-              <div>
-                <div style={{ fontFamily: BODY, fontSize: 14.5, fontWeight: 700, color: INK }}>Готово — весь расчёт уже скопирован</div>
-                <div className="mt-1" style={{ fontFamily: BODY, fontSize: 13, lineHeight: 1.5, color: MUTE }}>
-                  Мы открыли чат менеджера в соседней вкладке. Ничего писать и объяснять не нужно — просто вставьте (<b style={{ color: INK }}>⌘V</b> на Mac или <b style={{ color: INK }}>Ctrl + V</b> на Windows) и отправьте сообщение.
-                </div>
-              </div>
-            </div>
-          ) : (
-            <p className="mt-3" style={{ fontFamily: BODY, fontSize: 12.5, lineHeight: 1.4, color: MUTE }}>
-              По кнопке откроется чат менеджера, а весь расчёт скопируется в буфер — останется только вставить и отправить.
-            </p>
-          )}
+          <button
+            type="button"
+            onClick={() => setShowModal(false)}
+            className="mt-2.5 w-full text-center cursor-pointer"
+            style={{ fontFamily: BODY, fontSize: 13, color: MUTE }}
+          >
+            Закрыть
+          </button>
         </div>
       </div>
-    </div>
+    )}
+    </>
   );
 }

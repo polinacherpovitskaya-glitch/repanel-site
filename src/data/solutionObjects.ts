@@ -10,6 +10,7 @@ export type SolutionObject = {
   short: string; // короткое (Табурет / Стул / …)
   category: SolutionCategory;
   glb: string; // путь к 3D-модели в /public
+  calcSlug?: string; // «Slug сайта» в калькуляторе — ключ сшивки тиражей/цен из /api/public/blanks_catalog
   basePrice: number; // ₽ за штуку в одном из 12 стандартных цветов (ЗАГЛУШКА)
   blurb: string;
   dims?: string; // габарит
@@ -45,6 +46,7 @@ export const SOLUTION_OBJECTS: SolutionObject[] = [
     short: "Табурет",
     category: "horeca",
     glb: "/models/stool.glb",
+    calcSlug: "Табурет Sofia",
     basePrice: 14900,
     dims: "Сиденье Ø338 · высота 455 мм",
     thickness: "18 мм",
@@ -58,6 +60,7 @@ export const SOLUTION_OBJECTS: SolutionObject[] = [
     short: "Стул",
     category: "horeca",
     glb: "/models/chair.glb",
+    calcSlug: "Стул Sofia",
     basePrice: 22900,
     dims: "Сиденье Ø400 · высота 665 мм",
     thickness: "18 мм",
@@ -70,6 +73,7 @@ export const SOLUTION_OBJECTS: SolutionObject[] = [
     short: "Скамья",
     category: "horeca",
     glb: "/models/bench.glb",
+    calcSlug: "Скамья Sofia",
     basePrice: 39900,
     dims: "974 × 338 мм · высота 455 мм",
     thickness: "18 мм",
@@ -82,6 +86,7 @@ export const SOLUTION_OBJECTS: SolutionObject[] = [
     short: "Стол",
     category: "horeca",
     glb: "/models/table.glb",
+    calcSlug: "Стол Sofia",
     basePrice: 49900,
     dims: "Ø970 мм · высота 750 мм",
     thickness: "25 мм",
@@ -140,4 +145,22 @@ export function computeOrder(base: number, qty: number, mode: ColorMode, ralCoun
   const vat = Math.round(net * VAT_RATE);
   const total = net + vat;
   return { unit, goods, mixAdd, ralAdd, net, vat, total };
+}
+
+/** Расчёт заказа из тиража калькулятора: цена/шт без НДС × кол-во + доплаты за цвет, затем НДС по ставке API. */
+export function computeTierOrder(
+  unitNoVat: number,
+  qty: number,
+  mode: ColorMode,
+  ralCount: number,
+  vatRate: number,
+) {
+  const n = Math.max(1, qty);
+  const goods = unitNoVat * n;
+  const mixAdd = mode === "mix" ? CUSTOM_MIX_SURCHARGE : 0;
+  const ralAdd = mode === "ral" ? RAL_SURCHARGE * Math.max(1, ralCount) : 0;
+  const net = goods + mixAdd + ralAdd;
+  const vat = Math.round(net * vatRate);
+  const total = net + vat;
+  return { unit: unitNoVat, goods, mixAdd, ralAdd, net, vat, total };
 }

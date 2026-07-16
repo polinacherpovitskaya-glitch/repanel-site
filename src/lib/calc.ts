@@ -78,6 +78,87 @@ export async function getGranules(): Promise<Granule[] | null> {
 
 export const granulePhoto = (g: Granule) => `${CALC_ORIGIN}${g.photo_url}`;
 
+/* ── Каталог опубликованных изделий (/api/public/blanks_catalog) ──
+   Источник тиражей и цен HoReCa-конфигуратора. Калькулятор (раздел «Бланки → Тиражная
+   экономика») публикует сюда отмеченные «На сайт» тиражи с посчитанными ценами. */
+
+export interface BlankTier {
+  qty: number;                   // тираж в штуках
+  sheets: number;                // сколько листов уходит
+  empty_units: number;           // «сгорает» мест на листе (0 = полная раскладка)
+  is_perfect_layout: boolean;
+  unit_price_no_vat: number;     // ₽/шт без НДС
+  unit_price_with_vat: number;   // ₽/шт с НДС
+  total_price_no_vat: number;
+  total_price_with_vat: number;
+}
+
+export interface BlankSalesPolicy {
+  min_order_qty: number;
+  order_step_qty: number;
+  recommended_quantities: number[];
+  recommended_label?: string;
+  custom_quantity_allowed?: boolean;
+  custom_quantity_title?: string;   // заголовок плашки «любой тираж»
+  custom_quantity_note?: string;    // текст плашки «любой тираж»
+  efficient_quantity_note?: string;
+  inefficient_quantity_note?: string;
+}
+
+export interface BlankProductContext {
+  catalog_role?: string;
+  customization_note?: string;
+  not_stock_note?: string;
+  layout_note?: string;
+  availability_label?: string;
+  recommended_quantity_note?: string;
+}
+
+export interface BlankProduct {
+  blank_id: number;
+  slug: string;            // «Slug сайта» из калькулятора = calcSlug объекта
+  name: string;
+  category: string;
+  currency: string;
+  vat_rate: number;        // 0.05
+  min_order_qty: number;
+  order_step_qty: number;
+  tiers: BlankTier[];
+  sales_policy: BlankSalesPolicy;
+  product_context: BlankProductContext;
+  quote_endpoint?: string;
+  published_at?: string;
+}
+
+// Тег кэша каталога. Сбрасывается on-demand вебхуком /api/revalidate-solutions,
+// который дёргает калькулятор при «опубликовать в облако». Без него — опрос по таймеру.
+export const SOLUTIONS_TAG = "solutions-catalog";
+
+export async function getBlanksCatalog(): Promise<BlankProduct[] | null> {
+  try {
+    // Кэшируем надолго (сутки — как страховка) + тег: обновляем по вебхуку при публикации, а не по таймеру.
+    const res = await fetch(`${CALC_ORIGIN}/api/public/blanks_catalog`, { next: { revalidate: 86400, tags: [SOLUTIONS_TAG] } });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { items?: BlankProduct[] };
+    return data.items?.length ? data.items : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Найти опубликованный товар по slug (устойчиво к регистру/пробелам). */
+export function findBlankBySlug(catalog: BlankProduct[] | null, slug: string | undefined | null): BlankProduct | null {
+  if (!catalog || !slug) return null;
+  const target = slug.trim().toLowerCase();
+  return catalog.find((b) => (b.slug || "").trim().toLowerCase() === target) ?? null;
+}
+
+/** Самая низкая цена ₽/шт (с НДС) среди тиражей — для «от …» на витрине. */
+export function blankFromPrice(b: BlankProduct): number | null {
+  const prices = b.tiers.map((t) => t.unit_price_with_vat).filter((n) => n > 0);
+  return prices.length ? Math.min(...prices) : null;
+}
+
 /* ── Опции цвета (как в калькуляторе) ── */
 
 export interface ColorOption {

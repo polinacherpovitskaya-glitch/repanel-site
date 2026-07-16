@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { FinalCTA } from "@/components/FinalCTA";
 import { SolutionModelCard } from "@/components/SolutionModelCard";
 import { objectsByCategory } from "@/data/solutionObjects";
+import { getBlanksCatalog, findBlankBySlug, blankFromPrice } from "@/lib/calc";
 
 const BODY = "'Gramatika', sans-serif";
 const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
@@ -23,8 +24,9 @@ function SectionLabel({ title }: { title: string }) {
   );
 }
 
-export default function SolutionsPage() {
+export default async function SolutionsPage() {
   const horeca = objectsByCategory("horeca");
+  const catalog = await getBlanksCatalog();
 
   return (
     <>
@@ -48,9 +50,10 @@ export default function SolutionsPage() {
           <div>
             <SectionLabel title="HoReCa" />
             <div className="mt-5 lg:mt-7 grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-              {horeca.map((o) => (
-                <SolutionModelCard key={o.slug} object={o} />
-              ))}
+              {horeca.map((o) => {
+                const b = findBlankBySlug(catalog, o.calcSlug);
+                return <SolutionModelCard key={o.slug} object={o} fromPrice={b ? blankFromPrice(b) : null} />;
+              })}
             </div>
           </div>
 

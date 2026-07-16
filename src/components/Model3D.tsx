@@ -6,7 +6,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, ContactShadows, useGLTF, useTexture } from "@react-three/drei";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState, type ElementRef, type MutableRefObject } from "react";
 import * as THREE from "three";
 import { PALETTE_12 } from "@/data/solutionObjects";
 
@@ -39,7 +39,7 @@ function applyBoxUV(geo: THREE.BufferGeometry, scale: number): THREE.BufferGeome
   return g;
 }
 
-function Model({ url, colorIndex, customHex, spin = false, scale = 1 }: { url: string; colorIndex: number; customHex: string; spin?: boolean; scale?: number }) {
+function Model({ url, colorIndex, customHex, spin = false, scale = 1, onReady }: { url: string; colorIndex: number; customHex: string; spin?: boolean; scale?: number; onReady?: () => void }) {
   const { scene } = useGLTF(url);
   const textures = useTexture(PALETTE_12.map((c) => c.img));
 
@@ -103,6 +103,14 @@ function Model({ url, colorIndex, customHex, spin = false, scale = 1 }: { url: s
     }
   }, [meshes, textures, colorIndex, customHex]);
 
+  // Один раз сообщаем наружу, что модель собрана и видна (для подсказки-жеста).
+  const readyRef = useRef(false);
+  useEffect(() => {
+    if (readyRef.current) return;
+    readyRef.current = true;
+    onReady?.();
+  });
+
   useFrame((_, dt) => {
     if (spin) obj.rotation.y += dt * 0.55;
   });
@@ -123,6 +131,9 @@ export default function Model3D({
   autoRotate = true,
   frameloop = "always",
   scale = 1,
+  resetRef,
+  onInteract,
+  onReady,
 }: {
   url: string;
   colorIndex: number;
@@ -131,8 +142,22 @@ export default function Model3D({
   autoRotate?: boolean;
   frameloop?: "always" | "demand";
   scale?: number;
+  resetRef?: MutableRefObject<(() => void) | null>;
+  onInteract?: () => void;
+  onReady?: () => void;
 }) {
   const [interacted, setInteracted] = useState(false);
+  const controlsRef = useRef<ElementRef<typeof OrbitControls>>(null);
+
+  // Наружу отдаём «вернуть камеру в исходный вид» — для кнопки-ресета над превью.
+  useEffect(() => {
+    if (!resetRef) return;
+    resetRef.current = () => controlsRef.current?.reset();
+    return () => {
+      if (resetRef) resetRef.current = null;
+    };
+  }, [resetRef]);
+
   return (
     <Canvas
       orthographic
@@ -147,10 +172,11 @@ export default function Model3D({
       <directionalLight position={[5, 8, 4]} intensity={1.5} />
       <directionalLight position={[-4, 3, -3]} intensity={0.3} />
       <Suspense fallback={null}>
-        <Model url={url} colorIndex={colorIndex} customHex={customHex} spin={!interactive && autoRotate} scale={scale} />
+        <Model url={url} colorIndex={colorIndex} customHex={customHex} spin={!interactive && autoRotate} scale={scale} onReady={onReady} />
       </Suspense>
       {interactive && (
         <OrbitControls
+          ref={controlsRef}
           enablePan={false}
           enableZoom
           zoomToCursor
@@ -160,7 +186,10 @@ export default function Model3D({
           maxPolarAngle={Math.PI / 2.05}
           autoRotate={autoRotate && !interacted}
           autoRotateSpeed={0.8}
-          onStart={() => setInteracted(true)}
+          onStart={() => {
+            setInteracted(true);
+            onInteract?.();
+          }}
           target={[0, 0, 0]}
         />
       )}

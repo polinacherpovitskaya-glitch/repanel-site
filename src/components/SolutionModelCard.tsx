@@ -11,7 +11,7 @@ const GREY = "#b7b4b0"; // нейтральный «серенький» рен�
 const Model3D = dynamic(() => import("./Model3D"), { ssr: false, loading: () => null });
 
 /** Карточка предмета на «Готовых решениях»: серый статичный 3D, по наведению крутится, клик → конфигуратор. */
-export function SolutionModelCard({ object }: { object: SolutionObject }) {
+export function SolutionModelCard({ object, fromPrice }: { object: SolutionObject; fromPrice?: number | null }) {
   const [hovered, setHovered] = useState(false);
   return (
     <Link
@@ -37,7 +37,7 @@ export function SolutionModelCard({ object }: { object: SolutionObject }) {
           <span className="absolute left-0 -bottom-0.5 h-[1.5px] bg-[#171513] w-0 group-hover:w-full transition-[width] duration-300" />
         </span>
         <span style={{ fontFamily: BODY, fontSize: 14, color: "rgba(23,21,19,0.6)", whiteSpace: "nowrap" }}>
-          от {formatRub(object.basePrice)}
+          от {formatRub(fromPrice ?? object.basePrice)}
         </span>
       </div>
       {object.dims && (

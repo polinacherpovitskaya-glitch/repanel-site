@@ -18,7 +18,7 @@ const moreLinks = [
 ];
 
 const socialLinks: { label: string; href: string; ext?: boolean }[] = [
-  { label: "телеграм", href: "https://t.me/repanel", ext: true },
+  { label: "телеграм", href: "https://t.me/panelpanelre", ext: true },
   { label: "вконтакте", href: "https://vk.com/repanel", ext: true },
   { label: "политика конфиденциальности", href: "/privacy" },
 ];
