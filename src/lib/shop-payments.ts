@@ -19,9 +19,6 @@ export type ShopOrder = {
   [k: string]: unknown;
 };
 
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const CHAT_ID = process.env.TELEGRAM_ORDER_CHAT_ID;
-
 /** Короткий человекочитаемый номер заказа из uuid. */
 export function displayOrderNumber(id: string): string {
   return id.slice(0, 6).toUpperCase();
@@ -32,21 +29,9 @@ export function esc(s: unknown): string {
   return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-/** Уведомление менеджеру в Telegram. Без кредов — тихо логируем (best-effort). */
-export async function notifyTelegram(text: string): Promise<void> {
-  if (!BOT_TOKEN || !CHAT_ID) {
-    console.log("[shop] telegram skip:", text);
-    return;
-  }
-  try {
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "HTML" }),
-    });
-  } catch (e) {
-    console.warn("[shop] telegram failed:", e);
-  }
+/** Совместимый no-op: клиентские контакты не передаются во внешние мессенджеры. */
+export async function notifyTelegram(_text: string): Promise<void> {
+  return;
 }
 
 /** Запись события в ленту заказа. Ошибку логируем, поток не роняем. */
