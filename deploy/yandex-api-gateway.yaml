@@ -1,0 +1,20 @@
+openapi: 3.0.0
+info:
+  title: RePanel site gateway
+  version: 1.0.0
+paths:
+  /{proxy+}:
+    x-yc-apigateway-any-method:
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: bbalfee93osjs6hdetnk
+        service_account_id: aje0a8sj4dla7ig89e9j
+      parameters:
+        - explode: false
+          in: path
+          name: proxy
+          required: false
+          schema:
+            default: "-"
+            type: string
+          style: simple
