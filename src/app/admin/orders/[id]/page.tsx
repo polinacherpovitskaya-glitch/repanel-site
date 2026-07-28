@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/AdminShell";
 import { OrderStatusControls } from "@/components/admin/OrderStatusControls";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/server-db";
 
 export const dynamic = "force-dynamic";
 

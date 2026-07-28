@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/server-db";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createTochkaPayment } from "@/lib/tochka";
 import { getSampleTier } from "@/lib/sample-kits";
 import { validateCode } from "@/lib/codes";
 import { insertTimeline, notifyTelegram, esc, displayOrderNumber } from "@/lib/shop-payments";
+import { LEGAL } from "@/lib/legal";
 
 export const runtime = "nodejs";
 
@@ -30,6 +31,16 @@ type CartItemIn = {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
+    if (
+      body.personal_data_consent !== true ||
+      body.personal_data_consent_version !== LEGAL.consentVersion ||
+      body.privacy_policy_version !== LEGAL.policyVersion
+    ) {
+      return NextResponse.json(
+        { success: false, error: "Для оформления заказа необходимо отдельное согласие на обработку персональных данных" },
+        { status: 400 },
+      );
+    }
     const db = supabaseAdmin();
 
     if (Array.isArray(body.items) && body.items.length > 0) {
@@ -136,7 +147,10 @@ async function handleCart(db: SupabaseClient, body: Record<string, unknown>) {
       applied_code: appliedCode,
       applied_code_type: appliedType,
       discount_amount: verifiedDiscount,
-      submitted_at: body.submitted_at ?? new Date().toISOString(),
+      submitted_at: new Date().toISOString(),
+      personal_data_consent_at: new Date().toISOString(),
+      personal_data_consent_version: LEGAL.consentVersion,
+      privacy_policy_version: LEGAL.policyVersion,
     })
     .select("id, tracking_token")
     .single();
@@ -167,7 +181,7 @@ async function handleCart(db: SupabaseClient, body: Record<string, unknown>) {
   await notifyTelegram(
     `🛍 <b>Новый заказ #${displayOrderNumber(orderId)} — ожидает оплаты</b>\n${itemLines}\n` +
       `<b>Доставка:</b> ${esc(String(body.delivery_method ?? "—"))}${effectiveDelivery > 0 ? ` — ${effectiveDelivery.toLocaleString("ru-RU")} ₽` : ""}\n` +
-      `<b>Итого: ${grandTotal.toLocaleString("ru-RU")} ₽</b>\n${esc(contactName)} | ${esc(contactPhone)} | ${esc(contactEmail)}`,
+      `<b>Итого: ${grandTotal.toLocaleString("ru-RU")} ₽</b>\nКонтакты доступны только в защищённой панели заказов.`,
   );
 
   if (!payment.paymentUrl) throw new Error("Точка не вернула ссылку на оплату");
@@ -213,6 +227,9 @@ async function handleSamples(db: SupabaseClient, body: Record<string, unknown>) 
       delivery_status: "created",
       carrier: "self_pickup",
       submitted_at: new Date().toISOString(),
+      personal_data_consent_at: new Date().toISOString(),
+      personal_data_consent_version: LEGAL.consentVersion,
+      privacy_policy_version: LEGAL.policyVersion,
     })
     .select("id, tracking_token")
     .single();
@@ -238,7 +255,7 @@ async function handleSamples(db: SupabaseClient, body: Record<string, unknown>) 
   await notifyTelegram(
     `🛍 <b>Новый заказ #${displayOrderNumber(orderId)} — ожидает оплаты</b>\n` +
       `${esc(title)} — ${price.toLocaleString("ru-RU")} ₽\nЦвета: ${esc(colorsLabel)}\n` +
-      `${esc(contactName)} | ${esc(contactPhone)} | ${esc(contactEmail)}`,
+      `Контакты доступны только в защищённой панели заказов.`,
   );
 
   if (!payment.paymentUrl) throw new Error("Точка не вернула ссылку на оплату");

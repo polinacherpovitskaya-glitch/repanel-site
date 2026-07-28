@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/server-db";
 
 // Поля статуса, которые админ может менять вручную. Любое другое поле отклоняется.
 const ALLOWED_FIELDS = [

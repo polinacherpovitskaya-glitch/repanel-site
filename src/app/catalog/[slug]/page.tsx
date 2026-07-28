@@ -4,7 +4,8 @@ import type { Metadata } from "next";
 import { FinalCTA } from "@/components/FinalCTA";
 import { Group } from "@/components/blocks";
 import { ProductDetail } from "@/components/ProductDetail";
-import { supabaseAdmin, type Product } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/server-db";
+import type { Product } from "@/lib/supabase";
 
 const BODY = "'Gramatika', sans-serif";
 const DISPLAY = "'Chalet', 'Gramatika', sans-serif";

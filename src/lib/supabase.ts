@@ -9,19 +9,6 @@ const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
  */
 export const supabase = createClient(url, anonKey);
 
-/**
- * Привилегированный клиент (service_role). Обходит RLS — пишет заказы, метит
- * оплату. ТОЛЬКО НА СЕРВЕРЕ (в API-роутах). Никогда не импортировать в
- * клиентские компоненты — это утечка секрета.
- */
-export function supabaseAdmin() {
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceKey) {
-    throw new Error("Supabase env vars (URL / SERVICE_ROLE_KEY) не заданы");
-  }
-  return createClient(url, serviceKey, { auth: { persistSession: false } });
-}
-
 /* ── Типы ── */
 export type ProductColor = { name: string; hex: string; image: string | null };
 

@@ -1,5 +1,5 @@
 import { AdminShell } from "@/components/AdminShell";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/server-db";
 
 export const dynamic = "force-dynamic";
 

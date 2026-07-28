@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS personal_data_records (
+  collection Utf8 NOT NULL,
+  id Utf8 NOT NULL,
+  body JsonDocument NOT NULL,
+  created_at Timestamp NOT NULL,
+  updated_at Timestamp NOT NULL,
+  PRIMARY KEY (collection, id)
+);
+

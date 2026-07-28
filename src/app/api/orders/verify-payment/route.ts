@@ -8,7 +8,7 @@
  * подтвердил APPROVED (см. confirmAndMarkPaid). Идемпотентно.
  */
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/server-db";
 import { confirmAndMarkPaid, type ShopOrder } from "@/lib/shop-payments";
 
 export const runtime = "nodejs";

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminShell } from "@/components/AdminShell";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/server-db";
 import { displayOrderNumber } from "@/lib/shop-payments";
 import { returnStatusMeta } from "@/lib/return-statuses";
 import { ReturnControls } from "./ReturnControls";

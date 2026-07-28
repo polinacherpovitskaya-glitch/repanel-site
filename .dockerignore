@@ -1,0 +1,12 @@
+.git
+.github
+.next
+.vercel
+node_modules
+.env
+.env.*
+npm-debug.log*
+docs
+output
+tmp
+public/pitch-sibur

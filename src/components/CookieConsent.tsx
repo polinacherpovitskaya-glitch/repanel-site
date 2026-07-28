@@ -11,12 +11,19 @@ export function CookieConsent() {
 
   useEffect(() => {
     let stored: string | null = null;
+    let enterFrame = 0;
     try {
       stored = localStorage.getItem(KEY);
     } catch {}
     if (!stored) {
-      setShow(true);
-      requestAnimationFrame(() => requestAnimationFrame(() => setEnter(true)));
+      const showFrame = requestAnimationFrame(() => {
+        setShow(true);
+        enterFrame = requestAnimationFrame(() => setEnter(true));
+      });
+      return () => {
+        cancelAnimationFrame(showFrame);
+        cancelAnimationFrame(enterFrame);
+      };
     }
   }, []);
 
@@ -44,7 +51,7 @@ export function CookieConsent() {
   return (
     <div
       role="dialog"
-      aria-label="Согласие на использование cookies"
+      aria-label="Уведомление об использовании cookies"
       style={{
         position: "fixed",
         left: 20,
@@ -75,18 +82,16 @@ export function CookieConsent() {
       </button>
 
       <p style={{ fontSize: 13.5, lineHeight: 1.5, margin: 0, paddingRight: 18 }}>
-        Мы используем cookies, чтобы сайт работал лучше и&nbsp;удобнее. Оставаясь, вы&nbsp;соглашаетесь со&nbsp;сбором данных.{" "}
+        Для работы корзины и&nbsp;защищённых разделов сайт использует только необходимые cookies
+        и&nbsp;локальное хранилище. Рекламного отслеживания и&nbsp;аналитических cookies нет.{" "}
         <a href="/privacy" style={{ color: "#171513", textDecoration: "underline", textDecorationThickness: 1, textUnderlineOffset: 3 }}>
           Подробнее
         </a>
       </p>
 
       <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
-        <button onClick={() => close("accepted")} className="hover:opacity-70 transition-opacity" style={{ ...btn, background: "#171513", color: "#FFFFFF" }}>
-          Принять
-        </button>
-        <button onClick={() => close("declined")} className="hover:opacity-70 transition-opacity" style={btn}>
-          Отклонить
+        <button onClick={() => close("acknowledged")} className="hover:opacity-70 transition-opacity" style={{ ...btn, background: "#171513", color: "#FFFFFF" }}>
+          Понятно
         </button>
       </div>
     </div>

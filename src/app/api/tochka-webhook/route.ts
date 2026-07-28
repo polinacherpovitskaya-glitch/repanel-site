@@ -7,7 +7,7 @@
  * https://ДОМЕН/api/tochka-webhook (тип acquiringInternetPayment).
  */
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/server-db";
 import { verifyTochkaWebhookSignature } from "@/lib/tochka-webhook-verify";
 import {
   confirmAndMarkPaid,

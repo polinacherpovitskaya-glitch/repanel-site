@@ -18,9 +18,6 @@ export interface CartItem {
   /** Сертификат: при оплате вебхук выпустит подарочный сертификат. */
   certificate_payload?: {
     amount: number;
-    recipient_name: string;
-    recipient_email: string;
-    message?: string;
     purchaser_name?: string;
     purchaser_email?: string;
   };

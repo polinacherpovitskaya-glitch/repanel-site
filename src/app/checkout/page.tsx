@@ -6,6 +6,7 @@ import { useState, useEffect, useRef, useCallback, type ChangeEvent } from "reac
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart";
+import { LEGAL } from "@/lib/legal";
 
 const BODY = "'Gramatika', sans-serif";
 const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
@@ -34,6 +35,7 @@ export default function CheckoutPage() {
   const [validatingCode, setValidatingCode] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [personalDataConsent, setPersonalDataConsent] = useState(false);
 
   const [cdekCityCode, setCdekCityCode] = useState<number | null>(null);
   const [cdekCities, setCdekCities] = useState<City[]>([]);
@@ -131,6 +133,7 @@ export default function CheckoutPage() {
 
   const isValid =
     form.first_name.trim() && form.last_name.trim() && form.phone.trim() && form.email.trim() &&
+    personalDataConsent &&
     (delivery === "pickup" || (delivery === "cdek_pickup" && cdekCityCode && selectedPvz) || (delivery === "cdek_courier" && form.city.trim() && form.address.trim()));
 
   const handleSubmit = async () => {
@@ -160,6 +163,9 @@ export default function CheckoutPage() {
           applied_code: appliedCode?.code ?? null,
           applied_code_type: appliedCode?.type ?? null,
           discount_amount: discountAmount,
+          personal_data_consent: true,
+          personal_data_consent_version: LEGAL.consentVersion,
+          privacy_policy_version: LEGAL.policyVersion,
         }),
       });
       const j = await r.json();
@@ -268,6 +274,26 @@ export default function CheckoutPage() {
             {error && <p className="text-[#b00020] text-[13px] mt-4 leading-relaxed">{error}</p>}
 
             <div className="mt-8">
+              <label className="mb-5 flex cursor-pointer items-start gap-3">
+                <input
+                  type="checkbox"
+                  checked={personalDataConsent}
+                  onChange={(e) => setPersonalDataConsent(e.target.checked)}
+                  className="mt-1 h-4 w-4 shrink-0"
+                  style={{ accentColor: "#171513" }}
+                />
+                <span className="text-[12px] leading-[1.5] text-[#171513]/65">
+                  Я даю отдельное{" "}
+                  <Link className="underline underline-offset-2" href="/personal-data-consent" target="_blank">
+                    согласие на обработку персональных данных
+                  </Link>{" "}
+                  и ознакомился с{" "}
+                  <Link className="underline underline-offset-2" href="/privacy" target="_blank">
+                    Политикой
+                  </Link>
+                  .
+                </span>
+              </label>
               <button onClick={handleSubmit} disabled={!isValid || submitting} className="cart-pill w-full py-[14px] bg-[#171513] text-white font-bold text-[15px] cursor-pointer hover:bg-[#2c2a28] transition-colors disabled:opacity-35 disabled:cursor-not-allowed">
                 {submitting ? "Создаём заказ…" : `Оплатить · ${grandTotal.toLocaleString("ru-RU")} ₽`}
               </button>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/AdminShell";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/server-db";
 import { displayOrderNumber } from "@/lib/shop-payments";
 import { returnStatusMeta } from "@/lib/return-statuses";
 import { NewReturnForm } from "./NewReturnForm";

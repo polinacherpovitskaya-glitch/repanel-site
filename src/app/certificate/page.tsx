@@ -1,6 +1,6 @@
 "use client";
 
-// Подарочный сертификат: выбор номинала + получатель → в корзину (certificate_payload).
+// Подарочный сертификат: выбор номинала → в корзину (certificate_payload).
 // При оплате вебхук/поллинг выпускает сертификат (lib/certificates).
 import { useState } from "react";
 import { useCart } from "@/lib/cart";
@@ -13,7 +13,6 @@ const PRESETS = [3000, 5000, 10000, 15000];
 export default function CertificatePage() {
   const { addItem, openCart } = useCart();
   const [amount, setAmount] = useState(5000);
-  const [form, setForm] = useState({ recipient_name: "", recipient_email: "", message: "" });
 
   const valid = amount >= 1000 && amount <= 100000;
 
@@ -24,12 +23,8 @@ export default function CertificatePage() {
       title: `Подарочный сертификат — ${amount.toLocaleString("ru-RU")} ₽`,
       price: amount,
       image_url: null,
-      color: form.recipient_name ? `Кому: ${form.recipient_name}` : undefined,
       certificate_payload: {
         amount,
-        recipient_name: form.recipient_name.trim(),
-        recipient_email: form.recipient_email.trim(),
-        message: form.message.trim() || undefined,
       },
     });
     openCart();
@@ -81,12 +76,19 @@ export default function CertificatePage() {
           {!valid && <p className="mt-2 text-[13px] text-[#b00020]">Сумма от 1 000 до 100 000 ₽</p>}
         </div>
 
-        {/* Правая колонка — получатель */}
+        {/* Правая колонка — приватная передача сертификата */}
         <div className="lg:col-start-7 lg:col-span-6">
-          <p className="font-bold text-[#171513] mb-1" style={{ fontSize: 14 }}>Кому (необязательно)</p>
-          <input placeholder="Имя получателя" value={form.recipient_name} onChange={(e) => setForm((f) => ({ ...f, recipient_name: e.target.value }))} className={input} style={{ fontFamily: BODY }} />
-          <input type="email" placeholder="E-mail получателя" value={form.recipient_email} onChange={(e) => setForm((f) => ({ ...f, recipient_email: e.target.value }))} className={input} style={{ fontFamily: BODY }} />
-          <textarea placeholder="Поздравление (необязательно)" rows={3} value={form.message} onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))} className="w-full border border-[#171513] p-3 mt-5 text-[16px] bg-transparent outline-none resize-none placeholder:text-[#171513]/40" style={{ fontFamily: BODY }} />
+          <div className="border-t border-[#171513] pt-5">
+            <p className="font-bold text-[#171513]" style={{ fontSize: 18 }}>Как подарить</p>
+            <ol className="mt-4 space-y-3 text-[#171513]/75" style={{ fontSize: 14, lineHeight: 1.55 }}>
+              <li>1. Добавьте сертификат в корзину и оформите его на свои контактные данные.</li>
+              <li>2. После оплаты код сертификата будет доступен покупателю.</li>
+              <li>3. Передайте код получателю удобным вам способом.</li>
+            </ol>
+            <p className="mt-5 text-[#171513]/50" style={{ fontSize: 12.5, lineHeight: 1.5 }}>
+              Мы не просим имя и e-mail получателя: так его персональные данные не попадут на сайт без его согласия.
+            </p>
+          </div>
 
           <button
             onClick={add}
@@ -97,7 +99,7 @@ export default function CertificatePage() {
             В корзину — {amount.toLocaleString("ru-RU")} ₽
           </button>
           <p className="mt-2.5" style={{ fontSize: 12, color: "rgba(23,21,19,0.45)", lineHeight: 1.45 }}>
-            Сертификат придёт кодом после оплаты. Оплата картой или СБП через Точку.
+            Оплата картой или СБП через Точку. Код выпускается после подтверждения оплаты.
           </p>
         </div>
       </div>

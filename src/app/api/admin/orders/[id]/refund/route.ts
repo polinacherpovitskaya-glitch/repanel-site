@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/server-db";
 import { refundTochkaPayment } from "@/lib/tochka";
 
 export const runtime = "nodejs";

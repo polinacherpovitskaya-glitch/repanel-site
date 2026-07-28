@@ -48,6 +48,9 @@ create table if not exists shop_orders (
   city                text,
   address             text,
   comment             text,
+  personal_data_consent_at      timestamptz,
+  personal_data_consent_version text,
+  privacy_policy_version        text,
 
   -- машина состояний
   status              text,
