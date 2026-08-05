@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --test tests/*.test.mjs && NODE_OPTIONS=--conditions=react-server tsx --test tests/*.test.ts",
+    "test:site-api": "node tests/site-api-smoke.mjs",
     "test:vercel-redirects": "node --test tests/vercel-redirects.test.mjs",
     "deploy:check:ru": "node scripts/check-yandex-data-plane.mjs"
   },
