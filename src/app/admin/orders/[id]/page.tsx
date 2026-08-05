@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/AdminShell";
 import { OrderStatusControls } from "@/components/admin/OrderStatusControls";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 
 export const dynamic = "force-dynamic";
 
@@ -167,7 +167,7 @@ export default async function OrderDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const db = supabaseAdmin();
+  const db = siteDb();
 
   const [{ data: order }, { data: timelineData }] = await Promise.all([
     db.from("shop_orders").select("*").eq("id", id).single(),

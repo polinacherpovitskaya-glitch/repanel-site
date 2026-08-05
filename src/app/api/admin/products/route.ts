@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 import { commonProductFields } from "@/lib/product-fields";
 
 export const runtime = "nodejs";
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     const payload = { title, slug, ...commonProductFields(body) };
 
-    const db = supabaseAdmin();
+    const db = siteDb();
     const { data, error } = await db.from("products").insert(payload).select("id").single();
 
     if (error) {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/AdminShell";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 import { displayOrderNumber } from "@/lib/shop-payments";
 import { returnStatusMeta } from "@/lib/return-statuses";
 import { NewReturnForm } from "./NewReturnForm";
@@ -33,7 +33,7 @@ function fmtDate(iso: string | null) {
 }
 
 export default async function AdminReturns() {
-  const db = supabaseAdmin();
+  const db = siteDb();
   const { data: returnsData } = await db
     .from("returns")
     .select("id, order_id, reason, status, amount, created_at")

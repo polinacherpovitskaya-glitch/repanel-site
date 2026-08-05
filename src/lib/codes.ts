@@ -1,6 +1,6 @@
 // Валидация сертификатов и промокодов. Используется и роутом /api/codes/validate,
 // и роутом оплаты (повторная серверная проверка скидки — клиенту не доверяем).
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { SiteDatabase } from "@/lib/server-db";
 
 export type CodeValidation =
   | {
@@ -21,7 +21,7 @@ const fmt = (v: number) => v.toLocaleString("ru-RU");
  * Сертификат гасит сумму товаров (в пределах баланса). Промо: percent/fixed/free_shipping.
  */
 export async function validateCode(
-  db: SupabaseClient,
+  db: SiteDatabase,
   rawCode: string,
   itemsTotal: number,
   shipping: number,

@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/AdminShell";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 
 export const dynamic = "force-dynamic";
 
 const BODY = "'Gramatika', sans-serif";
 
 export default async function AdminDashboard() {
-  const db = supabaseAdmin();
+  const db = siteDb();
   const [orders, paid, products, certs] = await Promise.all([
     db.from("shop_orders").select("id", { count: "exact", head: true }),
     db.from("shop_orders").select("id", { count: "exact", head: true }).eq("payment_status", "paid"),

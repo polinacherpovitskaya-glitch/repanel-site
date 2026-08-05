@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/AdminShell";
 import { ProductForm } from "@/components/ProductForm";
-import { supabaseAdmin } from "@/lib/server-db";
-import type { Product } from "@/lib/supabase";
+import { siteDb } from "@/lib/server-db";
+import type { Product } from "@/lib/shop-types";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +14,7 @@ export default async function EditProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const db = supabaseAdmin();
+  const db = siteDb();
   const { data } = await db.from("products").select("*").eq("id", id).single();
 
   if (!data) {

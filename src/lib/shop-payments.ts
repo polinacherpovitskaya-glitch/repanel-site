@@ -2,7 +2,7 @@
 // Источник истины об оплате — статус операции в API Точки, НЕ входной вебхук и
 // НЕ клиент. И поллинг (/api/orders/verify-payment), и вебхук метят оплату через
 // confirmAndMarkPaid → защита от поддельного "APPROVED".
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { SiteDatabase } from "@/lib/server-db";
 import { getTochkaPaymentStatus, extractTochkaPaymentOperation } from "@/lib/tochka";
 import { issueCertificatesForOrder } from "@/lib/certificates";
 
@@ -36,7 +36,7 @@ export async function notifyTelegram(_text: string): Promise<void> {
 
 /** Запись события в ленту заказа. Ошибку логируем, поток не роняем. */
 export async function insertTimeline(
-  db: SupabaseClient,
+  db: SiteDatabase,
   orderId: string,
   eventType: string,
   actor: string,
@@ -60,7 +60,7 @@ export type MarkPaidOutcome = { paid: boolean; status: string };
  * - банк не подтвердил     → { paid:false, status:<lowercased статус Точки> }
  * - подтверждено и помечено→ { paid:true,  status:"paid" }
  */
-export async function confirmAndMarkPaid(db: SupabaseClient, order: ShopOrder): Promise<MarkPaidOutcome> {
+export async function confirmAndMarkPaid(db: SiteDatabase, order: ShopOrder): Promise<MarkPaidOutcome> {
   if (order.payment_status === "paid") return { paid: true, status: "paid" };
 
   const opId = order.tochka_operation_id;

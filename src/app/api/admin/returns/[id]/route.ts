@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 
 export const runtime = "nodejs";
 
@@ -17,7 +17,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       return NextResponse.json({ error: "status не разрешён" }, { status: 400 });
     }
 
-    const db = supabaseAdmin();
+    const db = siteDb();
     const { error } = await db
       .from("returns")
       .update({ status, updated_at: new Date().toISOString() })

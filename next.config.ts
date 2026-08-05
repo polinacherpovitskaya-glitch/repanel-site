@@ -1,23 +1,18 @@
 import type { NextConfig } from "next";
 
-const configuredSupabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const storageOrigin = new URL(configuredSupabaseUrl || "https://data.re-panel.ru");
+const storageOrigin = new URL(
+  process.env.SITE_STORAGE_PUBLIC_BASE_URL || "https://storage.yandexcloud.net",
+);
 
 const nextConfig: NextConfig = {
   output: "standalone",
   images: {
-    // Текущий managed Supabase и будущий self-hosted Storage в российском ЦОД.
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "*.supabase.co",
-        pathname: "/storage/v1/object/public/**",
-      },
       {
         protocol: storageOrigin.protocol === "http:" ? "http" : "https",
         hostname: storageOrigin.hostname,
         port: storageOrigin.port,
-        pathname: "/storage/v1/object/public/**",
+        pathname: "/**",
       },
     ],
   },

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 import { commonProductFields } from "@/lib/product-fields";
 
 export const runtime = "nodejs";
@@ -21,7 +21,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       ...commonProductFields(body),
     };
 
-    const db = supabaseAdmin();
+    const db = siteDb();
     const { error } = await db.from("products").update(payload).eq("id", id);
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -37,7 +37,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const db = supabaseAdmin();
+    const db = siteDb();
     const { error } = await db.from("products").delete().eq("id", id);
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

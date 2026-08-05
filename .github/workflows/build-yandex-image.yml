@@ -37,7 +37,6 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.REGISTRY_ID }}/${{ env.IMAGE_NAME }}:latest
           build-args: |
             NEXT_PUBLIC_SITE_URL=https://www.re-panel.ru
-            NEXT_PUBLIC_SUPABASE_URL=${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
-            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+            SITE_STORAGE_PUBLIC_BASE_URL=${{ vars.SITE_STORAGE_PUBLIC_BASE_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

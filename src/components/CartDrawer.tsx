@@ -4,11 +4,10 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/cart";
-import { supabase } from "@/lib/supabase";
 
 const BODY = "'Gramatika', sans-serif";
 
-type Upsell = { id: string; title: string; price: number; image_url?: string | null };
+type Upsell = { id: string; slug: string | null; title: string; price: number; image_url?: string | null };
 
 export function CartDrawer() {
   const { items, total, isOpen, closeCart, updateQty, removeItem, addItem } = useCart();
@@ -37,11 +36,12 @@ export function CartDrawer() {
     if (!isOpen) return;
     (async () => {
       const cartIds = items.map((i) => i.id);
-      const { data } = await supabase
-        .from("products")
-        .select("id, title, price, image_url")
-        .eq("is_published", true)
-        .limit(30);
+      const response = await fetch("/api/catalog/products", { credentials: "same-origin" });
+      if (!response.ok) {
+        setUpsell([]);
+        return;
+      }
+      const { products: data } = (await response.json()) as { products: Upsell[] };
       if (!data || data.length === 0) {
         setUpsell([]);
         return;
@@ -187,7 +187,7 @@ export function CartDrawer() {
                               Добавить в корзину
                             </button>
                             <Link
-                              href={`/catalog/${u.id}`}
+                              href={`/catalog/${u.slug ?? u.id}`}
                               onClick={closeCart}
                               className="text-[12px] font-bold text-[#171513] cursor-pointer hover:opacity-60 transition-opacity whitespace-nowrap self-start"
                               style={{ fontFamily: BODY }}

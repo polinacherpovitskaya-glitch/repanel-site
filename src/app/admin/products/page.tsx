@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/AdminShell";
-import { supabaseAdmin } from "@/lib/server-db";
-import type { Product } from "@/lib/supabase";
+import { siteDb } from "@/lib/server-db";
+import type { Product } from "@/lib/shop-types";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +10,7 @@ const INK = "#171513";
 const HAIRLINE = "rgba(23,21,19,0.15)";
 
 export default async function AdminProductsPage() {
-  const db = supabaseAdmin();
+  const db = siteDb();
   const { data } = await db
     .from("products")
     .select("*")

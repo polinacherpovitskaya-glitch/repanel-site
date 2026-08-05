@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/AdminShell";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 
 export const dynamic = "force-dynamic";
 
@@ -72,7 +72,7 @@ const td: React.CSSProperties = {
 };
 
 export default async function AdminOrdersPage() {
-  const db = supabaseAdmin();
+  const db = siteDb();
   const { data, error } = await db
     .from("shop_orders")
     .select(

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 import { refundTochkaPayment } from "@/lib/tochka";
 
 export const runtime = "nodejs";
@@ -18,14 +18,14 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     return NextResponse.json({ error: "Некорректная сумма возврата" }, { status: 400 });
   }
 
-  const db = supabaseAdmin();
+  const db = siteDb();
 
   // 1. Загружаем заказ.
   const { data: order, error: fetchError } = await db
     .from("shop_orders")
     .select("id, payment_status, tochka_operation_id")
     .eq("id", id)
-    .single();
+    .single<{ id: string; payment_status: string | null; tochka_operation_id: string | null }>();
 
   if (fetchError || !order) {
     return NextResponse.json({ error: "Заказ не найден" }, { status: 404 });

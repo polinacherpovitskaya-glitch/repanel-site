@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminShell } from "@/components/AdminShell";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 import { displayOrderNumber } from "@/lib/shop-payments";
 import { returnStatusMeta } from "@/lib/return-statuses";
 import { ReturnControls } from "./ReturnControls";
@@ -44,7 +44,7 @@ function fmtDateTime(iso: string | null) {
 
 export default async function ReturnDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const db = supabaseAdmin();
+  const db = siteDb();
 
   const { data: returnData } = await db
     .from("returns")

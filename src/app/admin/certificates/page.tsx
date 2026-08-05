@@ -1,5 +1,5 @@
 import { AdminShell } from "@/components/AdminShell";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +37,7 @@ function fmtDate(iso: string | null) {
 }
 
 export default async function AdminCertificates() {
-  const db = supabaseAdmin();
+  const db = siteDb();
   const { data } = await db
     .from("certificates")
     .select("id, code, initial_amount, balance, status, recipient_email, recipient_name, created_at")
