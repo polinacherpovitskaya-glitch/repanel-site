@@ -7,7 +7,7 @@
  * https://ДОМЕН/api/tochka-webhook (тип acquiringInternetPayment).
  */
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 import { verifyTochkaWebhookSignature } from "@/lib/tochka-webhook-verify";
 import {
   confirmAndMarkPaid,
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     if (!operationId || !webhookType) return NextResponse.json({ ok: true }); // тест-пинг
     if (webhookType !== "acquiringInternetPayment") return NextResponse.json({ ok: true });
 
-    const db = supabaseAdmin();
+    const db = siteDb();
 
     // найти заказ по operationId, иначе по paymentLinkId (= наш order id)
     let order: ShopOrder | null = null;

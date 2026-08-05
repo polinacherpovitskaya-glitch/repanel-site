@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import { FinalCTA } from "@/components/FinalCTA";
 import { Group } from "@/components/blocks";
 import { ProductDetail } from "@/components/ProductDetail";
-import { supabaseAdmin } from "@/lib/server-db";
-import type { Product } from "@/lib/supabase";
+import { siteDb } from "@/lib/server-db";
+import type { Product } from "@/lib/shop-types";
 
 const BODY = "'Gramatika', sans-serif";
 const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
@@ -13,7 +13,7 @@ const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
 export const revalidate = 60;
 
 async function getProduct(slug: string): Promise<Product | null> {
-  const db = supabaseAdmin();
+  const db = siteDb();
   const { data } = await db
     .from("products")
     .select("*")
@@ -47,7 +47,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     );
   }
 
-  const db = supabaseAdmin();
+  const db = siteDb();
   const { data: relatedRaw } = await db
     .from("products")
     .select("id, slug, title, price, image_url")
@@ -55,7 +55,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     .neq("id", product.id)
     .order("sort_order", { ascending: false })
     .limit(5);
-  const related = (relatedRaw ?? []).filter((r) => r.slug).slice(0, 4);
+  const related = (relatedRaw as Array<Pick<Product, "id" | "slug" | "title" | "price" | "image_url">>)
+    .filter((r) => r.slug)
+    .slice(0, 4);
 
   return (
     <>

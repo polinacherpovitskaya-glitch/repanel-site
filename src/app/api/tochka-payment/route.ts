@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/server-db";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { siteDb } from "@/lib/server-db";
+import type { SiteDatabase } from "@/lib/server-db";
 import { createTochkaPayment } from "@/lib/tochka";
 import { getSampleTier } from "@/lib/sample-kits";
 import { validateCode } from "@/lib/codes";
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
-    const db = supabaseAdmin();
+    const db = siteDb();
 
     if (Array.isArray(body.items) && body.items.length > 0) {
       return NextResponse.json(await handleCart(db, body));
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
 }
 
 // ─────────────────────────── Корзина ───────────────────────────
-async function handleCart(db: SupabaseClient, body: Record<string, unknown>) {
+async function handleCart(db: SiteDatabase, body: Record<string, unknown>) {
   const items = body.items as CartItemIn[];
   const contactName = String(body.name ?? "").trim();
   const contactEmail = String(body.email ?? "").trim();
@@ -189,7 +189,7 @@ async function handleCart(db: SupabaseClient, body: Record<string, unknown>) {
 }
 
 // ─────────────────────────── Набор образцов ───────────────────────────
-async function handleSamples(db: SupabaseClient, body: Record<string, unknown>) {
+async function handleSamples(db: SiteDatabase, body: Record<string, unknown>) {
   const tier = getSampleTier(Number(body.tier));
   if (!tier) throw new Error("Некорректный тариф набора образцов");
 

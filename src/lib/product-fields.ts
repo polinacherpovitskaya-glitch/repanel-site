@@ -1,4 +1,4 @@
-import type { ProductColor } from "@/lib/supabase";
+import type { ProductColor } from "@/lib/shop-types";
 
 export function toInt(value: unknown, fallback = 0): number {
   const n = parseInt(String(value ?? ""), 10);

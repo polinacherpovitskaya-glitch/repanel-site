@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 
 // Поля статуса, которые админ может менять вручную. Любое другое поле отклоняется.
 const ALLOWED_FIELDS = [
@@ -35,7 +35,7 @@ export async function POST(
     return Response.json({ error: "value обязателен" }, { status: 400 });
   }
 
-  const db = supabaseAdmin();
+  const db = siteDb();
 
   const { error: updateError } = await db
     .from("shop_orders")

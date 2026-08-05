@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/server-db";
+import { putProductImage } from "@/lib/object-storage";
 
 export const runtime = "nodejs";
 
-const BUCKET = "product-images";
 const ALLOWED = ["image/png", "image/jpeg", "image/webp", "image/avif"];
 const MAX = 10 * 1024 * 1024; // 10 МБ
 
@@ -26,16 +25,8 @@ export async function POST(req: NextRequest) {
     const path = `products/${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`;
     const buf = Buffer.from(await file.arrayBuffer());
 
-    const db = supabaseAdmin();
-    const { error } = await db.storage.from(BUCKET).upload(path, buf, {
-      contentType: file.type,
-      upsert: false,
-    });
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-    const { data } = db.storage.from(BUCKET).getPublicUrl(path);
-    return NextResponse.json({ url: data.publicUrl });
+    const url = await putProductImage(path, buf, file.type);
+    return NextResponse.json({ url });
   } catch (err) {
     console.error("[admin/upload]", err);
     return NextResponse.json({ error: "Не удалось загрузить файл" }, { status: 500 });

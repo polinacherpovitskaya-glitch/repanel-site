@@ -8,7 +8,7 @@
  * подтвердил APPROVED (см. confirmAndMarkPaid). Идемпотентно.
  */
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 import { confirmAndMarkPaid, type ShopOrder } from "@/lib/shop-payments";
 
 export const runtime = "nodejs";
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ status: "pending", error: "missing_params" }, { status: 400 });
     }
 
-    const db = supabaseAdmin();
+    const db = siteDb();
     const { data: order, error } = await db
       .from("shop_orders")
       .select("*")

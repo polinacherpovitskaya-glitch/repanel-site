@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { Product, ProductColor } from "@/lib/supabase";
+import type { Product, ProductColor } from "@/lib/shop-types";
 
 const BODY = "'Gramatika', sans-serif";
 const HAIRLINE = "rgba(23,21,19,0.15)";

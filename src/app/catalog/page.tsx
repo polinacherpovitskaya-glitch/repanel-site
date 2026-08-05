@@ -3,7 +3,8 @@ import { FinalCTA } from "@/components/FinalCTA";
 import { CatalogGrid } from "@/components/CatalogGrid";
 import { ShopComingSoon } from "@/components/ShopComingSoon";
 import { SHOP_COMING_SOON } from "@/lib/shop-config";
-import { supabase, type Product } from "@/lib/supabase";
+import { siteDb } from "@/lib/server-db";
+import type { Product } from "@/lib/shop-types";
 
 const BODY = "'Gramatika', sans-serif";
 const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function CatalogPage() {
-  const { data } = await supabase
+  const { data } = await siteDb()
     .from("products")
     .select("*")
     .eq("is_published", true)

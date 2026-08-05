@@ -1,0 +1,3 @@
+shadow-site.re-panel.ru {
+  reverse_proxy ro-repanel-site:3000
+}

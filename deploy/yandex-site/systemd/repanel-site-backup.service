@@ -1,0 +1,16 @@
+[Unit]
+Description=Back up RePanel site PostgreSQL to versioned Yandex Object Storage
+After=docker.service network-online.target
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=robot
+Group=robot
+UMask=0077
+EnvironmentFile=/home/robot/repanel-site/config/backup.env
+ExecStart=/home/robot/repanel-site/current/deploy/yandex-site/backup.sh
+NoNewPrivileges=true
+PrivateTmp=true
+Nice=10

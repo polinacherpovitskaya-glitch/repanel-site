@@ -1,0 +1,44 @@
+services:
+  app:
+    image: ${REPANEL_SITE_IMAGE:?set REPANEL_SITE_IMAGE}
+    container_name: ro-repanel-site
+    restart: unless-stopped
+    init: true
+    env_file:
+      - ${REPANEL_SITE_DATABASE_ENV:?set REPANEL_SITE_DATABASE_ENV}
+      - ${REPANEL_SITE_STORAGE_ENV:?set REPANEL_SITE_STORAGE_ENV}
+      - ${REPANEL_SITE_RUNTIME_ENV:?set REPANEL_SITE_RUNTIME_ENV}
+    environment:
+      NODE_ENV: production
+      HOSTNAME: 0.0.0.0
+      PORT: "3000"
+    ports:
+      - 127.0.0.1:3300:3000
+    networks:
+      - platform
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,uid=1001,gid=1001,mode=0700
+      - /app/.next/cache:rw,noexec,nosuid,nodev,uid=1001,gid=1001,mode=0700
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 512m
+    cpus: 1.0
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3000/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+networks:
+  platform:
+    external: true
+    name: ro-platform-shadow_shadow

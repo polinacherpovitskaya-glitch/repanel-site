@@ -6,7 +6,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
-import type { Product } from "@/lib/supabase";
+import type { Product } from "@/lib/shop-types";
 
 const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
 const BODY = "'Gramatika', sans-serif";

@@ -1,5 +1,5 @@
 // Подарочные сертификаты: генерация кода + автовыпуск при оплате заказа.
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { SiteDatabase } from "@/lib/server-db";
 
 const ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // без похожих символов (O/0, I/1)
 
@@ -36,7 +36,7 @@ type OrderLike = {
  * Выпускает подарочные сертификаты для всех позиций заказа с certificate_payload.
  * Идемпотентно: если по заказу уже есть сертификаты — повторно не выпускает.
  */
-export async function issueCertificatesForOrder(db: SupabaseClient, order: OrderLike): Promise<void> {
+export async function issueCertificatesForOrder(db: SiteDatabase, order: OrderLike): Promise<void> {
   const items = Array.isArray(order.items)
     ? (order.items as Array<{ quantity?: number; certificate_payload?: CertPayload }>)
     : [];

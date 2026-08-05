@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/server-db";
+import { siteDb } from "@/lib/server-db";
 
 export const runtime = "nodejs";
 
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     const reason = String(body.reason ?? "").trim() || null;
     const amount = Math.max(0, toInt(body.amount, 0));
 
-    const db = supabaseAdmin();
+    const db = siteDb();
     const { data, error } = await db
       .from("returns")
       .insert({

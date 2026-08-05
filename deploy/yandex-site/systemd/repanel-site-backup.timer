@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily RePanel site PostgreSQL backup
+
+[Timer]
+OnCalendar=*-*-* 03:10:00 UTC
+RandomizedDelaySec=900
+Persistent=true
+Unit=repanel-site-backup.service
+
+[Install]
+WantedBy=timers.target
