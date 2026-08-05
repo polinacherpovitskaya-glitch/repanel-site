@@ -15,7 +15,10 @@ export const metadata: Metadata = {
     "Готовые предметы из переработанного полистирола: мебель, аксессуары, наборы образцов. Адаптируем под цвет, размер и тираж.",
 };
 
-export const revalidate = 60;
+// The Yandex container has a read-only root filesystem. Catalog data lives in
+// PostgreSQL, so render it per request instead of asking Next to rewrite ISR
+// artifacts under .next/server at runtime.
+export const dynamic = "force-dynamic";
 
 export default async function CatalogPage() {
   const { data } = await siteDb()

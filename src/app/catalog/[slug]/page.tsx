@@ -10,7 +10,9 @@ import type { Product } from "@/lib/shop-types";
 const BODY = "'Gramatika', sans-serif";
 const DISPLAY = "'Chalet', 'Gramatika', sans-serif";
 
-export const revalidate = 60;
+// Product data is mutable in PostgreSQL and the production container is
+// read-only, so ISR cannot persist regenerated route artifacts safely.
+export const dynamic = "force-dynamic";
 
 async function getProduct(slug: string): Promise<Product | null> {
   const db = siteDb();
