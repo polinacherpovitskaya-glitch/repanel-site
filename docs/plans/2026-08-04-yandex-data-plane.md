@@ -68,10 +68,26 @@
 
 ## 8. Переключение и наблюдение
 
-- [ ] Остановить старый write-path, снять финальную дельту и повторить сверку.
-- [ ] Переключить `site.re-panel.ru` на VM, не меняя Vercel-редиректы.
-- [ ] Проверить TLS, страницы, админку, checkout validation и webhook endpoint.
-- [ ] Перевести прежний Serverless Container в rollback-only состояние.
+- [x] Исключить старый write-path из production DNS, снять финальную дельту и
+      повторить сверку.
+- [x] Переключить `site.re-panel.ru` на VM, не меняя Vercel-редиректы.
+- [x] Проверить TLS, страницы, админку, checkout validation и webhook endpoint.
+- [x] Перевести прежний Serverless Container в rollback-only состояние.
 - [x] Подтвердить ежедневный backup и успешное контрольное скачивание.
 - [ ] Наблюдать новый контур 14 дней до отдельного решения об отключении старых
       ресурсов.
+
+### Протокол переключения
+
+- Production DNS переключён 2026-08-05: `site.re-panel.ru A 158.160.27.182`,
+  TTL 300. Vercel-домены `re-panel.ru` и `www.re-panel.ru` не менялись.
+- Финальный источник повторно сверён перед DNS: 7 товаров, 2 заказа и 4 события
+  истории; канонические SHA-256 всех десяти коллекций совпали с PostgreSQL.
+- Финальный архив сохранён в приватном версионируемом backup-бакете по префиксу
+  `site/m5/final-source/20260805T044135Z/` и проверен после скачивания.
+- Production работает на immutable-образе `ro-repanel-site:c4170d148524`;
+  `/api/health` сообщает healthy DB и разрешённую запись.
+- Caddy выпустил отдельный сертификат Let's Encrypt. Главная, privacy, каталог,
+  карточка товара, админка, checkout validation и webhook health прошли smoke.
+- Старый API Gateway/Serverless Container, Supabase и YDB сохранены без удаления
+  только для аварийного rollback на период наблюдения.
